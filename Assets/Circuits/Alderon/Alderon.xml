@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<CircuitInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <grid>
+    <pole>
+      <x>-11.9155121</x>
+      <y>7.951935</y>
+      <z>-473.1842</z>
+    </pole>
+    <second>
+      <x>-29.0118561</x>
+      <y>8.906036</y>
+      <z>-481.19812</z>
+    </second>
+    <third>
+      <x>-11.0250854</x>
+      <y>8.906036</y>
+      <z>-488.677765</z>
+    </third>
+    <forward>
+      <x>-0.00016784668</x>
+      <y>0</y>
+      <z>0.999938965</z>
+    </forward>
+  </grid>
+</CircuitInfo>

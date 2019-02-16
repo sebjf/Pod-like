@@ -1,0 +1,124 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 14.02.2019 23:05:35
+
+newmtl texture_0
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\0_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\0_diffuse.png
+
+newmtl texture_1
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\1_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\1_diffuse.png
+
+newmtl colour_8_0_8
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 0.031373 0.031373 0.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+
+newmtl texture_3
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\3_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\3_diffuse.png
+
+newmtl texture_2
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\2_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\2_diffuse.png
+
+newmtl texture_4
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\4_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\4_diffuse.png
+
+newmtl colour_206_189_198
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 0.807843 0.776471 0.741177
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+
+newmtl Material__61
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\1_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\1_diffuse.png
+
+newmtl Material__63
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\1_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Beltane\1_diffuse.png

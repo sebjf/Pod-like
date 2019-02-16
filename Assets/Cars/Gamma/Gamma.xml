@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<CarInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Chassis>
+    <x>0</x>
+    <y>1.29998779</y>
+    <z>0</z>
+  </Chassis>
+  <WheelFrontL>
+    <x>-1.13252258</x>
+    <y>0</y>
+    <z>1.9276886</z>
+  </WheelFrontL>
+  <WheelFrontR>
+    <x>1.13252258</x>
+    <y>0</y>
+    <z>1.9276886</z>
+  </WheelFrontR>
+  <WheelRearL>
+    <x>-1.13252258</x>
+    <y>0</y>
+    <z>-1.9276886</z>
+  </WheelRearL>
+  <WheelRearR>
+    <x>1.13252258</x>
+    <y>0</y>
+    <z>-1.9276886</z>
+  </WheelRearR>
+</CarInfo>

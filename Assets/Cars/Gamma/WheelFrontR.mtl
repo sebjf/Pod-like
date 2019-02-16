@@ -1,0 +1,15 @@
+newmtl colour_0_0_0
+Kd 0.000000 0.000000 0.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+newmtl texture_1
+Kd 1.000000 1.000000 1.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+map_Kd 1_diffuse.png
