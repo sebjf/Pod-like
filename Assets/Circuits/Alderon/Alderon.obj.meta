@@ -19,7 +19,54 @@ ModelImporter:
     2300000: default
     3300000: default
     4300000: default
-  externalObjects: {}
+    6400000: default
+    2186277476908879412: ImportLogs
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: colour_206_189_189
+    second: {fileID: 2100000, guid: 1fbc2805188f8d5499db40153170da22, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: colour_41_41_33
+    second: {fileID: 2100000, guid: 1404184c2c11ed3469469183c8ab1353, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: texture_0
+    second: {fileID: 2100000, guid: e6cadb1bf94748d40b7e4d5222f853ac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: texture_1
+    second: {fileID: 2100000, guid: 1cc487d11d3738a459c57f2e47e21709, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: texture_2
+    second: {fileID: 2100000, guid: b80d72f1350815340bc8585a302bd7cc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: texture_3
+    second: {fileID: 2100000, guid: 09bd3ca5d564b174f9b45e8db0c63089, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: texture_4
+    second: {fileID: 2100000, guid: b554fbb580462b846b2d777b8c7d4018, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: texture_5
+    second: {fileID: 2100000, guid: 4ee3c09896b49944b98a981aacb82c16, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: texture_6
+    second: {fileID: 2100000, guid: 081b37ca4e826344b8e210dee0f0acc3, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -52,14 +99,14 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0

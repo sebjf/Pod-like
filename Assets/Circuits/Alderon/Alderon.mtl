@@ -1,70 +1,124 @@
+# 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
+# File Created: 18.02.2019 22:02:37
+
 newmtl texture_3
-Kd 1.000000 1.000000 1.000000
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
-map_Kd 3_diffuse.png
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\3_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\3_diffuse.png
+
 newmtl texture_1
-Kd 1.000000 1.000000 1.000000
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
-map_Kd 1_diffuse.png
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\1_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\1_diffuse.png
+
 newmtl texture_0
-Kd 1.000000 1.000000 1.000000
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
-map_Kd 0_diffuse.png
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\0_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\0_diffuse.png
+
 newmtl texture_2
-Kd 1.000000 1.000000 1.000000
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
-map_Kd 2_diffuse.png
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\2_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\2_diffuse.png
+
 newmtl texture_4
-Kd 1.000000 1.000000 1.000000
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
-map_Kd 4_diffuse.png
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\4_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\4_diffuse.png
+
 newmtl colour_41_41_33
-Kd 0.160784 0.129412 0.160784
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 0.160784 0.129412 0.160784
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+
 newmtl texture_6
-Kd 1.000000 1.000000 1.000000
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
-map_Kd 6_diffuse.png
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\6_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\6_diffuse.png
+
 newmtl texture_5
-Kd 1.000000 1.000000 1.000000
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
-map_Kd 5_diffuse.png
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 1.000000 1.000000 1.000000
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
+	map_Ka C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\5_diffuse.png
+	map_Kd C:\Users\Sebastian\Documents\Unity Projects\PoD\Assets\Circuits\Alderon\5_diffuse.png
+
 newmtl colour_206_189_189
-Kd 0.807843 0.741177 0.741177
-illum 2
-d 1.000000
-Ns 0.000000
-sharpness 60
-Ni 1.000000
+	Ns 0.000000
+	Ni 1.500000
+	d 1.000000
+	Tr 0.000000
+	Tf 1.000000 1.000000 1.000000 
+	illum 2
+	Ka 0.550000 0.550000 0.550000
+	Kd 0.807843 0.741177 0.741177
+	Ks 0.000000 0.000000 0.000000
+	Ke 0.000000 0.000000 0.000000
