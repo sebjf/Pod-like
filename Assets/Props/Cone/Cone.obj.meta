@@ -5,14 +5,32 @@ ModelImporter:
   fileIDToRecycleName:
     100000: Box001
     100002: //RootNode
+    100004: Cone001
     400000: Box001
     400002: //RootNode
+    400004: Cone001
     2100000: Material__25
+    2100002: wire_225087143
+    2100004: Base
+    2100006: Cone
     2300000: Box001
+    2300002: Cone001
     3300000: Box001
+    3300002: Cone001
     4300000: Box001
+    4300002: Cone001
     2186277476908879412: ImportLogs
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Base
+    second: {fileID: 2100000, guid: 24e15ee44a8a0834380b858736fb3353, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cone
+    second: {fileID: 2100000, guid: b91cde20918b77c4ca94df2809bce92e, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -56,7 +74,7 @@ ModelImporter:
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
-    weldVertices: 1
+    weldVertices: 0
     preserveHierarchy: 0
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -67,13 +85,13 @@ ModelImporter:
     previousCalculatedGlobalScale: 1
     hasPreviousCalculatedGlobalScale: 0
   tangentSpace:
-    normalSmoothAngle: 60
+    normalSmoothAngle: 40
     normalImportMode: 0
     tangentImportMode: 3
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
-    normalSmoothingSource: 0
+    normalSmoothingSource: 2
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
