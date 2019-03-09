@@ -24,9 +24,18 @@ public class Wheel : MonoBehaviour
 
     private Vector3 position;
     private Vector3 prevPosition;
-    public Vector3 velocity;
+    private Vector3 velocity;
+
+    public bool incontact;
 
     private GraphOverlay.Annotation annotation;
+
+    private Rigidbody rigidBody;
+
+    private void Awake()
+    {
+        rigidBody = GetComponentInParent<Rigidbody>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -47,24 +56,21 @@ public class Wheel : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    public bool UpdateSuspensionForce()
     {
-        var rigidBody = GetComponentInParent<Rigidbody>();
-
-        // Suspension
-
         prevDisplacement = displacement;
 
         bool result = Physics.Raycast(new Ray(transform.position, -transform.up), out m_raycastHit, travel);
-        if(result)
+        if (result)
         {
             var intersection = (m_raycastHit.point - transform.position).magnitude;
             displacement = length - intersection;
+            incontact = true;
         }
         else
         {
             displacement = 0;
+            incontact = false;
         }
 
         displacementVel = (displacement - prevDisplacement) / Time.deltaTime;
@@ -73,8 +79,11 @@ public class Wheel : MonoBehaviour
 
         rigidBody.AddForceAtPosition(transform.up * -Fsuspension, transform.position);
 
-        // Drive
+        return incontact;
+    }
 
+    public void UpdateDriveForce()
+    {
         float torque = maxTorque * Input.GetAxis("Vertical");
 
         // pretend radius is 1
@@ -82,10 +91,10 @@ public class Wheel : MonoBehaviour
         var Ff = torque;
 
         rigidBody.AddForceAtPosition(transform.forward * Ff, transform.position);
+    }
 
-
-        // Grip
-
+    public void UpdateGripForce(float wheelsInContact)
+    {
         // its important to compute the wheel velocities independently because they will include a component of the rb's angular velocity linearly
         position = transform.position;
         velocity = (position - prevPosition) / Time.fixedDeltaTime;
@@ -95,14 +104,14 @@ public class Wheel : MonoBehaviour
         var Vt = Vector3.Dot(velocity, transform.right) * transform.right;
         var at = Vt / Time.fixedDeltaTime;
 
-        var a = (-at / r) / 4;
+        var a = (-at / r) / wheelsInContact;
         Quaternion q = transform.rotation * rigidBody.inertiaTensorRotation;
         a = q * Vector3.Scale(rigidBody.inertiaTensor, (Quaternion.Inverse(q) * a));
         var Ft = a / r;
 
         var Fs = lateralForce;
         var slipAngle = Vector3.Dot(velocity, transform.forward);
-        if(slipAngle < Mathf.Sin(Mathf.Deg2Rad * 10))
+        if (slipAngle < Mathf.Sin(Mathf.Deg2Rad * 10))
         {
             Fs = 0;
         }
@@ -117,5 +126,4 @@ public class Wheel : MonoBehaviour
 
         Debug.DrawLine(transform.position, transform.position + Ft, Color.red);
     }
-
 }
