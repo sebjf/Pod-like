@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MonoBehaviour
 {
+    public float maxTorque;
+
     private Wheel[] wheels;
 
     private void Awake()
@@ -26,28 +28,52 @@ public class Vehicle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        int wheelsInContact = 0;
+        float angle = 45 * Input.GetAxis("Horizontal");
+
+        foreach (var wheel in wheels)
+        {
+            if(wheel.steers)
+            {
+                wheel.steerAngle = angle;
+            }
+
+            wheel.UpdateTransforms();
+        }
 
         foreach (var wheel in wheels)
         {
             wheel.UpdateSuspensionForce();
         }
 
+        int wheelsInContact = 0;
+
         foreach (var wheel in wheels)
         {
-            if(wheel.incontact)
+            if(wheel.inContact)
             {
                 wheelsInContact++;
             }
         }
 
+        float torque = maxTorque * Input.GetAxis("Vertical");
+
         foreach (var wheel in wheels)
         {
-            if(wheel.incontact)
+            wheel.UpdateVelocity();
+        }
+
+        foreach (var wheel in wheels)
+        {
+            if(wheel.inContact)
             {
-                wheel.UpdateDriveForce();
+                wheel.UpdateDriveForce(torque);
                 wheel.UpdateGripForce(wheelsInContact);
             }
+        }
+
+        foreach(var wheel in wheels)
+        {
+            wheel.UpdateLocalTransform();
         }
     }
 }
