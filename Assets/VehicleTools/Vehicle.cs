@@ -5,13 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MonoBehaviour
 {
-    public float maxTorque;
-
     private Wheel[] wheels;
+    private Drivetrain drivetrain;
+
+    public float steerAngle;
 
     private void Awake()
     {
         wheels = GetComponentsInChildren<Wheel>();
+        drivetrain = GetComponent<Drivetrain>();
     }
 
     // Start is called before the first frame update
@@ -28,7 +30,7 @@ public class Vehicle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float angle = 45 * Input.GetAxis("Horizontal");
+        float angle = steerAngle * Input.GetAxis("Horizontal");
 
         foreach (var wheel in wheels)
         {
@@ -55,7 +57,27 @@ public class Vehicle : MonoBehaviour
             }
         }
 
-        float torque = maxTorque * Input.GetAxis("Vertical");
+        var angularVelocity = 0f;
+        var angularVelocityCount = 0f;
+        foreach (var wheel in wheels)
+        {
+            if (wheel.drives)
+            {
+                angularVelocity += wheel.angularVelocity; angularVelocityCount++;
+            }
+        }
+
+        angularVelocity /= angularVelocityCount;
+
+        var torque = drivetrain.EvaluateTorque(angularVelocity);
+
+        foreach (var wheel in wheels)
+        {
+            if (wheel.drives)
+            {
+                wheel.ApplyDriveTorque(torque);
+            }
+        }
 
         foreach (var wheel in wheels)
         {
@@ -64,9 +86,9 @@ public class Vehicle : MonoBehaviour
 
         foreach (var wheel in wheels)
         {
-            if(wheel.inContact)
+            if (wheel.inContact)
             {
-                wheel.UpdateDriveForce(torque);
+                wheel.UpdateDriveForce();
                 wheel.UpdateGripForce(wheelsInContact);
             }
         }

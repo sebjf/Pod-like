@@ -14,7 +14,11 @@ public class Wheel : MonoBehaviour
     public AnimationCurve slipForce;
     public float slipForceScale;
 
+    public AnimationCurve forwardSlipForce;
+    public float forwardSlipScale;
+
     public bool steers = false;
+    public bool drives = true;
 
     [HideInInspector]
     public float steerAngle = 0f;
@@ -36,6 +40,11 @@ public class Wheel : MonoBehaviour
     public bool inContact { get; private set; }
 
     public float angularVelocity { get; private set; }
+    public float angle { get; private set; }
+
+    public float mass;
+
+    private float inertia;
 
     /// <summary>
     /// The offset from the parent transform where the forces should be applied
@@ -74,6 +83,8 @@ public class Wheel : MonoBehaviour
         position = attachmentPoint;
         prevPosition = attachmentPoint;
 
+        inertia = mass * (radius * radius) / 2;
+
         annotation = FindObjectOfType<GraphOverlay>().CreateAnnotation();
         annotation.world = transform;
     }
@@ -91,13 +102,24 @@ public class Wheel : MonoBehaviour
         right = rotation * Vector3.right;
     }
 
+    public void ApplyDriveTorque(float torque)
+    {
+        var angularAcceleration = torque / inertia;
+        angularVelocity += angularAcceleration * Time.fixedDeltaTime;
+    }
+
+    public void ApplyBrake(float power)
+    {
+
+    }
+
     public void UpdateVelocity()
     {
         // its important to compute the wheel velocities independently because they will include a component of the rb's angular velocity linearly
         velocity = (position - prevPosition) / Time.fixedDeltaTime;
         prevPosition = position;
 
-        rotationAngle += angularVelocity * Time.fixedDeltaTime;
+        angle += angularVelocity * Time.fixedDeltaTime;
     }
 
     public void UpdateLocalTransform()
@@ -106,7 +128,7 @@ public class Wheel : MonoBehaviour
         localpose.y = localAttachmentPosition.y - height;
         transform.localPosition = localpose;
 
-        transform.localRotation = Quaternion.Euler(rotationAngle * Mathf.Rad2Deg, steerAngle, 0);
+        transform.localRotation = Quaternion.Euler(angle * Mathf.Rad2Deg, steerAngle, 0);
     }
 
     public void UpdateSuspensionForce()
@@ -137,13 +159,27 @@ public class Wheel : MonoBehaviour
         rigidBody.AddForceAtPosition(up * -Fsuspension, attachmentPoint);
     }
 
-    public void UpdateDriveForce(float torque)
+    public void UpdateDriveForce()
     {
-        var Vr = Vector3.Dot(velocity, forward) * forward;
-        angularVelocity = Vr.magnitude / radius;
- 
-        var Ff = torque;    // pretend radius is 1
-        rigidBody.AddForceAtPosition(forward * Ff, attachmentPoint);
+        var Vr = Vector3.Dot(velocity, forward);
+
+        var slip = ((angularVelocity * radius) - Vr) / Mathf.Abs(Vr);
+        var Fr = forwardSlipForce.Evaluate(Mathf.Abs(slip)) * Mathf.Sign(slip) * forwardSlipScale;
+
+        rigidBody.AddForceAtPosition(forward * Fr, attachmentPoint);
+
+        var tractionTorque = -(Fr * radius);
+        var tractionAngularAcceleration = tractionTorque / inertia;
+
+        var rollAngularVelocity = Vr / radius;
+        var angularDeltaV1 = rollAngularVelocity - angularVelocity;
+        var angularDeltaV2 = tractionAngularAcceleration * Time.fixedDeltaTime;
+        var angularDeltaVDirection = Mathf.Sign(angularDeltaV1);
+        var angularDeltaV = Mathf.Min(Mathf.Abs(angularDeltaV1), Mathf.Abs(angularDeltaV2)) * angularDeltaVDirection;
+
+      //  Debug.Log(slip.ToString() + " " + Fr.ToString() + " " + angularVelocity);
+
+        angularVelocity += angularDeltaV;
     }
 
     public void UpdateGripForce(float wheelsInContact)

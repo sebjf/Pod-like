@@ -10385,6 +10385,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1223322117, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322116, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322115, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322118, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
     - target: {fileID: 1530915397, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_SuspensionSpring.spring
       value: 55024.836
