@@ -17,6 +17,8 @@ public class Wheel : MonoBehaviour
     public AnimationCurve forwardSlipForce;
     public float forwardSlipScale;
 
+    public float brakingTorque;
+
     public bool steers = false;
     public bool drives = true;
 
@@ -31,7 +33,7 @@ public class Wheel : MonoBehaviour
 
     private Vector3 position;
     private Vector3 prevPosition;
-    private Vector3 velocity;
+    public Vector3 velocity { get; private set; }
     private Vector3 forward;
     private Quaternion rotation;
 
@@ -41,6 +43,17 @@ public class Wheel : MonoBehaviour
 
     public float angularVelocity { get; private set; }
     public float angle { get; private set; }
+
+    [HideInInspector]
+    public float wheelsInContact;
+
+    public float Vt
+    {
+        get
+        {
+            return Vector3.Dot(velocity, right);
+        }
+    }
 
     public float mass;
 
@@ -110,7 +123,8 @@ public class Wheel : MonoBehaviour
 
     public void ApplyBrake(float power)
     {
-
+        var angularAcceleration = -(brakingTorque * power) / inertia;
+        angularVelocity -= Mathf.Min(Mathf.Abs(angularVelocity), Mathf.Abs(angularAcceleration * Time.fixedDeltaTime)) * Mathf.Sign(angularVelocity);
     }
 
     public void UpdateVelocity()
@@ -163,7 +177,17 @@ public class Wheel : MonoBehaviour
     {
         var Vr = Vector3.Dot(velocity, forward);
 
-        var slip = ((angularVelocity * radius) - Vr) / Mathf.Abs(Vr);
+        //Jung, S., Kim, T.Y., &Yoo, W.S. (2018). Advanced slip ratio for ensuring numerical stability of low - speed driving simulation. Part I: Longitudinal slip ratio.
+        //Proceedings of the Institution of Mechanical Engineers, Part D: Journal of Automobile Engineering.http://doi.org/10.1177/0954407018759738
+        var Vtm = 1.1f * (Time.fixedDeltaTime / 2) * forwardSlipScale * (((radius * radius) / inertia) + ( 1f / (rigidBody.mass / wheelsInContact)));
+
+        var slip = ((angularVelocity * radius) - Vr) / (Mathf.Max(Mathf.Abs(Vr), Vtm));
+
+        if(float.IsNaN(slip))
+        {
+            slip = 0f;
+        }
+
         var Fr = forwardSlipForce.Evaluate(Mathf.Abs(slip)) * Mathf.Sign(slip) * forwardSlipScale;
 
         rigidBody.AddForceAtPosition(forward * Fr, attachmentPoint);
@@ -177,12 +201,12 @@ public class Wheel : MonoBehaviour
         var angularDeltaVDirection = Mathf.Sign(angularDeltaV1);
         var angularDeltaV = Mathf.Min(Mathf.Abs(angularDeltaV1), Mathf.Abs(angularDeltaV2)) * angularDeltaVDirection;
 
-      //  Debug.Log(slip.ToString() + " " + Fr.ToString() + " " + angularVelocity);
+        //Debug.Log(Vtm.ToString() + " " + ((angularVelocity * radius)).ToString() + " " + Vr + " " + slip.ToString() + " " + Fr.ToString());
 
         angularVelocity += angularDeltaV;
     }
 
-    public void UpdateGripForce(float wheelsInContact)
+    public void UpdateGripForce()
     {
         var r = (attachmentPoint - rigidBody.worldCenterOfMass).magnitude;
         var Vt = Vector3.Dot(velocity, right) * right;
@@ -193,7 +217,7 @@ public class Wheel : MonoBehaviour
         a = q * Vector3.Scale(rigidBody.inertiaTensor, (Quaternion.Inverse(q) * a));
         var Ft = a / r;
         
-        var slipAngle = Mathf.Abs(Vector3.Dot(velocity, forward));
+        var slipAngle = Mathf.Abs(Mathf.Acos(Vector3.Dot(velocity.normalized, forward)));
         var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale;
 
         Ft = Ft.normalized * Mathf.Min(Ft.magnitude, Fs);

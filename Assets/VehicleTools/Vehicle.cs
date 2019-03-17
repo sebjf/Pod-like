@@ -5,15 +5,26 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MonoBehaviour
 {
-    private Wheel[] wheels;
     private Drivetrain drivetrain;
 
-    public float steerAngle;
+    public float maxSteerAngle;
+
+    [HideInInspector]
+    public Wheel[] wheels;
+
+    [HideInInspector]
+    public float steeringAngle;
+
+    [HideInInspector]
+    public new Rigidbody rigidbody;
+
+    public bool brake;
 
     private void Awake()
     {
         wheels = GetComponentsInChildren<Wheel>();
         drivetrain = GetComponent<Drivetrain>();
+        rigidbody = GetComponent<Rigidbody>();
     }
 
     // Start is called before the first frame update
@@ -25,18 +36,20 @@ public class Vehicle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        drivetrain.throttle = Input.GetAxis("Vertical");
+
+      //  brake = Input.GetKey(KeyCode.X);
     }
 
     private void FixedUpdate()
     {
-        float angle = steerAngle * Input.GetAxis("Horizontal");
+        steeringAngle = maxSteerAngle * Input.GetAxisRaw("Horizontal");
 
         foreach (var wheel in wheels)
         {
             if(wheel.steers)
             {
-                wheel.steerAngle = angle;
+                wheel.steerAngle = steeringAngle;
             }
 
             wheel.UpdateTransforms();
@@ -55,6 +68,11 @@ public class Vehicle : MonoBehaviour
             {
                 wheelsInContact++;
             }
+        }
+
+        foreach (var wheel in wheels)
+        {
+            wheel.wheelsInContact = wheelsInContact;
         }
 
         var angularVelocity = 0f;
@@ -81,6 +99,14 @@ public class Vehicle : MonoBehaviour
 
         foreach (var wheel in wheels)
         {
+            if (brake || Input.GetKey(KeyCode.X))
+            {
+                wheel.ApplyBrake(1);
+            }
+        }
+
+        foreach (var wheel in wheels)
+        {
             wheel.UpdateVelocity();
         }
 
@@ -89,13 +115,13 @@ public class Vehicle : MonoBehaviour
             if (wheel.inContact)
             {
                 wheel.UpdateDriveForce();
-                wheel.UpdateGripForce(wheelsInContact);
+                wheel.UpdateGripForce();
             }
         }
 
-        foreach(var wheel in wheels)
+        foreach (var wheel in wheels)
         {
             wheel.UpdateLocalTransform();
-        }
+        }    
     }
 }
