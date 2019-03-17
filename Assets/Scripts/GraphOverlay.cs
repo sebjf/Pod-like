@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 /// <summary>
 /// This is a really simple graphing solution for the WheelCollider's friction slips.
@@ -92,19 +93,17 @@ public class GraphOverlay : MonoBehaviour
         return annotation;
     }
 
+    public void SetLabel(string label, string content)
+    {
+        GetComponentsInChildren<Text>().Where(c => c.gameObject.name == label).First().text = content;
+    }
+
     private void Awake()
     {
         // Add GUI infrastructure.
         var eventSystem = new GameObject(k_EventSystemName);
         eventSystem.AddComponent<EventSystem>();
         eventSystem.AddComponent<StandaloneInputModule>();
-
-        var canvas = new GameObject(k_GraphCanvasName);
-        var canvasScript = canvas.AddComponent<Canvas>();
-        canvas.AddComponent<CanvasScaler>();
-        canvas.AddComponent<GraphicRaycaster>();
-
-        canvasScript.renderMode = RenderMode.ScreenSpaceOverlay;
     }
 
     void Start()
