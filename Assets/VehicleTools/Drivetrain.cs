@@ -28,6 +28,6 @@ public class Drivetrain : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        throttle = Input.GetAxis("Vertical");
+
     }
 }
