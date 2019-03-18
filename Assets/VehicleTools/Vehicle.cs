@@ -19,6 +19,7 @@ public class Vehicle : MonoBehaviour
     public new Rigidbody rigidbody;
 
     public bool brake;
+    public bool handbrake;
 
     private void Awake()
     {
@@ -37,8 +38,7 @@ public class Vehicle : MonoBehaviour
     void Update()
     {
         drivetrain.throttle = Input.GetAxis("Vertical");
-
-      //  brake = Input.GetKey(KeyCode.X);
+        brake = Input.GetKey(KeyCode.X);
     }
 
     private void FixedUpdate()
@@ -99,7 +99,7 @@ public class Vehicle : MonoBehaviour
 
         foreach (var wheel in wheels)
         {
-            if (brake || Input.GetKey(KeyCode.X))
+            if (brake || handbrake)
             {
                 wheel.ApplyBrake(1);
             }

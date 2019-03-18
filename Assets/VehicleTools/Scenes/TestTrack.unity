@@ -3986,6 +3986,42 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -5.046
       objectReference: {fileID: 0}
+    - target: {fileID: 1223322117, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322117, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: forwardSlipScale
+      value: 15000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322116, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322116, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: forwardSlipScale
+      value: 15000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322115, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322115, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: forwardSlipScale
+      value: 15000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322118, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322118, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: forwardSlipScale
+      value: 15000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230204972, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: torqueCurveScalar
+      value: 500
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
 --- !u!1001 &2060989802
