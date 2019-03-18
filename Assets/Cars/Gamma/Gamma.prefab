@@ -60,36 +60,99 @@ Transform:
   m_Father: {fileID: 1575151656}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!146 &1530915397
-WheelCollider:
+--- !u!114 &1223322117
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450643449}
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.55
-  m_SuspensionSpring:
-    spring: 55024.562
-    damper: 8983.602
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.29154518
-  m_ForceAppPointDistance: 0.7845712
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 4
-    m_AsymptoteSlip: 1
-    m_AsymptoteValue: 2
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 3
-    m_AsymptoteSlip: 1
-    m_AsymptoteValue: 1.5
-    m_Stiffness: 1
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  k: 64220.188
+  B: 10000
+  offset: 0.2
+  travel: 0.4
+  radius: 0.6
+  slipForce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4.996277
+      value: 1
+      inSlope: -0.086701944
+      outSlope: -0.086701944
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.062818475
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  slipForceScale: 15000
+  forwardSlipForce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1076526
+      value: 0.7259878
+      inSlope: 4.179236
+      outSlope: 4.179236
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2190605
+      outWeight: 0.1978395
+    - serializedVersion: 3
+      time: 0.22551145
+      value: 0.9343626
+      inSlope: 0.48019093
+      outSlope: 0.48019093
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.4536587
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  forwardSlipScale: 20000
+  brakingTorque: 2000
+  steers: 0
+  drives: 1
+  steerAngle: 0
+  wheelsInContact: 0
+  mass: 20
+  localAttachmentPosition: {x: -1.1325226, y: 0.19100001, z: -1.9276886}
+  height: 0.49100006
 --- !u!1 &474698328
 GameObject:
   m_ObjectHideFlags: 0
@@ -101,8 +164,8 @@ GameObject:
   - component: {fileID: 474698329}
   - component: {fileID: 474698330}
   - component: {fileID: 9136540855096889896}
-  - component: {fileID: 3200230568436713863}
-  - component: {fileID: 474698331}
+  - component: {fileID: 406059496}
+  - component: {fileID: 1230204972}
   m_Layer: 0
   m_Name: Gamma
   m_TagString: Untagged
@@ -154,14 +217,14 @@ Rigidbody:
   m_GameObject: {fileID: 474698328}
   serializedVersion: 2
   m_Mass: 2000
-  m_Drag: 0.1
+  m_Drag: 0.12
   m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &3200230568436713863
+--- !u!114 &406059496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,20 +233,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 474698328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36ed7128051760b42bc56c15e5a6657d, type: 3}
+  m_Script: {fileID: 11500000, guid: 954310a35c68e6946b40b942f0e5406a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAngle: 40
-  maxTorque: 2000
-  brakeTorque: 70000
-  wheelShape: {fileID: 0}
-  updateWheelRPosition: 1
-  updateWheelRotation: 1
-  criticalSpeed: 10
-  stepsBelow: 10
-  stepsAbove: 20
-  driveType: 2
---- !u!114 &474698331
+  maxSteerAngle: 40
+  wheels: []
+  steeringAngle: 0
+  rigidbody: {fileID: 0}
+  brake: 0
+--- !u!114 &1230204972
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -192,13 +250,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 474698328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61682be5314d0440b9e67529196ac1a4, type: 3}
+  m_Script: {fileID: 11500000, guid: 6931947aae12ac644b10a1cc4cb994b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  naturalFrequency: 9.8
-  dampingRatio: 0.8
-  forceShift: 0.03
-  setSuspensionDistance: 1
+  throttle: 0
+  torqueCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.012393951
+      value: 0.65792847
+      inSlope: 1.0564256
+      outSlope: 1.0564256
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.060431637
+    - serializedVersion: 3
+      time: 0.7448097
+      value: 0.89183503
+      inSlope: -1.2670542
+      outSlope: -1.2670542
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.17914644
+      outWeight: 0.62592155
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  torqueCurveScalar: 800
+  rpmScalar: 2000
 --- !u!1 &681467350
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,66 +358,192 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!146 &1015134774
-WheelCollider:
+--- !u!114 &1223322116
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1359824872}
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.5
-  m_SuspensionSpring:
-    spring: 41015.44
-    damper: 6696.3984
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.29154515
-  m_ForceAppPointDistance: 0.7445733
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 4
-    m_AsymptoteSlip: 1
-    m_AsymptoteValue: 2
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 3
-    m_AsymptoteSlip: 1
-    m_AsymptoteValue: 1.5
-    m_Stiffness: 1
   m_Enabled: 1
---- !u!146 &1696801015
-WheelCollider:
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  k: 63636.36
+  B: 10000
+  offset: 0.2
+  travel: 0.4
+  radius: 0.6
+  slipForce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4.996277
+      value: 1
+      inSlope: -0.086701944
+      outSlope: -0.086701944
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.062818475
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  slipForceScale: 15000
+  forwardSlipForce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1076526
+      value: 0.7259878
+      inSlope: 4.179236
+      outSlope: 4.179236
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2190605
+      outWeight: 0.1978395
+    - serializedVersion: 3
+      time: 0.22551145
+      value: 0.9343626
+      inSlope: 0.48019093
+      outSlope: 0.48019093
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.4536587
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  forwardSlipScale: 20000
+  brakingTorque: 2000
+  steers: 1
+  drives: 1
+  steerAngle: 0
+  wheelsInContact: 0
+  mass: 20
+  localAttachmentPosition: {x: 1.1325226, y: 0.120000005, z: 1.9276886}
+  height: 0.49
+--- !u!114 &1223322115
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1492573347}
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.5
-  m_SuspensionSpring:
-    spring: 41209.008
-    damper: 6728.001
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.29154518
-  m_ForceAppPointDistance: 0.7445733
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 4
-    m_AsymptoteSlip: 1
-    m_AsymptoteValue: 2
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 3
-    m_AsymptoteSlip: 1
-    m_AsymptoteValue: 1.5
-    m_Stiffness: 1
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  k: 63636.36
+  B: 10000
+  offset: 0.2
+  travel: 0.4
+  radius: 0.6
+  slipForce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4.996277
+      value: 1
+      inSlope: -0.086701944
+      outSlope: -0.086701944
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.062818475
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  slipForceScale: 15000
+  forwardSlipForce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1076526
+      value: 0.7259878
+      inSlope: 4.179236
+      outSlope: 4.179236
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2190605
+      outWeight: 0.1978395
+    - serializedVersion: 3
+      time: 0.22551145
+      value: 0.9343626
+      inSlope: 0.48019093
+      outSlope: 0.48019093
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.4536587
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  forwardSlipScale: 20000
+  brakingTorque: 2000
+  steers: 1
+  drives: 1
+  steerAngle: 0
+  wheelsInContact: 0
+  mass: 20
+  localAttachmentPosition: {x: -1.1325226, y: 0.120000005, z: 1.9276886}
+  height: 0.49
 --- !u!1 &1575151655
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,36 +623,99 @@ Transform:
   m_Father: {fileID: 1575151656}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!146 &293974877
-WheelCollider:
+--- !u!114 &1223322118
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991818109}
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Radius: 0.55
-  m_SuspensionSpring:
-    spring: 54831
-    damper: 8952
-    targetPosition: 0.5
-  m_SuspensionDistance: 0.2915452
-  m_ForceAppPointDistance: 0.7845712
-  m_Mass: 20
-  m_WheelDampingRate: 0.25
-  m_ForwardFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 4
-    m_AsymptoteSlip: 1
-    m_AsymptoteValue: 2
-    m_Stiffness: 1
-  m_SidewaysFriction:
-    m_ExtremumSlip: 0.5
-    m_ExtremumValue: 3
-    m_AsymptoteSlip: 1
-    m_AsymptoteValue: 1.5
-    m_Stiffness: 1
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  k: 64220.188
+  B: 10000
+  offset: 0.2
+  travel: 0.4
+  radius: 0.6
+  slipForce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4.996277
+      value: 1
+      inSlope: -0.086701944
+      outSlope: -0.086701944
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.062818475
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  slipForceScale: 15000
+  forwardSlipForce:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.1076526
+      value: 0.7259878
+      inSlope: 4.179236
+      outSlope: 4.179236
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2190605
+      outWeight: 0.1978395
+    - serializedVersion: 3
+      time: 0.22551145
+      value: 0.9343626
+      inSlope: 0.48019093
+      outSlope: 0.48019093
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.4536587
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  forwardSlipScale: 20000
+  brakingTorque: 2000
+  steers: 0
+  drives: 1
+  steerAngle: 0
+  wheelsInContact: 0
+  mass: 20
+  localAttachmentPosition: {x: 1.1325226, y: 0.19100001, z: -1.9276886}
+  height: 0.49100006
 --- !u!1 &3975550122954535092
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,15 +891,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.1325226
+      value: -1.269
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.377
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.9276886
+      value: -1.878
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalRotation.x
@@ -693,15 +972,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.1325226
+      value: 1.17
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.387
+      value: -0.37
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.9276886
+      value: 1.901
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_LocalRotation.x
@@ -762,15 +1041,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.1325226
+      value: -1.14
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.387
+      value: -0.37
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.9276886
+      value: 1.901
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_LocalRotation.x
@@ -831,15 +1110,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.1325226
+      value: 1.264
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.377
+      value: -0.3
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.9276886
+      value: -1.878
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_LocalRotation.x

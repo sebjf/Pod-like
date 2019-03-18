@@ -9458,9 +9458,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8457277697996185235, guid: d72f710045d70ed46be31f78929fe6d2,
-        type: 3}
-      propertyPath: m_Enabled
+    - target: {fileID: 123379082, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -10777,6 +10776,42 @@ PrefabInstance:
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322117, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 20000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322117, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: brakingTorque
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322116, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 20000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322116, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: brakingTorque
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322115, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 20000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322115, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: brakingTorque
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322118, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: slipForceScale
+      value: 20000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223322118, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: brakingTorque
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 406059496, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: maxSteerAngle
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 1530915397, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_SuspensionSpring.spring

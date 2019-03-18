@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 /// <summary>
 /// This is a really simple graphing solution for the WheelCollider's friction slips.
@@ -53,19 +54,61 @@ public class GraphOverlay : MonoBehaviour
     const int k_InfoFontSize = 16;
     const float k_MaxRecordTimeTravel = 0.01f;
 
-	void Start()
+    public class Annotation
+    {
+        public Transform world;
+        public string label;
+
+        public Text textbox;
+        public RectTransform uitransform;
+    }
+
+    private List<Annotation> annotations = new List<Annotation>();
+
+    public Annotation CreateAnnotation()
+    {
+        var canvas = FindObjectOfType<Canvas>().gameObject;
+
+        // Add speed textbox.
+        var infoGo = new GameObject(k_InfoTextName);
+        infoGo.transform.parent = canvas.transform;
+        var textComponent = infoGo.AddComponent<Text>();
+        var textXform = infoGo.GetComponent<RectTransform>();
+
+        textComponent.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+        textComponent.fontSize = k_InfoFontSize;
+        textComponent.color = Color.red;
+
+        textXform.anchorMin = Vector2.up;
+        textXform.anchorMax = Vector2.up;
+        textXform.pivot = Vector2.up;
+        textXform.anchoredPosition = new Vector2(k_GUIScreenEdgeOffset, -m_HeightPixels - k_GUIScreenEdgeOffset);
+        textXform.sizeDelta = new Vector2(100, 100);
+
+        var annotation = new Annotation();
+        annotation.textbox = textComponent;
+        annotation.uitransform = textXform;
+
+        annotations.Add(annotation);
+        return annotation;
+    }
+
+    public void SetLabel(string label, string content)
+    {
+        GetComponentsInChildren<Text>().Where(c => c.gameObject.name == label).First().text = content;
+    }
+
+    private void Awake()
+    {
+        // Add GUI infrastructure.
+        var eventSystem = new GameObject(k_EventSystemName);
+        eventSystem.AddComponent<EventSystem>();
+        eventSystem.AddComponent<StandaloneInputModule>();
+    }
+
+    void Start()
 	{
-		// Add GUI infrastructure.
-        var eventSystem = new GameObject(k_EventSystemName);	
-		eventSystem.AddComponent<EventSystem>();
-		eventSystem.AddComponent<StandaloneInputModule>();
-
-        var canvas = new GameObject(k_GraphCanvasName);
-		var canvasScript = canvas.AddComponent<Canvas>();
-		canvas.AddComponent<CanvasScaler>();
-		canvas.AddComponent<GraphicRaycaster>();
-
-		canvasScript.renderMode = RenderMode.ScreenSpaceOverlay;
+        var canvas = FindObjectOfType<Canvas>().gameObject;
 
 		// Add a raw image object.
         var rawImageGO = new GameObject(k_GraphImageName);
@@ -200,6 +243,13 @@ public class GraphOverlay : MonoBehaviour
 
 		if (vehicleBody)
 			m_SpeedText.text = string.Format("Speed: {0:0.00} m/s, {1:0} mph", vehicleBody.velocity.magnitude, vehicleBody.velocity.magnitude * 2.237);
+
+
+        foreach (var item in annotations)
+        {
+            item.uitransform.position = GetComponent<Camera>().WorldToScreenPoint(item.world.position);
+            item.textbox.text = item.label;
+        }
 	}
 
 	// Convert time-value to the pixel plot space.

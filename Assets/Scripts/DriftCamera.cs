@@ -19,6 +19,16 @@ public class DriftCamera : MonoBehaviour
 
     bool m_ShowingSideView;
 
+    private void Awake()
+    {
+        if(cameraRig == null)
+        {
+            cameraRig = FindObjectOfType<CamRig>();
+        }
+
+        GetComponent<GraphOverlay>().vehicleBody = cameraRig.GetComponentInParent<Rigidbody>();
+    }
+
     private void FixedUpdate ()
     {
         if(advancedOptions.updateCameraInFixedUpdate)
