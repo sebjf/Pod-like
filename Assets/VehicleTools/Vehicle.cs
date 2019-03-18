@@ -7,7 +7,7 @@ public class Vehicle : MonoBehaviour
 {
     private Drivetrain drivetrain;
 
-    public float maxSteerAngle;
+    public float maxSteerAngle = 40f;
 
     [HideInInspector]
     public Wheel[] wheels;

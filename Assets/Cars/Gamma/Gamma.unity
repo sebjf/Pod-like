@@ -304,7 +304,8 @@ PrefabInstance:
       propertyPath: forceShift
       value: 0.03
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 474698330, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
 --- !u!1 &1081566868
 GameObject:
