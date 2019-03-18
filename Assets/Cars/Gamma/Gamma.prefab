@@ -162,7 +162,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 474698329}
-  - component: {fileID: 474698330}
   - component: {fileID: 9136540855096889896}
   - component: {fileID: 406059496}
   - component: {fileID: 1230204972}
@@ -195,19 +194,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &474698330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474698328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4762a5122f868af4095c000a2eb9940d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  carInfo: {fileID: 4900000, guid: 7e0b5f6dff250d94e96ae3bddef85f11, type: 3}
 --- !u!54 &9136540855096889896
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -241,6 +227,7 @@ MonoBehaviour:
   steeringAngle: 0
   rigidbody: {fileID: 0}
   brake: 0
+  handbrake: 0
 --- !u!114 &1230204972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -885,10 +872,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474698329}
     m_Modifications:
-    - target: {fileID: 100002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
-      propertyPath: m_Name
-      value: WheelRearL
-      objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.269
@@ -933,6 +916,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
+      propertyPath: m_Name
+      value: WheelRearL
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
@@ -947,15 +934,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
---- !u!4 &450615769 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf,
-    type: 3}
-  m_PrefabInstance: {fileID: 450741083}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &450643449 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: a2080119219c0b643bb178000b83c5cf,
+    type: 3}
+  m_PrefabInstance: {fileID: 450741083}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &450615769 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf,
     type: 3}
   m_PrefabInstance: {fileID: 450741083}
   m_PrefabAsset: {fileID: 0}
@@ -966,10 +953,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474698329}
     m_Modifications:
-    - target: {fileID: 100002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
-      propertyPath: m_Name
-      value: WheelFrontR
-      objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.17
@@ -1014,17 +997,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
+      propertyPath: m_Name
+      value: WheelFrontR
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
---- !u!4 &1359666120 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805,
-    type: 3}
-  m_PrefabInstance: {fileID: 1359790410}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1359824872 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: 7dc562365ffe3dc449318d98e3a99805,
+    type: 3}
+  m_PrefabInstance: {fileID: 1359790410}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1359666120 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805,
     type: 3}
   m_PrefabInstance: {fileID: 1359790410}
   m_PrefabAsset: {fileID: 0}
@@ -1035,10 +1022,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474698329}
     m_Modifications:
-    - target: {fileID: 100002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
-      propertyPath: m_Name
-      value: WheelFrontL
-      objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.14
@@ -1082,6 +1065,10 @@ PrefabInstance:
     - target: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
+      propertyPath: m_Name
+      value: WheelFrontL
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
