@@ -5,13 +5,20 @@ ModelImporter:
   fileIDToRecycleName:
     100000: Box001
     100002: //RootNode
+    100004: Cone001
     400000: Box001
     400002: //RootNode
+    400004: Cone001
     2100000: Material__25
     2100002: Box001Mat
+    2100004: Base
+    2100006: Cone
     2300000: Box001
+    2300002: Cone001
     3300000: Box001
+    3300002: Cone001
     4300000: Box001
+    4300002: Cone001
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
