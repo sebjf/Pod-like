@@ -1821,6 +1821,22 @@ PrefabInstance:
       propertyPath: m_AngularDrag
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 233415022, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1112526900, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1280059483, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954922859, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
+      propertyPath: slipForceScale
+      value: 10000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
 --- !u!1 &612550644

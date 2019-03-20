@@ -44,6 +44,9 @@ public class Wheel : MonoBehaviour
     public float angularVelocity { get; private set; }
     public float angle { get; private set; }
 
+    private Vector3 road;
+    private float coefficientOfFriction = 1f;
+
     [HideInInspector]
     public float wheelsInContact;
 
@@ -75,7 +78,7 @@ public class Wheel : MonoBehaviour
     /// </summary>
     public float height; 
 
-    private GraphOverlay.Annotation annotation;
+    //private GraphOverlay.Annotation annotation;
     private Rigidbody rigidBody;
 
     private void Reset()
@@ -98,8 +101,8 @@ public class Wheel : MonoBehaviour
 
         inertia = mass * (radius * radius) / 2;
 
-        annotation = FindObjectOfType<GraphOverlay>().CreateAnnotation();
-        annotation.world = transform;
+        //annotation = FindObjectOfType<GraphOverlay>().CreateAnnotation();
+        //annotation.world = transform;
     }
 
     public void UpdateTransforms()
@@ -156,6 +159,7 @@ public class Wheel : MonoBehaviour
         if (result)
         {
             displacement = restDistance - (m_raycastHit.distance - radius);
+            road = m_raycastHit.normal;
             inContact = true;
         }
         else
@@ -168,9 +172,9 @@ public class Wheel : MonoBehaviour
         height = restDistance - displacement;
 
         displacementVel = (displacement - prevDisplacement) / Time.deltaTime;
-        var Fsuspension = -k * displacement - B * displacementVel;
+        var Fsuspension = (k * displacement + B * displacementVel) * up;
 
-        rigidBody.AddForceAtPosition(up * -Fsuspension, attachmentPoint);
+        rigidBody.AddForceAtPosition(Fsuspension, attachmentPoint);
     }
 
     public void UpdateDriveForce()
@@ -178,7 +182,7 @@ public class Wheel : MonoBehaviour
         var Vr = Vector3.Dot(velocity, forward);
 
         //Jung, S., Kim, T.Y., &Yoo, W.S. (2018). Advanced slip ratio for ensuring numerical stability of low - speed driving simulation. Part I: Longitudinal slip ratio.
-        //Proceedings of the Institution of Mechanical Engineers, Part D: Journal of Automobile Engineering.http://doi.org/10.1177/0954407018759738
+        //Proceedings of the Institution of Mechanical Engineers, Part D: Journal of Automobile Engineering. http://doi.org/10.1177/0954407018759738
         var Vtm = 1.1f * (Time.fixedDeltaTime / 2) * forwardSlipScale * (((radius * radius) / inertia) + ( 1f / (rigidBody.mass / wheelsInContact)));
 
         var slip = ((angularVelocity * radius) - Vr) / (Mathf.Max(Mathf.Abs(Vr), Vtm));
@@ -204,6 +208,13 @@ public class Wheel : MonoBehaviour
         //Debug.Log(Vtm.ToString() + " " + ((angularVelocity * radius)).ToString() + " " + Vr + " " + slip.ToString() + " " + Fr.ToString());
 
         angularVelocity += angularDeltaV;
+
+
+        var g_acceleration = Vector3.Dot(Physics.gravity, forward) * forward;
+        var g_force = g_acceleration * (rigidBody.mass / wheelsInContact);
+        var Fn = Vector3.Dot(Physics.gravity * (rigidBody.mass / wheelsInContact), -road) * coefficientOfFriction;
+        var g_force_mag = Mathf.Min(g_force.magnitude, Fn);
+        rigidBody.AddForce(-g_force.normalized * g_force_mag, ForceMode.Force);
     }
 
     public void UpdateGripForce()
@@ -223,11 +234,14 @@ public class Wheel : MonoBehaviour
         Ft = Ft.normalized * Mathf.Min(Ft.magnitude, Fs);
         rigidBody.AddForceAtPosition(Ft, attachmentPoint, ForceMode.Force);
 
-        if (annotation != null)
-        {
-            annotation.label = Ft.magnitude.ToString();
-        }
-
         //Debug.DrawLine(attachmentPoint, attachmentPoint + Ft, Color.red);
+
+        var g_acceleration = Vector3.Dot(Physics.gravity, right) * right;
+        var g_force = g_acceleration * (rigidBody.mass / wheelsInContact);
+        var Fn = Vector3.Dot(Physics.gravity * (rigidBody.mass / wheelsInContact), -road) * coefficientOfFriction;
+        var g_force_mag = Mathf.Min(g_force.magnitude, Fn);
+        rigidBody.AddForce(-g_force.normalized * g_force_mag, ForceMode.Force);
+
+        //Debug.Log(Fn.ToString() + " " + g_force.magnitude.ToString());
     }
 }
