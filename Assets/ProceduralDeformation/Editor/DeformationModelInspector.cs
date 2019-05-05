@@ -25,9 +25,21 @@ public class DeformationModelInspector : Editor
             model.Build();
         }
 
+        if (model.simulation is DeformationModel.CPUSimulation)
+        {
+            if (GUILayout.Button("Export"))
+            {
+                string path = EditorUtility.SaveFilePanel("Save Velocities", "", "velocities.csv", "csv");
+                if (path.Length != 0)
+                {
+                    (model.simulation as DeformationModel.CPUSimulation).ExportVelocityLogs(path);
+                }
+            }
+        }
+
         if (GUILayout.Button("Step"))
         {
-           
+            model.Step();
         }
     }
 }

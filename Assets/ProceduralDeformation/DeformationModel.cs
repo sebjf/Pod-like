@@ -22,8 +22,8 @@ public class FiniteDeformationMesh
     {
         public Vector3 origin;
         public Vector3 position;
-        public float y;        // strain multiplier
-        public int locked; // helper flag to prevent resetting strain of entry node
+        public float y;         // strain multiplier
+        public int locked;      // helper flag to prevent resetting strain of entry node
 
         public int constraintoffset;
         public int constraintcount;
@@ -60,8 +60,8 @@ public class FiniteDeformationMesh
 
 public class DeformationModel : MonoBehaviour
 {
-    public float k;
-    public float maxd;
+    public float k;     //inelastic stiffness of the material
+    public float maxd;  //maximum deformation in world units
 
     public int simulationsteps;
 
@@ -79,9 +79,15 @@ public class DeformationModel : MonoBehaviour
         public float weight;
     }
 
-    GPUSimulation simulation;
+    public Simulation simulation;
 
-    public class GPUSimulation
+    public abstract class Simulation
+    {
+        public abstract void Step(int iterations);
+        public abstract void Release();
+    }
+
+    public class GPUSimulation : Simulation
     {
         public GPUBuffer nodes;
 
@@ -106,7 +112,7 @@ public class DeformationModel : MonoBehaviour
             buffers.SetBuffers(deformationshader.Shader, 0, 1, 2, 3, 4, 5);
         }
 
-        public void Step()
+        private void Step()
         {
             deformationshader.Dispatch(0, mesh.totalconstraints, 1, 1);
             deformationshader.Dispatch(1, mesh.edges.Length, 1, 1);
@@ -115,7 +121,7 @@ public class DeformationModel : MonoBehaviour
             deformationshader.Dispatch(4, mesh.nodes.Length, 1, 1);
         }
 
-        public void Step(int iterations)
+        public override void Step(int iterations)
         {
             nodes.Buffer.SetData(mesh.nodes);
 
@@ -129,29 +135,52 @@ public class DeformationModel : MonoBehaviour
             nodes.Buffer.GetData(mesh.nodes);
         }
 
-        public void Release()
+        public override void Release()
         {
             buffers.Release();
         }
     }
 
-    public class CPUSimulation
+    public class CPUSimulation : Simulation
     {
         public CPUSimulation(FiniteDeformationMesh mesh)
         {
             this.mesh = mesh;
             constraints = new Constraint[mesh.totalconstraints];
+            previousnodepositions = new Vector3[mesh.nodes.Length];
+            nodevelocities = new List<float[]>();
         }
 
         public Constraint[] constraints;
         public FiniteDeformationMesh mesh;
 
-        public void Step(int iterations)
+        public bool logVelocities = true;
+
+        public Vector3[] previousnodepositions;
+        public List<float[]> nodevelocities;
+
+        public override void Step(int iterations)
         {
+            float[] stepvelocities = new float[iterations];
+
             for (int i = 0; i < iterations; i++)
             {
                 Step();
+
+                if (logVelocities)
+                {
+                    var maxvelocity = float.MinValue;
+                    for (int n = 0; n < mesh.nodes.Length; n++)
+                    { 
+                        var nodevelocity = (mesh.nodes[n].position - previousnodepositions[n]).magnitude;
+                        previousnodepositions[n] = mesh.nodes[n].position;
+                        maxvelocity = Mathf.Max(maxvelocity, nodevelocity);
+                    }
+                    stepvelocities[i] = maxvelocity;
+                }
             }
+
+            nodevelocities.Add(stepvelocities);
 
             for (int i = 0; i < mesh.nodes.Length; i++)
             {
@@ -160,7 +189,7 @@ public class DeformationModel : MonoBehaviour
             }
         }
 
-        public void Step()
+        private void Step()
         {
             // resolve the constraints one by one
 
@@ -226,9 +255,23 @@ public class DeformationModel : MonoBehaviour
             }
         }
 
-        public void Release()
+        public override void Release()
         {
 
+        }
+
+        public void ExportVelocityLogs(string filename)
+        {
+            string contents = "";
+            foreach (var list in nodevelocities)
+            {
+                foreach (var item in list)
+                {
+                    contents += item + ",";
+                }
+                contents += "\n";
+            }
+            System.IO.File.WriteAllText(filename, contents);
         }
 
     }
@@ -237,12 +280,6 @@ public class DeformationModel : MonoBehaviour
     void Start()
     {
         simulation = new GPUSimulation(mesh);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void Build()
@@ -285,14 +322,22 @@ public class DeformationModel : MonoBehaviour
         mesh = new FiniteDeformationMesh();
         mesh.nodes = vertexsets.Select(v => new Node() { origin = v.position, position = v.position, locked = 0, y = 0 }).ToArray();
 
-        mesh.edges =
-            edgemesh.edges.Select(
-                e => new Edge()
+        HashSet<long> existingedges = new HashSet<long>();
+        List<Edge> newedges = new List<Edge>();
+        foreach (var e in edgemesh.edges)
+        {
+            if(!existingedges.Contains(e.ForwardHash) && !existingedges.Contains(e.OppositeHash))
+            {
+                newedges.Add(new Edge()
                 {
                     v0 = e.node,
                     v1 = e.next.node,
-                }
-                ).ToArray();
+                });
+                existingedges.Add(e.ForwardHash);
+            }
+        }
+
+        mesh.edges = newedges.ToArray();
 
         for (int i = 0; i < mesh.edges.Length; i++)
         {
