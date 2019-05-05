@@ -9,6 +9,8 @@ ModelImporter:
     400002: default
     2100000: texture_1
     2100002: texture_0
+    2100004: material_0
+    2100006: material_1
     2300000: default
     3300000: default
     4300000: default

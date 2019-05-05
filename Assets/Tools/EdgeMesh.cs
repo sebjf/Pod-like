@@ -11,12 +11,6 @@ public class EdgeMesh
     {
         vertices = new List<Vertex>();
         edges = new List<Edge>();
-        nodes = new List<Node>();
-    }
-
-    [Serializable]
-    public class Node
-    {
     }
 
     [Serializable]
@@ -88,11 +82,11 @@ public class EdgeMesh
 
     public List<Vertex> vertices;
     public List<Edge> edges;
-    public List<Node> nodes;
+    public int nodes;
 
     public void Build(Mesh nativemesh)
     {
-        vertices = new List<Vertex>();
+        var vertices = new List<Vertex>();
 
         var positions = nativemesh.vertices;
         foreach (var vertex in positions)
@@ -101,25 +95,38 @@ public class EdgeMesh
             {
                 position = vertex
             });
-            nodes.Add(new Node());
+        }
+
+        var nodes = new int[vertices.Count];
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            nodes[i] = i;
         }
 
         var indices = nativemesh.triangles;
+
+        Build(indices, vertices.ToArray(), nodes);
+    }
+
+    public void Build(int[] indices, Vertex[] vertices, int[] vertexnodes)
+    {
+        this.vertices.AddRange(vertices);
+
         var numtriangles = indices.Length / 3;
 
         for (int i = 0; i < numtriangles; i++)
         {
             var edge0 = new Edge();
             edge0.vertex = indices[(i * 3) + 0];
-            edge0.node = edge0.vertex;  // for now the vertex is the same as the node
+            edge0.node = vertexnodes[edge0.vertex];  // for now the vertex is the same as the node
 
             var edge1 = new Edge();
             edge1.vertex = indices[(i * 3) + 1];
-            edge1.node = edge1.vertex;
+            edge1.node = vertexnodes[edge1.vertex];
 
             var edge2 = new Edge();
             edge2.vertex = indices[(i * 3) + 2];
-            edge2.node = edge2.vertex;
+            edge2.node = vertexnodes[edge2.vertex];
 
             edge0.next = edge1;
             edge1.next = edge2;
@@ -131,6 +138,8 @@ public class EdgeMesh
         }
 
         FindOppositeEdges();
+
+        nodes = vertexnodes.Max();
     }
 
     public void FindOppositeEdges()
@@ -174,8 +183,7 @@ public class EdgeMesh
 
         if (edge.Conforming)
         {
-            newnode = nodes.Count;
-            nodes.Add(new Node());
+            newnode = ++nodes;
         }
         else
         {
@@ -267,12 +275,6 @@ public class EdgeMesh
         v.position = Vector3.Lerp(v0.position, v1.position, 0.5f);
         vertices.Add(v);
         return i;
-    }
-
-    public void Bake(Mesh existing)
-    {
-        existing.vertices = vertices.Select(v => v.position).ToArray();
-        existing.triangles = edges.Select(e => e.vertex).ToArray();
     }
 }
 

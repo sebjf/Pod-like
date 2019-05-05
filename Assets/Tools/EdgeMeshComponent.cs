@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EdgeMeshComponent : MonoBehaviour
@@ -7,10 +8,63 @@ public class EdgeMeshComponent : MonoBehaviour
     [HideInInspector]
     public EdgeMesh Mesh;
 
-    private void Reset()
+    public void Reset()
     {
-        Mesh = new EdgeMesh();
-        Mesh.Build(GetComponent<MeshFilter>().sharedMesh);
+        var edgemesh = new EdgeMesh();
+        var nativemesh = GetComponentInChildren<MeshFilter>().sharedMesh;
+
+        var indices = nativemesh.triangles;
+        var positions = nativemesh.vertices;
+
+        // collect the vertices into nodes/groups based on their location
+
+        SpatialHashMap map = new SpatialHashMap(0.01f);
+        for (int i = 0; i < positions.Length; i++)
+        {
+            map.Add(positions[i], i);
+        }
+
+        var nodes = new int[positions.Length];
+
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            nodes[i] = -1; // this will make it obvious should the node for a particular vertex fail to be set for some reason
+        }
+
+        var vertexsets = map.Sets.ToList();
+        foreach (var set in vertexsets)
+        {
+            foreach (var index in set.indices)
+            {
+                nodes[index] = vertexsets.IndexOf(set);
+            }
+        }
+
+        var edgeMeshVertices = new List<EdgeMesh.Vertex>();
+        edgeMeshVertices.AddRange(positions.Select(v => new EdgeMesh.Vertex() { position = v }));
+
+        edgemesh.Build(indices, edgeMeshVertices.ToArray(), nodes);
+
+        var fem = GetComponent<DeformerLattice>();
+
+        fem.mesh = new FiniteDeformationMesh();
+        fem.mesh.nodes.AddRange(
+            vertexsets.Select(v => new FiniteDeformationMesh.Node() { origin = v.position })
+            );
+
+        fem.mesh.edges.AddRange(
+            edgemesh.edges.Select(
+                e => new FiniteDeformationMesh.Edge()
+                {
+                    v0 = e.node,
+                    v1 = e.next.node,
+                }
+                ));
+
+        foreach (var edge in fem.mesh.edges)
+        {
+            edge.length = (fem.mesh.nodes[edge.v0].origin - fem.mesh.nodes[edge.v1].origin).magnitude;
+        }
     }
 
     // Start is called before the first frame update

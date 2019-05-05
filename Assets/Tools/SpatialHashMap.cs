@@ -19,15 +19,49 @@ class SpatialHashMap
                 (Mathf.FloorToInt(v.z / d) * 83492791));
     }
 
-    public Dictionary<int, List<int>> HashTable = new Dictionary<int, List<int>>();
+    public Dictionary<int, List<Set>> HashTable = new Dictionary<int, List<Set>>();
+
+    public class Set
+    {
+        public Vector3 position;
+        public List<int> indices = new List<int>();
+
+        public Set(Vector3 position, int i)
+        {
+            this.position = position;
+            indices.Add(i);
+        }
+    }
 
     public void Add(Vector3 v, int i)
     {
         int h = Hash(v);
         if (!HashTable.ContainsKey(h))
         {
-            HashTable.Add(h, new List<int>());
+            HashTable.Add(h, new List<Set>());
         }
-        HashTable[h].Add(i);
+        foreach (var set in HashTable[h])
+        {
+            if((set.position - v).magnitude < Mathf.Epsilon)
+            {
+                set.indices.Add(i);
+                return;
+            }
+        }
+        HashTable[h].Add(new Set(v,i));
+    }
+
+    public IEnumerable<Set> Sets
+    {
+        get
+        {
+            foreach (var item in HashTable.Values)
+            {
+                foreach (var set in item)
+                {
+                    yield return set;
+                }
+            }
+        }
     }
 }
