@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[Serializable]
 public class EdgeMesh
 {
     public EdgeMesh()
@@ -13,17 +12,46 @@ public class EdgeMesh
         edges = new List<Edge>();
     }
 
-    [Serializable]
     public class Vertex
     {
+        public int node;
+        public int index;
+
         public Vector3 position;
+        public Vector3 normal;
+        public Vector4 tangent;
+        public Vector2 uv ;
+        public Vector2 uv2;
+        public Vector2 uv3;
+        public Vector2 uv4;
+        public Vector2 uv5;
+        public Vector2 uv6;
+        public Vector2 uv7;
+        public Vector2 uv8;
+
+        public static Vertex Interpolate(Vertex v0, Vertex v1)
+        {
+            var v = new Vertex();
+            v.position = Vector3.Lerp(v0.position, v1.position, 0.5f);
+            v.normal = Vector3.Lerp(v0.normal, v1.normal, 0.5f);
+            v.tangent = Vector4.Lerp(v0.tangent, v1.tangent, 0.5f);
+            v.uv  = Vector2.Lerp(v0.uv,  v1.uv, 0.5f);
+            v.uv2 = Vector2.Lerp(v0.uv2, v1.uv2, 0.5f);
+            v.uv3 = Vector2.Lerp(v0.uv3, v1.uv3, 0.5f);
+            v.uv4 = Vector2.Lerp(v0.uv4, v1.uv4, 0.5f);
+            v.uv5 = Vector2.Lerp(v0.uv5, v1.uv5, 0.5f);
+            v.uv6 = Vector2.Lerp(v0.uv6, v1.uv6, 0.5f);
+            v.uv7 = Vector2.Lerp(v0.uv7, v1.uv7, 0.5f);
+            v.uv8 = Vector2.Lerp(v0.uv7, v1.uv8, 0.5f);
+            return v;
+        }
     }
 
-    [Serializable]
     public class Edge
     {
+        public int submesh;
         public int node;
-        public int vertex;
+        public Vertex vertex;
         public Edge next;
         public Edge opposite1;
         public Edge opposite2;
@@ -78,23 +106,95 @@ public class EdgeMesh
                 return hash;
             }
         }
+
+        public float Length
+        {
+            get
+            {
+                return (vertex.position - next.vertex.position).magnitude;
+            }
+        }
+
     }
 
     public List<Vertex> vertices;
     public List<Edge> edges;
     public int nodes;
 
+    public class BakeOptions
+    {
+        public bool normals;
+        public bool tangents;
+        public bool uv;
+        public bool uv2;
+        public bool uv3;
+        public bool uv4;
+        public bool uv5;
+        public bool uv6;
+        public bool uv7;
+        public bool uv8;
+    }
+
+    public BakeOptions bakeoptions;
+
     public void Build(Mesh nativemesh)
     {
         var vertices = new List<Vertex>();
 
         var positions = nativemesh.vertices;
-        foreach (var vertex in positions)
+
+        var normals = nativemesh.normals;
+        var tangents = nativemesh.tangents;
+        var uv = nativemesh.uv;
+        var uv2 = nativemesh.uv2;
+        var uv3 = nativemesh.uv3;
+        var uv4 = nativemesh.uv4;
+        var uv5 = nativemesh.uv5;
+        var uv6 = nativemesh.uv6;
+        var uv7 = nativemesh.uv7;
+        var uv8 = nativemesh.uv8;
+
+        bakeoptions = new BakeOptions();
+
+        bakeoptions.normals = normals.Length == nativemesh.vertexCount;
+        bakeoptions.tangents = tangents.Length == nativemesh.vertexCount;
+        bakeoptions.uv = uv.Length == nativemesh.vertexCount;
+        bakeoptions.uv2 = uv2.Length == nativemesh.vertexCount;
+        bakeoptions.uv3 = uv3.Length == nativemesh.vertexCount;
+        bakeoptions.uv4 = uv4.Length == nativemesh.vertexCount;
+        bakeoptions.uv5 = uv5.Length == nativemesh.vertexCount;
+        bakeoptions.uv6 = uv6.Length == nativemesh.vertexCount;
+        bakeoptions.uv7 = uv7.Length == nativemesh.vertexCount;
+        bakeoptions.uv8 = uv8.Length == nativemesh.vertexCount;
+
+        for (int i = 0; i < nativemesh.vertexCount; i++)
         {
-            vertices.Add(new Vertex()
-            {
-                position = vertex
-            });
+            var vertex = new Vertex();
+
+            vertex.position = positions[i];
+
+            if (bakeoptions.normals)
+                vertex.normal = normals[i];
+            if (bakeoptions.tangents)
+                vertex.tangent = tangents[i];
+            if (bakeoptions.uv)
+                vertex.uv = uv[i];
+            if (bakeoptions.uv2)
+                vertex.uv2 = uv2[i];
+            if (bakeoptions.uv3)
+                vertex.uv3 = uv3[i];
+            if (bakeoptions.uv4)
+                vertex.uv4 = uv4[i];
+            if (bakeoptions.uv5)
+                vertex.uv5 = uv5[i];
+            if (bakeoptions.uv6)
+                vertex.uv6 = uv6[i];
+            if (bakeoptions.uv7)
+                vertex.uv7 = uv7[i];
+            if (bakeoptions.uv8)
+                vertex.uv8 = uv8[i];
+
+            vertices.Add(vertex);
         }
 
         var nodes = new int[vertices.Count];
@@ -103,12 +203,20 @@ public class EdgeMesh
             nodes[i] = i;
         }
 
-        var indices = nativemesh.triangles;
+        List<int> indices = new List<int>();
+        List<int> submeshids = new List<int>();
 
-        Build(indices, vertices.ToArray(), nodes);
+        for (int i = 0; i < nativemesh.subMeshCount; i++)
+        {
+            var triangles = nativemesh.GetTriangles(i);
+            indices.AddRange(triangles);
+            submeshids.AddRange(Enumerable.Repeat(i, triangles.Length));
+        }
+
+        Build(indices.ToArray(), submeshids.ToArray(), vertices.ToArray(), nodes);
     }
 
-    public void Build(int[] indices, Vertex[] vertices, int[] vertexnodes)
+    public void Build(int[] indices, int[] indexsubmeshes, Vertex[] vertices, int[] vertexnodes)
     {
         this.vertices.AddRange(vertices);
 
@@ -117,16 +225,25 @@ public class EdgeMesh
         for (int i = 0; i < numtriangles; i++)
         {
             var edge0 = new Edge();
-            edge0.vertex = indices[(i * 3) + 0];
-            edge0.node = vertexnodes[edge0.vertex];  // for now the vertex is the same as the node
+            edge0.submesh = indexsubmeshes[(i * 3) + 0];
+            var edge0vertex = indices[(i * 3) + 0];
+            edge0.vertex = vertices[edge0vertex];
+            edge0.node = vertexnodes[edge0vertex];
+            edge0.vertex.node = edge0.node;         // just in case the caller didn't set this
 
             var edge1 = new Edge();
-            edge1.vertex = indices[(i * 3) + 1];
-            edge1.node = vertexnodes[edge1.vertex];
+            edge1.submesh = indexsubmeshes[(i * 3) + 1];
+            var edge1vertex = indices[(i * 3) + 1];
+            edge1.vertex = vertices[edge1vertex];
+            edge1.node = vertexnodes[edge1vertex];
+            edge1.vertex.node = edge1.node;
 
             var edge2 = new Edge();
-            edge2.vertex = indices[(i * 3) + 2];
-            edge2.node = vertexnodes[edge2.vertex];
+            edge2.submesh = indexsubmeshes[(i * 3) + 2];
+            var edge2vertex = indices[(i * 3) + 2];
+            edge2.vertex = vertices[edge2vertex];
+            edge2.node = vertexnodes[edge2vertex];
+            edge2.vertex.node = edge2.node;
 
             edge0.next = edge1;
             edge1.next = edge2;
@@ -197,13 +314,16 @@ public class EdgeMesh
 
         // create the per-triangle vertices for the new edge
 
-        var v0 = InterpolateVertex(edge2.vertex, edge3.vertex);
-        var v1 = InterpolateVertex(edge2.vertex, edge3.vertex);
+        Vertex v0 = Vertex.Interpolate(edge2.vertex, edge3.vertex);
 
+        vertices.Add(v0);
+       
         edgeA.vertex = edge2.vertex;
         edgeCa.vertex = v0;
-        edgeB.vertex = v1;
+        edgeB.vertex = v0;
         edgeCb.vertex = edge1.vertex;
+
+        v0.node = edgeCa.node;
 
         // now assign the pointers to create triangles out of these new edges
 
@@ -247,12 +367,18 @@ public class EdgeMesh
             }
         }
 
+        // remove the triangle entirely and readd the new ones at the end to keep the edge list structured
+
+        edges.Remove(edge1);
+        edges.Remove(edge2);
+        edges.Remove(edge3);
+
+        edges.Add(edge1);
         edges.Add(edgeA);
-        edges.Add(edgeB);
         edges.Add(edgeCa);
         edges.Add(edgeCb);
-
-        edges.Remove(edge2);
+        edges.Add(edgeB);
+        edges.Add(edge3);
     }
 
     public IEnumerable<Edge> FindNonConforming()
@@ -266,15 +392,96 @@ public class EdgeMesh
         }
     }
 
-    public int InterpolateVertex(int i0, int i1)
+    public void BakeMesh(Mesh nativemesh)
     {
-        int i = vertices.Count;
-        var v0 = vertices[i0];
-        var v1 = vertices[i1];
-        var v = new Vertex();
-        v.position = Vector3.Lerp(v0.position, v1.position, 0.5f);
-        vertices.Add(v);
-        return i;
+        Dictionary<int, List<int>> triangles = new Dictionary<int, List<int>>();
+
+        foreach (var edge in edges)
+        {
+            if (!triangles.ContainsKey(edge.submesh))
+            {
+                triangles.Add(edge.submesh, new List<int>());
+            }
+        }
+
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            vertices[i].index = i;
+        }
+
+        for (int i = 0; i < edges.Count; i += 3)
+        {
+            var edge = edges[i];
+            var triangleslist = triangles[edge.submesh];
+            triangleslist.Add(edge.vertex.index);
+            triangleslist.Add(edge.next.vertex.index);
+            triangleslist.Add(edge.next.next.vertex.index);
+        }
+
+        nativemesh.vertices = vertices.Select(v => v.position).ToArray();
+        if (bakeoptions.normals)
+            nativemesh.normals = vertices.Select(v => v.normal).ToArray();
+        if (bakeoptions.tangents)
+            nativemesh.tangents = vertices.Select(v => v.tangent).ToArray();
+        if (bakeoptions.uv)
+            nativemesh.uv = vertices.Select(v => v.uv).ToArray();
+        if (bakeoptions.uv2)
+            nativemesh.uv2 = vertices.Select(v => v.uv2).ToArray();
+        if (bakeoptions.uv3)
+            nativemesh.uv3 = vertices.Select(v => v.uv3).ToArray();
+        if (bakeoptions.uv4)
+            nativemesh.uv4 = vertices.Select(v => v.uv4).ToArray();
+        if (bakeoptions.uv5)
+            nativemesh.uv5 = vertices.Select(v => v.uv5).ToArray();
+        if (bakeoptions.uv6)
+            nativemesh.uv6 = vertices.Select(v => v.uv6).ToArray();
+        if (bakeoptions.uv7)
+            nativemesh.uv7 = vertices.Select(v => v.uv7).ToArray();
+        if (bakeoptions.uv8)
+            nativemesh.uv8 = vertices.Select(v => v.uv8).ToArray();
+
+        nativemesh.subMeshCount = triangles.Count;
+        foreach (var submesh in triangles)
+        {
+            nativemesh.SetTriangles(submesh.Value, submesh.Key);
+        }
+    }
+
+    public void RefineMesh(float edgeLength)
+    {
+        List<Edge> nonconformingedges = new List<Edge>();
+
+        do
+        {
+            Edge longest = edges.First();
+            foreach (var edge in edges)
+            {
+                if (longest.Length < edge.Length)
+                {
+                    longest = edge;
+                }
+            }
+
+            if (longest.Length > edgeLength)
+            {
+                Bisect(longest);
+            }
+            else
+            {
+                break;
+            }
+
+            do
+            {
+                foreach (var item in nonconformingedges)
+                {
+                    Bisect(item);
+                }
+                nonconformingedges.Clear();
+                nonconformingedges.AddRange(FindNonConforming());
+            } while (nonconformingedges.Count > 0);
+
+        } while (true);
     }
 }
 

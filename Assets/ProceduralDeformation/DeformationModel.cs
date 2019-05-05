@@ -286,6 +286,7 @@ public class DeformationModel : MonoBehaviour
 
         var indices = nativemesh.triangles;
         var positions = nativemesh.vertices;
+        var submeshes = Enumerable.Repeat(0, indices.Length).ToArray();
 
         // collect the vertices into nodes/groups based on their location
 
@@ -314,7 +315,7 @@ public class DeformationModel : MonoBehaviour
         var edgeMeshVertices = new List<EdgeMesh.Vertex>();
         edgeMeshVertices.AddRange(positions.Select(v => new EdgeMesh.Vertex() { position = v }));
 
-        edgemesh.Build(indices, edgeMeshVertices.ToArray(), nodesmap);
+        edgemesh.Build(indices, submeshes, edgeMeshVertices.ToArray(), nodesmap);
 
         mesh = new FiniteDeformationMesh();
         mesh.nodes = vertexsets.Select(v => new Node() { origin = v.position, position = v.position, locked = 0, y = 0 }).ToArray();
