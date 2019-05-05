@@ -58,7 +58,7 @@ public class FiniteDeformationMesh
     }
 }
 
-public class DeformerLattice : MonoBehaviour
+public class DeformationModel : MonoBehaviour
 {
     public float k;
     public float maxd;

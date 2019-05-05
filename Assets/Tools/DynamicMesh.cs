@@ -17,7 +17,7 @@ public class DynamicMesh : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var deformer = GetComponentInParent<DeformerLattice>();
+        var deformer = GetComponentInParent<DeformationModel>();
 
         for(int i = 0; i < positions.Length; i++)
         {

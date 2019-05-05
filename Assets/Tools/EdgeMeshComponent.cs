@@ -45,7 +45,7 @@ public class EdgeMeshComponent : MonoBehaviour
 
         edgemesh.Build(indices, edgeMeshVertices.ToArray(), nodes);
 
-        var fem = GetComponent<DeformerLattice>();
+        var fem = GetComponent<DeformationModel>();
 
         fem.mesh = new FiniteDeformationMesh();
         fem.mesh.nodes.AddRange(

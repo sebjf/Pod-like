@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(DeformerLattice))]
-public class DeformerLatticeInspector : Editor
+[CustomEditor(typeof(DeformationModel))]
+public class DeformationModelInspector : Editor
 {
     public override void OnInspectorGUI()
     {
@@ -15,7 +15,7 @@ public class DeformerLatticeInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("gizmo"));
         serializedObject.ApplyModifiedProperties();
 
-        var model = (target as DeformerLattice);
+        var model = (target as DeformationModel);
 
         EditorGUILayout.LabelField("Points: " + model.mesh.nodes.Count);
         EditorGUILayout.LabelField("Edges: " + model.mesh.edges.Count);
@@ -32,10 +32,10 @@ public class DeformerLatticeInspector : Editor
     }
 }
 
-public class DeformerLatticeGizmoDrawer
+public class DeformationModelGizmoDrawer
 {
     [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Active)]
-    static void DrawGizmoForMyScript(DeformerLattice target, GizmoType gizmoType)
+    static void DrawGizmoForDeformationModel(DeformationModel target, GizmoType gizmoType)
     {
         if(!target.gizmo)
         {
