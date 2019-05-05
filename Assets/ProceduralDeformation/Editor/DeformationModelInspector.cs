@@ -27,7 +27,7 @@ public class DeformationModelInspector : Editor
 
         if (GUILayout.Button("Step"))
         {
-            model.Step();
+           
         }
     }
 }
