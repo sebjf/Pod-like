@@ -107,18 +107,15 @@ public class DeformationModel : MonoBehaviour
 
             deformationshader.Shader.SetInt("numnodes", mesh.nodes.Length);
             deformationshader.Shader.SetInt("numedges", mesh.edges.Length);
-            deformationshader.Shader.SetInt("numconstraints", mesh.totalconstraints);
 
-            buffers.SetBuffers(deformationshader.Shader, 0, 1, 2, 3, 4, 5);
+            buffers.SetBuffers(deformationshader.Shader, 0, 1, 2, 3);
         }
 
         private void Step()
         {
-            deformationshader.Dispatch(0, mesh.totalconstraints, 1, 1);
-            deformationshader.Dispatch(1, mesh.edges.Length, 1, 1);
+            deformationshader.Dispatch(0, mesh.edges.Length, 1, 1);
+            deformationshader.Dispatch(1, mesh.nodes.Length, 1, 1);
             deformationshader.Dispatch(2, mesh.nodes.Length, 1, 1);
-            deformationshader.Dispatch(3, mesh.edges.Length, 1, 1);
-            deformationshader.Dispatch(4, mesh.nodes.Length, 1, 1);
         }
 
         public override void Step(int iterations)
@@ -130,7 +127,7 @@ public class DeformationModel : MonoBehaviour
                 Step();
             }
 
-            deformationshader.Dispatch(5, mesh.nodes.Length, 1, 1);
+            deformationshader.Dispatch(3, mesh.nodes.Length, 1, 1);
 
             nodes.Buffer.GetData(mesh.nodes);
         }

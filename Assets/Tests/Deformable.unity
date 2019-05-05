@@ -497,7 +497,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   k: 400000
   maxd: 0.7
-  simulationsteps: 100
+  simulationsteps: 25
   mesh:
     nodes:
     - origin: {x: -0.742622, y: -0.108879, z: 1.596304}

@@ -1,7 +1,5 @@
 ﻿// Each #kernel tells which function to compile; you can have many kernels
-#pragma kernel ResetConstraints
 #pragma kernel ProjectEdges
-#pragma kernel ResetNodeStrains
 #pragma kernel UpdateNodeStrains
 #pragma kernel AverageNodeConstraints
 #pragma kernel ClearNodeFlags
@@ -39,21 +37,6 @@ RWStructuredBuffer<Constraint> constraints;
 
 uint numnodes;
 uint numedges;
-uint numconstraints;
-
-[numthreads(64,1,1)]
-void ResetConstraints (uint3 id : SV_DispatchThreadID)
-{
-	if (id.x >= numconstraints)
-	{
-		return;
-	}
-
-	Constraint c;
-	c.position = float3(0, 0, 0);
-	c.weight = 0;
-	constraints[id.x] = c;
-}
 
 [numthreads(64, 1, 1)]
 void ProjectEdges(uint3 id : SV_DispatchThreadID)
@@ -87,7 +70,7 @@ void ProjectEdges(uint3 id : SV_DispatchThreadID)
 }
 
 [numthreads(64, 1, 1)]
-void ResetNodeStrains(uint3 id : SV_DispatchThreadID)
+void UpdateNodeStrains(uint3 id : SV_DispatchThreadID)
 {
 	if (id.x >= numnodes)
 	{
@@ -96,34 +79,14 @@ void ResetNodeStrains(uint3 id : SV_DispatchThreadID)
 
 	Node node = nodes[id.x];
 
-	if (!node.locked)
-	{
-		node.y = 0;
-		nodes[id.x] = node;
-	}
-}
+	node.y = 0;
 
-[numthreads(64, 1, 1)]
-void UpdateNodeStrains(uint3 id : SV_DispatchThreadID)
-{
-	if (id.x >= numedges)
+	for (int i = 0; i < node.constraintcount; i++)
 	{
-		return;
+		node.y += constraints[node.constraintoffset + i].weight;
 	}
 
-	Edge edge = edges[id.x];
-
-	Node v0 = nodes[edge.v0];
-	Node v1 = nodes[edge.v1];
-
-	float3 V = (v1.position - v0.position);
-	float  violation = abs(length(V) - edge.length);
-
-	v0.y += violation;
-	v1.y += violation;
-
-	nodes[edge.v0] = v0;
-	nodes[edge.v1] = v1;
+	nodes[id.x] = node;
 }
 
 [numthreads(64, 1, 1)]
