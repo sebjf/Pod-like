@@ -41,6 +41,9 @@ public class FiniteDeformationMesh
                 return displacement.magnitude;
             }
         }
+
+        public int constraintoffset;
+        public int constraintcount;
     }
 
     [Serializable]
@@ -49,6 +52,9 @@ public class FiniteDeformationMesh
         public int v0;
         public int v1;
         public float length;
+
+        public int constraintbinv0;
+        public int constraintbinv1;
     }
 }
 
@@ -64,6 +70,15 @@ public class DeformerLattice : MonoBehaviour
     public int[] nodesmap;
 
     public bool gizmo;
+
+    [Serializable]
+    public struct Constraint
+    {
+        public Vector3 position;
+        public float weight;
+    }
+
+    public Constraint[] constraints;
 
     // Start is called before the first frame update
     void Start()
@@ -132,6 +147,30 @@ public class DeformerLattice : MonoBehaviour
         {
             edge.length = (mesh.nodes[edge.v0].origin - mesh.nodes[edge.v1].origin).magnitude;
         }
+
+        foreach (var edge in mesh.edges)
+        {
+            edge.constraintbinv0 = mesh.nodes[edge.v0].constraintcount;
+            mesh.nodes[edge.v0].constraintcount++;
+
+            edge.constraintbinv1 = mesh.nodes[edge.v1].constraintcount;
+            mesh.nodes[edge.v1].constraintcount++;
+        }
+
+        int totalconstraints = 0;
+        foreach (var node in mesh.nodes)
+        {
+            node.constraintoffset = totalconstraints;
+            totalconstraints += node.constraintcount;
+        }
+
+        foreach (var edge in mesh.edges)
+        {
+            edge.constraintbinv0 += mesh.nodes[edge.v0].constraintoffset;
+            edge.constraintbinv1 += mesh.nodes[edge.v1].constraintoffset;
+        }
+
+        constraints = new Constraint[totalconstraints];
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -187,6 +226,11 @@ public class DeformerLattice : MonoBehaviour
     {
         // resolve the constraints one by one
 
+        for (int i = 0; i < constraints.Length; i++)
+        {
+            constraints[i].weight = 0;
+        }
+
         foreach (var edge in mesh.edges)
         {
             var v0 = mesh.nodes[edge.v0];
@@ -196,11 +240,14 @@ public class DeformerLattice : MonoBehaviour
 
             var violation = V.magnitude - edge.length;
 
-            var correction0 = V.normalized *  violation * (v1.y / (v0.y + v1.y + Mathf.Epsilon));
+            var correction0 = V.normalized * violation * (v1.y / (v0.y + v1.y + Mathf.Epsilon));
             var correction1 = V.normalized * -violation * (v0.y / (v0.y + v1.y + Mathf.Epsilon));
 
-            v0.position += correction0;
-            v1.position += correction1;
+            constraints[edge.constraintbinv0].position = v0.position + correction0;
+            constraints[edge.constraintbinv0].weight = Mathf.Abs(violation);
+
+            constraints[edge.constraintbinv1].position = v1.position + correction1;
+            constraints[edge.constraintbinv1].weight = Mathf.Abs(violation);
         }
 
         foreach (var node in mesh.nodes)
@@ -219,6 +266,23 @@ public class DeformerLattice : MonoBehaviour
             var violation = Mathf.Abs(V.magnitude - edge.length);
             v0.y += violation;
             v1.y += violation;
+        }
+
+        foreach (var node in mesh.nodes)
+        {
+            Vector3 positions = Vector3.zero;
+            float weight = 0;
+
+            for (int i = 0; i < node.constraintcount; i++)
+            {
+                positions += constraints[node.constraintoffset + i].position * constraints[node.constraintoffset + i].weight;
+                weight += constraints[node.constraintoffset + i].weight;
+            }
+
+            if(weight > Mathf.Epsilon)
+            {
+                node.position = positions / weight;
+            }
         }
     }
 
