@@ -12,13 +12,15 @@ public class DeformerLatticeInspector : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("k"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("maxd"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("simulationsteps"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("gizmo"));
         serializedObject.ApplyModifiedProperties();
 
         var model = (target as DeformerLattice);
 
         EditorGUILayout.LabelField("Points: " + model.mesh.nodes.Count);
+        EditorGUILayout.LabelField("Edges: " + model.mesh.edges.Count);
 
-        if(GUILayout.Button("Create"))
+        if (GUILayout.Button("Create"))
         {
             model.Build();
         }
@@ -35,6 +37,11 @@ public class DeformerLatticeGizmoDrawer
     [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Active)]
     static void DrawGizmoForMyScript(DeformerLattice target, GizmoType gizmoType)
     {
+        if(!target.gizmo)
+        {
+            return;
+        }
+
         foreach (var C in target.mesh.nodes)
         {
             var c0 = target.transform.TransformPoint(C.origin);

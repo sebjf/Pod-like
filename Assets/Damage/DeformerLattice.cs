@@ -59,8 +59,11 @@ public class DeformerLattice : MonoBehaviour
 
     public float simulationsteps;
 
-    [HideInInspector]
     public FiniteDeformationMesh mesh;
+
+    public int[] nodesmap;
+
+    public bool gizmo;
 
     // Start is called before the first frame update
     void Start()
@@ -90,11 +93,11 @@ public class DeformerLattice : MonoBehaviour
             map.Add(positions[i], i);
         }
 
-        var nodes = new int[positions.Length];
+        nodesmap = new int[positions.Length];
 
-        for (int i = 0; i < nodes.Length; i++)
+        for (int i = 0; i < nodesmap.Length; i++)
         {
-            nodes[i] = -1; // this will make it obvious should the node for a particular vertex fail to be set for some reason
+            nodesmap[i] = -1; // this will make it obvious should the node for a particular vertex fail to be set for some reason
         }
 
         var vertexsets = map.Sets.ToList();
@@ -102,14 +105,14 @@ public class DeformerLattice : MonoBehaviour
         {
             foreach (var index in set.indices)
             {
-                nodes[index] = vertexsets.IndexOf(set);
+                nodesmap[index] = vertexsets.IndexOf(set);
             }
         }
 
         var edgeMeshVertices = new List<EdgeMesh.Vertex>();
         edgeMeshVertices.AddRange(positions.Select(v => new EdgeMesh.Vertex() { position = v }));
 
-        edgemesh.Build(indices, edgeMeshVertices.ToArray(), nodes);
+        edgemesh.Build(indices, edgeMeshVertices.ToArray(), nodesmap);
 
         mesh = new FiniteDeformationMesh();
         mesh.nodes.AddRange(
