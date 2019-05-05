@@ -1,0 +1,168 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel ResetConstraints
+#pragma kernel ProjectEdges
+#pragma kernel ResetNodeStrains
+#pragma kernel UpdateNodeStrains
+#pragma kernel AverageNodeConstraints
+#pragma kernel ClearNodeFlags
+
+#define Epsilon 0.000001
+
+struct Node
+{
+	float3	origin;
+	float3	position;
+	float	y;
+	int		locked;
+	int		constraintoffset;
+	int		constraintcount;
+};
+
+struct Edge
+{
+	int		v0;
+	int		v1;
+	float	length;
+	int		constraintbinv0;
+	int		constraintbinv1;
+};
+
+struct Constraint
+{
+	float3	position;
+	float	weight;
+};
+
+RWStructuredBuffer<Node> nodes;
+RWStructuredBuffer<Edge> edges;
+RWStructuredBuffer<Constraint> constraints;
+
+uint numnodes;
+uint numedges;
+uint numconstraints;
+
+[numthreads(64,1,1)]
+void ResetConstraints (uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= numconstraints)
+	{
+		return;
+	}
+
+	Constraint c;
+	c.position = float3(0, 0, 0);
+	c.weight = 0;
+	constraints[id.x] = c;
+}
+
+[numthreads(64, 1, 1)]
+void ProjectEdges(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= numedges)
+	{
+		return;
+	}
+
+	Edge edge = edges[id.x];
+
+	Node v0 = nodes[edge.v0];
+	Node v1 = nodes[edge.v1];
+
+	float3 V = (v1.position - v0.position);
+
+	float violation = length(V) - edge.length;
+
+	float3 correction0 = normalize(V) * violation * (v1.y / (v0.y + v1.y + Epsilon));
+	float3 correction1 = normalize(V) * -violation * (v0.y / (v0.y + v1.y + Epsilon));
+
+	Constraint c0;
+	c0.position = v0.position + correction0;
+	c0.weight = abs(violation);
+	constraints[edge.constraintbinv0] = c0;
+
+	Constraint c1;
+	c1.position = v1.position + correction1;
+	c1.weight = abs(violation);
+	constraints[edge.constraintbinv1] = c1;
+}
+
+[numthreads(64, 1, 1)]
+void ResetNodeStrains(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= numnodes)
+	{
+		return;
+	}
+
+	Node node = nodes[id.x];
+
+	if (!node.locked)
+	{
+		node.y = 0;
+		nodes[id.x] = node;
+	}
+}
+
+[numthreads(64, 1, 1)]
+void UpdateNodeStrains(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= numedges)
+	{
+		return;
+	}
+
+	Edge edge = edges[id.x];
+
+	Node v0 = nodes[edge.v0];
+	Node v1 = nodes[edge.v1];
+
+	float3 V = (v1.position - v0.position);
+	float  violation = abs(length(V) - edge.length);
+
+	v0.y += violation;
+	v1.y += violation;
+
+	nodes[edge.v0] = v0;
+	nodes[edge.v1] = v1;
+}
+
+[numthreads(64, 1, 1)]
+void AverageNodeConstraints(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= numnodes)
+	{
+		return;
+	}
+
+	Node node = nodes[id.x];
+
+	float3 positions = float3(0,0,0);
+	float weight = 0;
+
+	for (int i = 0; i < node.constraintcount; i++)
+	{
+		positions += constraints[node.constraintoffset + i].position * constraints[node.constraintoffset + i].weight;
+		weight += constraints[node.constraintoffset + i].weight;
+	}
+
+	if (weight > Epsilon)
+	{
+		node.position = positions / weight;
+		nodes[id.x] = node;
+	}
+}
+
+[numthreads(64, 1, 1)]
+void ClearNodeFlags(uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= numnodes)
+	{
+		return;
+	}
+
+	Node node = nodes[id.x];
+	node.locked = 0;
+	nodes[id.x] = node;
+}
+
+

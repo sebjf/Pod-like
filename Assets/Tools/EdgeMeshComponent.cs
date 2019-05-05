@@ -48,22 +48,23 @@ public class EdgeMeshComponent : MonoBehaviour
         var fem = GetComponent<DeformationModel>();
 
         fem.mesh = new FiniteDeformationMesh();
-        fem.mesh.nodes.AddRange(
+        fem.mesh.nodes = (
             vertexsets.Select(v => new FiniteDeformationMesh.Node() { origin = v.position })
-            );
+            ).ToArray();
 
-        fem.mesh.edges.AddRange(
+        fem.mesh.edges = (
             edgemesh.edges.Select(
                 e => new FiniteDeformationMesh.Edge()
                 {
                     v0 = e.node,
                     v1 = e.next.node,
                 }
-                ));
+                )).ToArray();
 
-        foreach (var edge in fem.mesh.edges)
+        for (int i = 0; i < fem.mesh.edges.Length; i++)
         {
-            edge.length = (fem.mesh.nodes[edge.v0].origin - fem.mesh.nodes[edge.v1].origin).magnitude;
+            var edge = fem.mesh.edges[i];
+            fem.mesh.edges[i].length = (fem.mesh.nodes[edge.v0].origin - fem.mesh.nodes[edge.v1].origin).magnitude;
         }
     }
 

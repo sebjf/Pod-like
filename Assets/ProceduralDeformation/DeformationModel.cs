@@ -1,30 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.Profiling;
+
+using Node = FiniteDeformationMesh.Node;
+using Edge = FiniteDeformationMesh.Edge;
 
 [Serializable]
 public class FiniteDeformationMesh
 {
-    public FiniteDeformationMesh()
-    {
-        nodes = new List<Node>();
-        edges = new List<Edge>();
-    }
-
-    public List<Node> nodes;
-    public List<Edge> edges;
+    public Node[] nodes;
+    public Edge[] edges;
 
     public int totalconstraints;
 
     [Serializable]
-    public class Node
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Node
     {
         public Vector3 origin;
         public Vector3 position;
-        public float y = 1f;        // strain multiplier
-        public bool locked = false; // helper flag to prevent resetting strain of entry node
+        public float y;        // strain multiplier
+        public int locked; // helper flag to prevent resetting strain of entry node
+
+        public int constraintoffset;
+        public int constraintcount;
 
         public Vector3 displacement
         {
@@ -41,13 +43,11 @@ public class FiniteDeformationMesh
                 return displacement.magnitude;
             }
         }
-
-        public int constraintoffset;
-        public int constraintcount;
     }
 
     [Serializable]
-    public class Edge
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Edge
     {
         public int v0;
         public int v1;
@@ -63,13 +63,14 @@ public class DeformationModel : MonoBehaviour
     public float k;
     public float maxd;
 
-    public float simulationsteps;
+    public int simulationsteps;
 
     public FiniteDeformationMesh mesh;
 
     public int[] nodesmap;
 
     public bool gizmo;
+    public float lastImpactForce;
 
     [Serializable]
     public struct Constraint
@@ -78,12 +79,60 @@ public class DeformationModel : MonoBehaviour
         public float weight;
     }
 
-    CPUSimulation simulation;
+    GPUSimulation simulation;
 
     public class GPUSimulation
     {
+        public GPUBuffer nodes;
 
+        FiniteDeformationMesh mesh;
+        BuffersHelper buffers;
+        ShaderWrapper deformationshader;
 
+        public GPUSimulation(FiniteDeformationMesh mesh)
+        {
+            this.mesh = mesh;
+            buffers = new BuffersHelper();
+            nodes = new GPUBuffer<Node>(mesh.nodes);
+            buffers.Add(nodes, "nodes");
+            buffers.Add(new GPUBuffer<Edge>(mesh.edges), "edges");
+            buffers.Add(new GPUBuffer<Constraint>(mesh.totalconstraints), "constraints");
+            deformationshader = new ShaderWrapper("DeformationModel");
+
+            deformationshader.Shader.SetInt("numnodes", mesh.nodes.Length);
+            deformationshader.Shader.SetInt("numedges", mesh.edges.Length);
+            deformationshader.Shader.SetInt("numconstraints", mesh.totalconstraints);
+
+            buffers.SetBuffers(deformationshader.Shader, 0, 1, 2, 3, 4, 5);
+        }
+
+        public void Step()
+        {
+            deformationshader.Dispatch(0, mesh.totalconstraints, 1, 1);
+            deformationshader.Dispatch(1, mesh.edges.Length, 1, 1);
+            deformationshader.Dispatch(2, mesh.nodes.Length, 1, 1);
+            deformationshader.Dispatch(3, mesh.edges.Length, 1, 1);
+            deformationshader.Dispatch(4, mesh.nodes.Length, 1, 1);
+        }
+
+        public void Step(int iterations)
+        {
+            nodes.Buffer.SetData(mesh.nodes);
+
+            for (int i = 0; i < iterations; i++)
+            {
+                Step();
+            }
+
+            deformationshader.Dispatch(5, mesh.nodes.Length, 1, 1);
+
+            nodes.Buffer.GetData(mesh.nodes);
+        }
+
+        public void Release()
+        {
+            buffers.Release();
+        }
     }
 
     public class CPUSimulation
@@ -96,6 +145,20 @@ public class DeformationModel : MonoBehaviour
 
         public Constraint[] constraints;
         public FiniteDeformationMesh mesh;
+
+        public void Step(int iterations)
+        {
+            for (int i = 0; i < iterations; i++)
+            {
+                Step();
+            }
+
+            for (int i = 0; i < mesh.nodes.Length; i++)
+            {
+                ref var node = ref mesh.nodes[i];
+                node.locked = 0;
+            }
+        }
 
         public void Step()
         {
@@ -125,26 +188,28 @@ public class DeformationModel : MonoBehaviour
                 constraints[edge.constraintbinv1].weight = Mathf.Abs(violation);
             }
 
-            foreach (var node in mesh.nodes)
+            for(int i = 0; i < mesh.nodes.Length; i++)
             {
-                if (!node.locked)
+                if (mesh.nodes[i].locked <= 0)
                 {
-                    node.y = 0f;
+                    mesh.nodes[i].y = 0f;
                 }
             }
 
             foreach (var edge in mesh.edges)
             {
-                var v0 = mesh.nodes[edge.v0];
-                var v1 = mesh.nodes[edge.v1];
+                ref var v0 = ref mesh.nodes[edge.v0];
+                ref var v1 = ref mesh.nodes[edge.v1];
                 var V = (v1.position - v0.position);
                 var violation = Mathf.Abs(V.magnitude - edge.length);
                 v0.y += violation;
                 v1.y += violation;
             }
 
-            foreach (var node in mesh.nodes)
+            for(int n = 0; n < mesh.nodes.Length; n++)
             {
+                ref var node = ref mesh.nodes[n];
+
                 Vector3 positions = Vector3.zero;
                 float weight = 0;
 
@@ -161,12 +226,17 @@ public class DeformationModel : MonoBehaviour
             }
         }
 
+        public void Release()
+        {
+
+        }
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        simulation = new CPUSimulation(mesh);
+        simulation = new GPUSimulation(mesh);
     }
 
     // Update is called once per frame
@@ -213,26 +283,27 @@ public class DeformationModel : MonoBehaviour
         edgemesh.Build(indices, edgeMeshVertices.ToArray(), nodesmap);
 
         mesh = new FiniteDeformationMesh();
-        mesh.nodes.AddRange(
-            vertexsets.Select(v => new FiniteDeformationMesh.Node() { origin = v.position, position = v.position })
-            );
+        mesh.nodes = vertexsets.Select(v => new Node() { origin = v.position, position = v.position, locked = 0, y = 0 }).ToArray();
 
-        mesh.edges.AddRange(
+        mesh.edges =
             edgemesh.edges.Select(
-                e => new FiniteDeformationMesh.Edge()
+                e => new Edge()
                 {
                     v0 = e.node,
                     v1 = e.next.node,
                 }
-                ));
+                ).ToArray();
 
-        foreach (var edge in mesh.edges)
+        for (int i = 0; i < mesh.edges.Length; i++)
         {
+            ref var edge = ref mesh.edges[i];
             edge.length = (mesh.nodes[edge.v0].origin - mesh.nodes[edge.v1].origin).magnitude;
         }
 
-        foreach (var edge in mesh.edges)
+        for (int i = 0; i < mesh.edges.Length; i++)
         {
+            ref var edge = ref mesh.edges[i];
+
             edge.constraintbinv0 = mesh.nodes[edge.v0].constraintcount;
             mesh.nodes[edge.v0].constraintcount++;
 
@@ -242,14 +313,16 @@ public class DeformationModel : MonoBehaviour
 
         mesh.totalconstraints = 0;
 
-        foreach (var node in mesh.nodes)
+        for (int i = 0; i < mesh.nodes.Length; i++)
         {
-            node.constraintoffset = mesh.totalconstraints;
-            mesh.totalconstraints += node.constraintcount;
+            mesh.nodes[i].constraintoffset = mesh.totalconstraints;
+            mesh.totalconstraints += mesh.nodes[i].constraintcount;
         }
 
-        foreach (var edge in mesh.edges)
+        for (int i = 0; i < mesh.edges.Length; i++)
         {
+            ref var edge = ref mesh.edges[i];
+
             edge.constraintbinv0 += mesh.nodes[edge.v0].constraintoffset;
             edge.constraintbinv1 += mesh.nodes[edge.v1].constraintoffset;
         }
@@ -260,20 +333,20 @@ public class DeformationModel : MonoBehaviour
         Profiler.BeginSample("Damage Force Application");
 
         var force = transform.InverseTransformDirection(collision.impulse / Time.fixedDeltaTime);
+        lastImpactForce = force.magnitude;
 
         for (int i = 0; i < collision.contactCount; i++)
         {
             var contact = collision.GetContact(i);
             var point = transform.InverseTransformPoint(contact.point);
 
-            Debug.Log(force.magnitude);
-
-            var closest = mesh.nodes.First();
-            foreach (var item in mesh.nodes)
+            ref var closest = ref mesh.nodes[0];
+            for (int n = 0; n < mesh.nodes.Length; n++)
             {
+                ref var item = ref mesh.nodes[n];
                 if((item.origin - point).magnitude < (closest.origin - point).magnitude)
                 {
-                    closest = item;
+                    closest = ref item;
                 }
             }
 
@@ -284,28 +357,25 @@ public class DeformationModel : MonoBehaviour
             {
                 closest.position = closest.origin + displacement * force.normalized;
                 closest.y = 100f; // any big number relative to the world scale of the model, since edge strains are the same as world scale deviations
-                closest.locked = true;
+                closest.locked = 1;
             }
         }
 
         Profiler.EndSample();
         Profiler.BeginSample("Simulate");
 
-        for (int i = 0; i < simulationsteps; i++)
-        {
-            Step();
-        }
+        simulation.Step(simulationsteps);
 
         Profiler.EndSample();
-
-        foreach (var node in mesh.nodes)
-        {
-            node.locked = false;
-        }
     }
 
     public void Step()
     {
-        simulation.Step();
+        simulation.Step(1);
+    }
+
+    private void OnDestroy()
+    {
+        simulation.Release();
     }
 }
