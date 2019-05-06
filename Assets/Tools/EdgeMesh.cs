@@ -325,6 +325,11 @@ public class EdgeMesh
 
         v0.node = edgeCa.node;
 
+        edgeA.submesh = edge2.submesh;
+        edgeB.submesh = edge2.submesh;
+        edgeCa.submesh = edge2.submesh;
+        edgeCb.submesh = edge2.submesh;
+
         // now assign the pointers to create triangles out of these new edges
 
         edge1.next = edgeA;
