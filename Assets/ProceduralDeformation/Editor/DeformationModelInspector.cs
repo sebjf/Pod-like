@@ -60,8 +60,8 @@ public class DeformationModelGizmoDrawer
             var c0 = target.transform.TransformPoint(C.origin);
             var c1 = target.transform.TransformPoint(C.position);
             
-            Gizmos.color = new Color((C.origin - C.position).magnitude, 0, 0);
-            Gizmos.DrawLine(c0, c1);
+            Gizmos.color = new Color(C.y, 0, 0);
+ //         Gizmos.DrawLine(c0, c1);
             Gizmos.DrawWireSphere(c1, 0.01f);
         }
 
@@ -75,7 +75,7 @@ public class DeformationModelGizmoDrawer
 
             var violation = edge.length - (v0.position - v1.position).magnitude;
 
-            Gizmos.color = new Color(violation, 0, 0);
+            Gizmos.color = new Color(violation * 100f, 0, 0);
             Gizmos.DrawLine(c0, c1);
         }
     }
