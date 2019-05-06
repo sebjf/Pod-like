@@ -6,6 +6,12 @@ public class DynamicMesh : MonoBehaviour
 {
     Mesh mesh;
     Vector3[] positions;
+    DeformationModel deformer;
+
+    private void Awake()
+    {
+        deformer = GetComponentInParent<DeformationModel>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -17,13 +23,13 @@ public class DynamicMesh : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var deformer = GetComponentInParent<DeformationModel>();
-
-        for(int i = 0; i < positions.Length; i++)
+        if (deformer.lastImpactFrame == Time.frameCount)    // lastImpactFrame is set in OnCollisionEnter, which always occurs before Update
         {
-            positions[i] = deformer.mesh.nodes[deformer.nodesmap[i]].position;
+            for (int i = 0; i < positions.Length; i++)
+            {
+                positions[i] = deformer.mesh.nodes[deformer.nodesmap[i]].position;
+            }
+            mesh.vertices = positions;
         }
-
-        mesh.vertices = positions;
     }
 }

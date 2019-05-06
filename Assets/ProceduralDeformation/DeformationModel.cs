@@ -71,6 +71,7 @@ public class DeformationModel : MonoBehaviour
 
     public bool gizmo;
     public float lastImpactForce;
+    public int lastImpactFrame;
 
     [Serializable]
     public struct Constraint
@@ -410,6 +411,8 @@ public class DeformationModel : MonoBehaviour
         simulation.Step(simulationsteps);
 
         Profiler.EndSample();
+
+        lastImpactFrame = Time.frameCount;
     }
 
     public void Step()
