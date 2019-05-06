@@ -35,20 +35,48 @@ class VehicleTools : EditorWindow
         {
             InitialiseWheels(Selection.activeGameObject);
         }
+
+        EditorGUILayout.LabelField("Deformation");
+
+        if (GUILayout.Button("Create High Res Geometry"))
+        {
+            CreateHighResolutionGeometry(Selection.activeGameObject);
+        }
+
+        if (GUILayout.Button("Create Deformation Model"))
+        {
+            CreateDeformationComponents(Selection.activeGameObject);
+        }
+    }
+
+    public class AssetDirectories
+    {
+        public string name;
+        public string path;
+        public string filename;
+        public string file;
+    }
+
+    public static AssetDirectories FindAssetPaths(GameObject asset)
+    {
+        AssetDirectories paths = new AssetDirectories();
+        var mesh = asset.GetComponentInChildren<MeshFilter>().sharedMesh;
+        paths.name = asset.name;
+        paths.path = Path.GetDirectoryName(AssetDatabase.GetAssetPath(mesh));
+        paths.filename = asset.name; // Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(mesh));
+        paths.file = Path.Combine(paths.path, paths.filename);
+        return paths;
     }
 
     void LoadWheelGeometry(GameObject asset)
     {
         // Use the mesh to find the directory of this car.
 
-        var mesh = asset.GetComponentInChildren<MeshFilter>().sharedMesh;
-        var name = asset.name;
-        var path = Path.GetDirectoryName(AssetDatabase.GetAssetPath(mesh));
-        var file = Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(mesh));
+        var paths = FindAssetPaths(asset);
 
         // get the xml
 
-        var metadatafile = Path.Combine(Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - "Assets\\".Length), path), file + ".xml");
+        var metadatafile = Path.Combine(Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - "Assets\\".Length), paths.path), paths.filename + ".xml");
         var metadatabytes = File.ReadAllBytes(metadatafile);
 
         var metadata = AssetsInfo.CarInfo.Load(metadatabytes);
@@ -59,7 +87,7 @@ class VehicleTools : EditorWindow
 
         if(!asset.transform.Find("WheelRearL"))
         {
-            var wheelasset = Path.Combine(path, "WheelRearL.obj");
+            var wheelasset = Path.Combine(paths.path, "WheelRearL.obj");
             var wheelgameobject = Instantiate(AssetDatabase.LoadAssetAtPath(wheelasset, typeof(GameObject))) as GameObject;
             wheelgameobject.name = "WheelRearL";
             wheelgameobject.transform.parent = asset.transform;
@@ -67,7 +95,7 @@ class VehicleTools : EditorWindow
 
         if (!asset.transform.Find("WheelFrontL"))
         {
-            var wheelasset = Path.Combine(path, "WheelFrontL.obj");
+            var wheelasset = Path.Combine(paths.path, "WheelFrontL.obj");
             var wheelgameobject = Instantiate(AssetDatabase.LoadAssetAtPath(wheelasset, typeof(GameObject))) as GameObject;
             wheelgameobject.name = "WheelFrontL";
             wheelgameobject.transform.parent = asset.transform;
@@ -75,7 +103,7 @@ class VehicleTools : EditorWindow
 
         if (!asset.transform.Find("WheelRearR"))
         {
-            var wheelasset = Path.Combine(path, "WheelRearR.obj");
+            var wheelasset = Path.Combine(paths.path, "WheelRearR.obj");
             var wheelgameobject = Instantiate(AssetDatabase.LoadAssetAtPath(wheelasset, typeof(GameObject))) as GameObject;
             wheelgameobject.name = "WheelRearR";
             wheelgameobject.transform.parent = asset.transform;
@@ -83,7 +111,7 @@ class VehicleTools : EditorWindow
 
         if (!asset.transform.Find("WheelFrontR"))
         {
-            var wheelasset = Path.Combine(path, "WheelFrontR.obj");
+            var wheelasset = Path.Combine(paths.path, "WheelFrontR.obj");
             var wheelgameobject = Instantiate(AssetDatabase.LoadAssetAtPath(wheelasset, typeof(GameObject))) as GameObject;
             wheelgameobject.name = "WheelFrontR";
             wheelgameobject.transform.parent = asset.transform;
@@ -150,5 +178,52 @@ class VehicleTools : EditorWindow
     public static void InitialiseWheels(GameObject asset)
     {
         WheelTools.AddWheelsForBody(asset.transform);
+    }
+
+    public static void CreateHighResolutionGeometry(GameObject asset)
+    {
+        var paths = FindAssetPaths(asset);
+        var original = AssetDatabase.LoadAssetAtPath(paths.file + ".obj", typeof(Mesh)) as Mesh;
+
+        var deformable = AssetDatabase.LoadAssetAtPath(paths.file + "DeformableMesh.asset", typeof(Mesh)) as Mesh;
+        if(deformable == null)
+        {
+            deformable = new Mesh();
+            AssetDatabase.CreateAsset(deformable, paths.file + "DeformableMesh.asset");
+        }
+
+        EdgeMesh edgemesh = new EdgeMesh();
+        edgemesh.Build(original);
+        edgemesh.RefineMesh(0.25f);
+        edgemesh.BakeMesh(deformable);
+
+        AssetDatabase.SaveAssets();
+
+        asset.GetComponentInChildren<MeshFilter>().sharedMesh = deformable;
+    }
+
+    public static void CreateDeformationComponents(GameObject asset)
+    {
+        var model = asset.GetComponent<DeformationModel>();
+        if (model == null)
+        {
+            model = asset.AddComponent<DeformationModel>();
+        }
+
+        model.Build();
+        model.k = 400000;
+        model.maxd = 0.6f;
+        model.simulationsteps = 25;
+
+        EditorUtility.SetDirty(model);
+
+        var filter = asset.GetComponentInChildren<MeshFilter>();
+
+        var dynamicrenderer = filter.gameObject.GetComponent<DynamicMesh>();
+
+        if(dynamicrenderer == null)
+        {
+            dynamicrenderer = filter.gameObject.AddComponent<DynamicMesh>();
+        }
     }
 }
