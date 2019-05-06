@@ -25,8 +25,6 @@ public class Wheel : MonoBehaviour
     [HideInInspector]
     public float steerAngle = 0f;
 
-    private float rotationAngle = 0f;
-
     private float displacement;
     private float prevDisplacement;
     private float displacementVel;
