@@ -129,10 +129,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Alien
       objectReference: {fileID: 0}
-    - target: {fileID: 914759940, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 914759939, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
@@ -175,20 +171,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 914759939, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 914759945, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: handbrake
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5158299566702106700, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: gizmo
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7711390314312023423, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

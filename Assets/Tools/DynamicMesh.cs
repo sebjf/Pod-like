@@ -6,6 +6,7 @@ public class DynamicMesh : MonoBehaviour
 {
     Mesh mesh;
     Vector3[] positions;
+    Color[] uv3;
     DeformationModel deformer;
 
     private void Awake()
@@ -18,6 +19,7 @@ public class DynamicMesh : MonoBehaviour
     {
         mesh = GetComponent<MeshFilter>().mesh;
         positions = new Vector3[mesh.vertexCount];
+        uv3 = new Color[mesh.vertexCount];
     }
 
     // Update is called once per frame
@@ -28,8 +30,11 @@ public class DynamicMesh : MonoBehaviour
             for (int i = 0; i < positions.Length; i++)
             {
                 positions[i] = deformer.mesh.nodes[deformer.nodesmap[i]].position;
+                 uv3[i].r = 1 - (positions[i] - deformer.mesh.nodes[deformer.nodesmap[i]].origin).magnitude;
+                //uv3[i].r = 1 - deformer.mesh.nodes[deformer.nodesmap[i]].y;
             }
             mesh.vertices = positions;
+            mesh.colors = uv3;
         }
     }
 }
