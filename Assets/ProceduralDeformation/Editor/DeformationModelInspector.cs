@@ -23,6 +23,7 @@ public class DeformationModelInspector : Editor
         if (GUILayout.Button("Create"))
         {
             model.Build();
+            EditorUtility.SetDirty(model);
         }
 
         if (model.simulation is DeformationModel.CPUSimulation)
