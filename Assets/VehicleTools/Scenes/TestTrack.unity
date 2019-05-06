@@ -1769,10 +1769,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Alien
       objectReference: {fileID: 0}
-    - target: {fileID: 914759940, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 914759939, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.46
@@ -1817,26 +1813,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 914759942, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: m_AngularDrag
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 233415022, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: slipForceScale
-      value: 10000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1112526900, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: slipForceScale
-      value: 10000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1280059483, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: slipForceScale
-      value: 10000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954922859, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: slipForceScale
-      value: 10000
-      objectReference: {fileID: 0}
+    - target: {fileID: 7711390314312023423, guid: 3de47bfceb3a8d846945b45cdf30f2af,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100004, guid: 7466b24960746f54fa2f2c9ef12addec, type: 3}
+    - target: {fileID: 7711390314312023423, guid: 3de47bfceb3a8d846945b45cdf30f2af,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100006, guid: 7466b24960746f54fa2f2c9ef12addec, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
 --- !u!1 &612550644
@@ -4383,7 +4369,8 @@ PrefabInstance:
       propertyPath: maxTorque
       value: 2500
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1975959812714508567, guid: e36491c2390a1b94a9d6c0f96608970d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e36491c2390a1b94a9d6c0f96608970d, type: 3}
 --- !u!1001 &8457277697651797022
 PrefabInstance:
