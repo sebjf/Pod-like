@@ -368,7 +368,7 @@ public class DeformationModel : MonoBehaviour
     {
         Profiler.BeginSample("Damage Force Application");
 
-        var force = transform.InverseTransformDirection(collision.impulse / Time.fixedDeltaTime);
+        var force = (collision.impulse / Time.fixedDeltaTime);
         lastImpactForce = force.magnitude;
 
         for (int i = 0; i < collision.contactCount; i++)
@@ -391,7 +391,7 @@ public class DeformationModel : MonoBehaviour
 
             if (displacement > closest.strain)
             {
-                closest.position = closest.origin + displacement * force.normalized;
+                closest.position = closest.origin + displacement * transform.InverseTransformDirection(contact.normal);
                 closest.y = 100f; // any big number relative to the world scale of the model, since edge strains are the same as world scale deviations
                 closest.locked = 1;
             }
