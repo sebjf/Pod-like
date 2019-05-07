@@ -128,8 +128,6 @@ public class DeformationModel : MonoBehaviour
                 Step();
             }
 
-            deformationshader.Dispatch(3, mesh.nodes.Length, 1, 1);
-
             nodes.Buffer.GetData(mesh.nodes);
         }
 
@@ -179,12 +177,6 @@ public class DeformationModel : MonoBehaviour
             }
 
             nodevelocities.Add(stepvelocities);
-
-            for (int i = 0; i < mesh.nodes.Length; i++)
-            {
-                ref var node = ref mesh.nodes[i];
-                node.locked = 0;
-            }
         }
 
         private void Step()
