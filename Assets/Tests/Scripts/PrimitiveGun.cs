@@ -7,6 +7,7 @@ public class PrimitiveGun : MonoBehaviour
     public float speed;
     public float mass;
     public GameObject target;
+    public float camerarate;
 
     private Vector3 previousmouse;
     private float distance;
@@ -41,7 +42,7 @@ public class PrimitiveGun : MonoBehaviour
 
         if(Input.GetMouseButton(1))
         {
-            transform.RotateAround(target.transform.position, Vector3.up, 10f * 0.1f);
+            transform.RotateAround(target.transform.position, Vector3.up, camerarate * Time.deltaTime);
         }
 
         var correction = (transform.position - target.transform.position).magnitude - distance;
