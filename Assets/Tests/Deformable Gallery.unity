@@ -177,65 +177,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5158299566702106700, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: gizmo
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5158299566702106700, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: simulationsteps
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 7711390314312023423, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 914759945, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: handbrake
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7262632919422551960, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7262632920078225672, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7262632920089387863, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7262632920191070455, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7262632919422550118, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7262632920078225686, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7262632920089387861, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7262632920191070453, guid: 3de47bfceb3a8d846945b45cdf30f2af,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
 --- !u!1 &1316458557
@@ -325,7 +266,7 @@ Transform:
   m_GameObject: {fileID: 1316458557}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.23200846, y: 0, z: 0.14854884}
-  m_LocalScale: {x: 5.0222, y: 5.0222, z: 5.0222}
+  m_LocalScale: {x: 85.6034, y: 85.6034, z: 85.6034}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -458,6 +399,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3377283260564951050, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: gizmo
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 406059496, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: handbrake
       value: 1
@@ -466,11 +412,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3377283260564951050, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: gizmo
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
@@ -572,4 +513,5 @@ MonoBehaviour:
   speed: 85
   mass: 350
   target: {fileID: 914958906}
-  camerarate: 45
+  camerarate: 55
+  turnable: 0
