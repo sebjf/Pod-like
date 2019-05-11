@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ControllerInput : MonoBehaviour
+public class VehicleControllerInput : MonoBehaviour
 {
     private Vehicle vehicle;
 

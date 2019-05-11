@@ -163,6 +163,7 @@ GameObject:
   m_Component:
   - component: {fileID: 474698329}
   - component: {fileID: 9136540855096889896}
+  - component: {fileID: 3819372694604359179}
   - component: {fileID: 406059496}
   - component: {fileID: 1230204972}
   - component: {fileID: 3377283260564951050}
@@ -211,6 +212,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &3819372694604359179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474698328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 089d0af9d8c24f1428597c24fd910892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &406059496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54818,32 +54831,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9a6a896b10f50449f328c8bf389704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blendFunction:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  forceUpdate: 0
-  blendChannel: 2
 --- !u!1001 &450741083
 PrefabInstance:
   m_ObjectHideFlags: 0

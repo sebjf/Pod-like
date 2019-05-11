@@ -148,6 +148,12 @@ class VehicleTools : EditorWindow
 
     public static void InitialiseVehicle(GameObject asset)
     {
+        var controllerinput = asset.GetComponent<VehicleControllerInput>();
+        if (controllerinput == null)
+        {
+            controllerinput = asset.AddComponent<VehicleControllerInput>();
+        }
+
         var vehicle = asset.GetComponent<Vehicle>();
         if(vehicle == null)
         {
@@ -213,6 +219,7 @@ class VehicleTools : EditorWindow
         model.Build();
         model.k = 400000;
         model.maxd = 0.6f;
+        model.geodesicmetric = 0.8f;
         model.simulationsteps = 25;
 
         EditorUtility.SetDirty(model);
