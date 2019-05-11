@@ -184,6 +184,13 @@ class VehicleTools : EditorWindow
     public static void InitialiseWheels(GameObject asset)
     {
         WheelTools.AddWheelsForBody(asset.transform);
+
+        var wheelManager = asset.GetComponent<WheelManager>();
+        if(wheelManager == null)
+        {
+            wheelManager = asset.AddComponent<WheelManager>();
+            wheelManager.Reset();
+        }
     }
 
     public static void CreateHighResolutionGeometry(GameObject asset)

@@ -72,10 +72,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 64220.188
+  k: 79999.96
   B: 10000
-  offset: 0.2
-  travel: 0.4
+  offset: 0.087500006
+  travel: 0.35000002
   radius: 0.6
   slipForce:
     serializedVersion: 2
@@ -101,7 +101,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 15000
+  slipForceScale: 20000
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -151,8 +151,8 @@ MonoBehaviour:
   steerAngle: 0
   wheelsInContact: 0
   mass: 20
-  localAttachmentPosition: {x: -1.1325226, y: 0.19100001, z: -1.9276886}
-  height: 0.49100006
+  localAttachmentPosition: {x: -1.269, y: -0.02, z: -1.878}
+  height: 0.35
 --- !u!1 &474698328
 GameObject:
   m_ObjectHideFlags: 0
@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 406059496}
   - component: {fileID: 1230204972}
   - component: {fileID: 3377283260564951050}
+  - component: {fileID: 343465207}
   m_Layer: 0
   m_Name: Gamma
   m_TagString: Untagged
@@ -54229,6 +54230,94 @@ MonoBehaviour:
   gizmo: 0
   lastImpactForce: 0
   lastImpactFrame: 0
+--- !u!114 &343465207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474698328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131e7fb34d1a01d448caf7cdcef31619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheelAssignments:
+  - settings:
+      slipForce:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 4.996277
+          value: 1
+          inSlope: -0.086701944
+          outSlope: -0.086701944
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.062818475
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      slipForceScale: 20000
+      forwardSlipForce:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 2
+          outSlope: 2
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.1076526
+          value: 0.7259878
+          inSlope: 4.179236
+          outSlope: 4.179236
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.2190605
+          outWeight: 0.1978395
+        - serializedVersion: 3
+          time: 0.22551145
+          value: 0.9343626
+          inSlope: 0.48019093
+          outSlope: 0.48019093
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.4536587
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      forwardSlipForceScale: 20000
+      brakingTorque: 2000
+    wheels:
+    - {fileID: 1223322118}
+    - {fileID: 1223322117}
+    - {fileID: 1223322116}
+    - {fileID: 1223322115}
 --- !u!1 &681467350
 GameObject:
   m_ObjectHideFlags: 0
@@ -54310,10 +54399,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 63636.36
+  k: 66666.64
   B: 10000
-  offset: 0.2
-  travel: 0.4
+  offset: 0.105000004
+  travel: 0.42000002
   radius: 0.6
   slipForce:
     serializedVersion: 2
@@ -54339,7 +54428,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 15000
+  slipForceScale: 20000
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -54389,8 +54478,8 @@ MonoBehaviour:
   steerAngle: 0
   wheelsInContact: 0
   mass: 20
-  localAttachmentPosition: {x: 1.1325226, y: 0.120000005, z: 1.9276886}
-  height: 0.49
+  localAttachmentPosition: {x: 1.17, y: -0.02, z: 1.901}
+  height: 0.42000002
 --- !u!114 &1223322115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54403,10 +54492,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 63636.36
+  k: 66666.64
   B: 10000
-  offset: 0.2
-  travel: 0.4
+  offset: 0.105000004
+  travel: 0.42000002
   radius: 0.6
   slipForce:
     serializedVersion: 2
@@ -54432,7 +54521,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 15000
+  slipForceScale: 20000
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -54482,8 +54571,8 @@ MonoBehaviour:
   steerAngle: 0
   wheelsInContact: 0
   mass: 20
-  localAttachmentPosition: {x: -1.1325226, y: 0.120000005, z: 1.9276886}
-  height: 0.49
+  localAttachmentPosition: {x: -1.14, y: -0.02, z: 1.901}
+  height: 0.42000002
 --- !u!1 &1575151655
 GameObject:
   m_ObjectHideFlags: 0
@@ -54575,10 +54664,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 64220.188
+  k: 79999.96
   B: 10000
-  offset: 0.2
-  travel: 0.4
+  offset: 0.087500006
+  travel: 0.35000002
   radius: 0.6
   slipForce:
     serializedVersion: 2
@@ -54604,7 +54693,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 15000
+  slipForceScale: 20000
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -54654,8 +54743,8 @@ MonoBehaviour:
   steerAngle: 0
   wheelsInContact: 0
   mass: 20
-  localAttachmentPosition: {x: 1.1325226, y: 0.19100001, z: -1.9276886}
-  height: 0.49100006
+  localAttachmentPosition: {x: 1.264, y: -0.02, z: -1.878}
+  height: 0.35
 --- !u!1 &3975550122954535092
 GameObject:
   m_ObjectHideFlags: 0
@@ -54848,7 +54937,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.3
+      value: -0.37
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalPosition.z
@@ -54929,7 +55018,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.37
+      value: -0.44
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_LocalPosition.z
@@ -54998,7 +55087,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.37
+      value: -0.44
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -55038,15 +55127,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
---- !u!4 &1492205699 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1492605441}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1492573347 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: 2bd2d12fb5271244c9b95b2841470f1f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1492605441}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1492205699 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400002, guid: 2bd2d12fb5271244c9b95b2841470f1f,
     type: 3}
   m_PrefabInstance: {fileID: 1492605441}
   m_PrefabAsset: {fileID: 0}
@@ -55067,7 +55156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.3
+      value: -0.37
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_LocalPosition.z

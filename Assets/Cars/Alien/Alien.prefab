@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 914759945}
   - component: {fileID: 914759944}
   - component: {fileID: 5158299566702106700}
+  - component: {fileID: 7262632918985002092}
   m_Layer: 0
   m_Name: Alien
   m_TagString: Untagged
@@ -49557,6 +49558,94 @@ MonoBehaviour:
   gizmo: 0
   lastImpactForce: 0
   lastImpactFrame: 0
+--- !u!114 &7262632918985002092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914759940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 131e7fb34d1a01d448caf7cdcef31619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheelAssignments:
+  - settings:
+      slipForce:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0.2
+          outSlope: 0.2
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 4.996277
+          value: 1
+          inSlope: -0.005135605
+          outSlope: -0.005135605
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      slipForceScale: 10000
+      forwardSlipForce:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 2
+          outSlope: 2
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.1076526
+          value: 0.7259878
+          inSlope: 4.179236
+          outSlope: 4.179236
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.2255114
+          value: 0.9343626
+          inSlope: 0.4801909
+          outSlope: 0.4801909
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      forwardSlipForceScale: 12000
+      brakingTorque: 1000
+    wheels:
+    - {fileID: 233415022}
+    - {fileID: 1280059483}
+    - {fileID: 1954922859}
+    - {fileID: 1112526900}
 --- !u!1 &914759941
 GameObject:
   m_ObjectHideFlags: 0
