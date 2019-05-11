@@ -5,21 +5,24 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MonoBehaviour
 {
-    private Drivetrain drivetrain;
+    [Range(0,1)]
+    public float throttle;
+
+    [Range(0,1)]
+    public float steeringAngle;
+
+    public bool brake;
+    public bool handbrake;
 
     public float maxSteerAngle = 40f;
 
     [HideInInspector]
-    public Wheel[] wheels;
-
-    [HideInInspector]
-    public float steeringAngle;
+    public Wheel[] wheels;  
 
     [HideInInspector]
     public new Rigidbody rigidbody;
 
-    public bool brake;
-    public bool handbrake;
+    private Drivetrain drivetrain;
 
     private void Awake()
     {
@@ -37,19 +40,16 @@ public class Vehicle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        drivetrain.throttle = Input.GetAxis("Vertical");
-        brake = Input.GetKey(KeyCode.X);
+        drivetrain.throttle = throttle;
     }
 
     private void FixedUpdate()
     {
-        steeringAngle = maxSteerAngle * Input.GetAxisRaw("Horizontal");
-
         foreach (var wheel in wheels)
         {
             if(wheel.steers)
             {
-                wheel.steerAngle = steeringAngle;
+                wheel.steerAngle = maxSteerAngle * steeringAngle;
             }
 
             wheel.UpdateTransforms();
