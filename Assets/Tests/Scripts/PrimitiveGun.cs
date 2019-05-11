@@ -9,6 +9,8 @@ public class PrimitiveGun : MonoBehaviour
     public GameObject target;
     public float camerarate;
 
+    public bool turnable = false;
+
     private Vector3 previousmouse;
     private float distance;
     private float height;
@@ -40,7 +42,7 @@ public class PrimitiveGun : MonoBehaviour
             rb.velocity = trajectory.direction * speed;
         }
 
-        if(Input.GetMouseButton(1))
+        if(Input.GetMouseButton(1) || turnable)
         {
             transform.RotateAround(target.transform.position, Vector3.up, camerarate * Time.deltaTime);
         }
