@@ -49,6 +49,8 @@ class WheelTools : EditorWindow
             }
         }
 
+        EditorGUILayout.LabelField("Suspension Tools");
+
         if (GUILayout.Button("Set Attachment Point"))
         {
             foreach (var wheel in selectedWheels)
@@ -73,6 +75,8 @@ class WheelTools : EditorWindow
             }
         }
 
+        EditorGUILayout.LabelField("Pose Controls");
+
         if (GUILayout.Button("Set Height From Mass"))
         {
             foreach (var wheel in selectedWheels)
@@ -89,7 +93,7 @@ class WheelTools : EditorWindow
             }
         }
 
-
+        EditorGUILayout.LabelField("Utilities");
 
         if (GUILayout.Button("Generate Curve Code"))
         {
@@ -116,8 +120,15 @@ class WheelTools : EditorWindow
 
         wheel.k = k;
         SetHeightFromMass(wheel);
+
+        EditorUtility.SetDirty(wheel);
     }
 
+    /// <summary>
+    /// Sets the current wheel height to what it would be if the mass of the car were being simulated at runtime.
+    /// (Height is a pose parameter that is usually updated by the simulation)
+    /// </summary>
+    /// <param name="wheel"></param>
     public static void SetHeightFromMass(Wheel wheel)
     {
         var rigidBody = wheel.GetComponentInParent<Rigidbody>();
@@ -129,6 +140,11 @@ class WheelTools : EditorWindow
         wheel.height = restDistance + d;
     }
 
+    /// <summary>
+    /// Sets the current wheel height to the reset pose with no gravity applied.
+    /// (Height is a pose parameter that is usually updated by the simulation)
+    /// </summary>
+    /// <param name="wheel"></param>
     public static void ResetHeight(Wheel wheel)
     {
         wheel.height = wheel.offset + wheel.travel;
@@ -147,10 +163,12 @@ class WheelTools : EditorWindow
         var localAttachmentPoint = rb.transform.worldToLocalMatrix.MultiplyPoint(worldAttachmentPoint);
 
         wheel.localAttachmentPosition = localAttachmentPoint;
+
+        EditorUtility.SetDirty(wheel);
     }
 
     /// <summary>
-    /// Sets the Travel of the Suspension to be the distance between the Force App Point and the Wheels Position with a safety margin
+    /// Sets the Travel of the Suspension to be the distance between the Force App Point and the Wheels current Position with a safety margin
     /// </summary>
     /// <param name="wheel"></param>
     public static void SetTravel(Wheel wheel)
@@ -161,6 +179,8 @@ class WheelTools : EditorWindow
 
         wheel.offset = length * 0.25f;
         wheel.travel = length;
+
+        EditorUtility.SetDirty(wheel);
     }
 
     /// <summary>
@@ -176,6 +196,8 @@ class WheelTools : EditorWindow
 
             var max = Mathf.Max(mesh.bounds.extents.x, Mathf.Max(mesh.bounds.extents.y, mesh.bounds.extents.z));
             wheel.radius = max;
+
+            EditorUtility.SetDirty(wheel);
         }
     }
 
