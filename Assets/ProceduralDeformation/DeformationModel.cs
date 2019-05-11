@@ -24,6 +24,7 @@ public class FiniteDeformationMesh
         public Vector3 position;
         public float y;         // strain multiplier
         public int locked;      // helper flag to prevent resetting strain of entry node
+        public float d;
 
         public int constraintoffset;
         public int constraintcount;
@@ -62,6 +63,7 @@ public class DeformationModel : MonoBehaviour
 {
     public float k;     //inelastic stiffness of the material
     public float maxd;  //maximum deformation in world units
+    public float geodesicmetric; //applied to the contact node as paramter D - controls the distance of the surface damage element propagation
 
     public int simulationsteps;
 
@@ -78,6 +80,7 @@ public class DeformationModel : MonoBehaviour
     {
         public Vector3 position;
         public float weight;
+        public float d;
     }
 
     public Simulation simulation;
@@ -205,6 +208,9 @@ public class DeformationModel : MonoBehaviour
 
                 constraints[edge.constraintbinv1].position = v1.position + correction1;
                 constraints[edge.constraintbinv1].weight = Mathf.Abs(violation);
+
+                constraints[edge.constraintbinv0].d = v1.d - edge.length;
+                constraints[edge.constraintbinv1].d = v0.d - edge.length;
             }
 
             for(int i = 0; i < mesh.nodes.Length; i++)
@@ -241,6 +247,14 @@ public class DeformationModel : MonoBehaviour
                 if (weight > Mathf.Epsilon)
                 {
                     node.position = positions / weight;
+                }
+
+                if(!(node.locked > 0))
+                {
+                    for (int i = 0; i < node.constraintcount; i++)
+                    {
+                        node.d = Mathf.Max(node.d, constraints[node.constraintoffset + i].d);
+                    }
                 }
             }
         }
@@ -393,6 +407,7 @@ public class DeformationModel : MonoBehaviour
             {
                 closest.position = closest.origin + displacement * transform.InverseTransformDirection(contact.normal);
                 closest.y = 100f; // any big number relative to the world scale of the model, since edge strains are the same as world scale deviations
+                closest.d = geodesicmetric;
                 closest.locked = 1;
             }
         }

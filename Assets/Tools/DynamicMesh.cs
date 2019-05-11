@@ -9,6 +9,20 @@ public class DynamicMesh : MonoBehaviour
     Color[] uv3;
     DeformationModel deformer;
 
+    public AnimationCurve blendFunction;
+
+    public bool forceUpdate;
+
+    public enum BlendChannel
+    {
+        Strain,
+        Deformation,
+        Distance
+    }
+
+    public BlendChannel blendChannel;
+
+
     private void Awake()
     {
         deformer = GetComponentInParent<DeformationModel>();
@@ -25,13 +39,26 @@ public class DynamicMesh : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (deformer.lastImpactFrame == Time.frameCount)    // lastImpactFrame is set in OnCollisionEnter, which always occurs before Update
+        if (deformer.lastImpactFrame == Time.frameCount || forceUpdate)    // lastImpactFrame is set in OnCollisionEnter, which always occurs before Update
         {
             for (int i = 0; i < positions.Length; i++)
             {
                 positions[i] = deformer.mesh.nodes[deformer.nodesmap[i]].position;
-                 uv3[i].r = 1 - (positions[i] - deformer.mesh.nodes[deformer.nodesmap[i]].origin).magnitude;
-                //uv3[i].r = 1 - deformer.mesh.nodes[deformer.nodesmap[i]].y;
+
+                switch (blendChannel)
+                {
+                    case BlendChannel.Strain:
+                        uv3[i].r = 1 - blendFunction.Evaluate(deformer.mesh.nodes[deformer.nodesmap[i]].y);
+                        break;
+                    case BlendChannel.Deformation:
+                        uv3[i].r = 1 - blendFunction.Evaluate((positions[i] - deformer.mesh.nodes[deformer.nodesmap[i]].origin).magnitude / deformer.maxd);
+                        break;
+                    case BlendChannel.Distance:
+                        uv3[i].r = 1 - (deformer.mesh.nodes[deformer.nodesmap[i]].d / deformer.geodesicmetric);
+                        break;
+                    default:
+                        break;
+                }                
             }
             mesh.vertices = positions;
             mesh.colors = uv3;

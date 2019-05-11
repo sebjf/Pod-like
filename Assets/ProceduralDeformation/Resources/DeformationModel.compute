@@ -12,6 +12,7 @@ struct Node
 	float3	position;
 	float	y;
 	int		locked;
+	float	d;
 	int		constraintoffset;
 	int		constraintcount;
 };
@@ -29,6 +30,7 @@ struct Constraint
 {
 	float3	position;
 	float	weight;
+	float	d;
 };
 
 RWStructuredBuffer<Node> nodes;
@@ -61,11 +63,13 @@ void ProjectEdges(uint3 id : SV_DispatchThreadID)
 	Constraint c0;
 	c0.position = v0.position + correction0;
 	c0.weight = abs(violation);
+	c0.d = v1.d - edge.length;
 	constraints[edge.constraintbinv0] = c0;
 
 	Constraint c1;
 	c1.position = v1.position + correction1;
 	c1.weight = abs(violation);
+	c1.d = v0.d - edge.length;
 	constraints[edge.constraintbinv1] = c1;
 }
 
@@ -98,19 +102,36 @@ void AverageNodeConstraints(uint3 id : SV_DispatchThreadID)
 	}
 
 	Node node = nodes[id.x];
+	bool updated = false;
 
 	float3 positions = float3(0,0,0);
 	float weight = 0;
+	float d = node.d;
 
 	for (int i = 0; i < node.constraintcount; i++)
 	{
 		positions += constraints[node.constraintoffset + i].position * constraints[node.constraintoffset + i].weight;
 		weight += constraints[node.constraintoffset + i].weight;
+		d = max(d, constraints[node.constraintoffset + i].d);
 	}
 
 	if (weight > Epsilon)
 	{
 		node.position = positions / weight;
+		updated = true;
+	}
+
+	if (!(node.locked > 0))
+	{
+		node.d = d;
+		if (abs(d - node.d) > Epsilon)
+		{
+			updated = true;
+		}
+	}
+
+	if (updated) 
+	{
 		nodes[id.x] = node;
 	}
 }

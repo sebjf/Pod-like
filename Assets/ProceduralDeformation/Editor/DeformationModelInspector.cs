@@ -11,6 +11,7 @@ public class DeformationModelInspector : Editor
         serializedObject.Update();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("k"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("maxd"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("geodesicmetric"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("simulationsteps"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("gizmo"));
         serializedObject.ApplyModifiedProperties();
