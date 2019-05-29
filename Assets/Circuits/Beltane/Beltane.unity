@@ -2732,26 +2732,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1223322117, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
-      propertyPath: slipForceScale
-      value: 50000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223322116, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
-      propertyPath: slipForceScale
-      value: 50000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223322115, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
-      propertyPath: slipForceScale
-      value: 50000
-      objectReference: {fileID: 0}
-    - target: {fileID: 1223322118, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
-      propertyPath: slipForceScale
-      value: 50000
-      objectReference: {fileID: 0}
-    - target: {fileID: 406059496, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
-      propertyPath: maxSteerAngle
-      value: 40
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
 --- !u!1 &791625529
@@ -6517,9 +6497,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954310a35c68e6946b40b942f0e5406a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheels: []
-  maxSteerAngle: 0
+  throttle: 0
   steeringAngle: 0
+  brake: 0
+  handbrake: 0
+  maxSteerAngle: 0
+  wheels: []
   rigidbody: {fileID: 0}
 --- !u!1 &1790088500
 GameObject:
