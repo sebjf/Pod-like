@@ -12,6 +12,11 @@ public class DynamicMesh : MonoBehaviour
     private void Awake()
     {
         deformer = GetComponentInParent<DeformationModel>();
+
+        if(deformer == null)
+        {
+            Destroy(this);
+        }
     }
 
     // Start is called before the first frame update

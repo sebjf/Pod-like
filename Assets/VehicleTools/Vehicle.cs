@@ -5,10 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MonoBehaviour
 {
-    [Range(0,1)]
+    [Range(-1,1)]
     public float throttle;
 
-    [Range(0,1)]
+    [Range(-1,1)]
     public float steeringAngle;
 
     public bool brake;
@@ -34,7 +34,7 @@ public class Vehicle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -123,5 +123,7 @@ public class Vehicle : MonoBehaviour
         {
             wheel.UpdateLocalTransform();
         }    
+
+
     }
 }
