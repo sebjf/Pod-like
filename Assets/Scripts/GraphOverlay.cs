@@ -241,8 +241,11 @@ public class GraphOverlay : MonoBehaviour
 		m_Texture.SetPixels32(m_Pixels);
 		m_Texture.Apply();
 
-		if (vehicleBody)
-			m_SpeedText.text = string.Format("Speed: {0:0.00} m/s, {1:0} mph", vehicleBody.velocity.magnitude, vehicleBody.velocity.magnitude * 2.237);
+        if (vehicleBody)
+        {
+            var vehicle = vehicleBody.GetComponent<Vehicle>();
+            m_SpeedText.text = string.Format("Speed: {0:0.00} m/s, {1:0} mph", vehicle.speed, vehicle.speed * 2.237);
+        }
 
 
         foreach (var item in annotations)

@@ -20,8 +20,20 @@ public class VehicleControllerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        vehicle.throttle = Input.GetAxis("Vertical");
-        vehicle.brake = Input.GetKey(KeyCode.X);
+        var throttleinput = Input.GetAxis("Vertical");
+
+        vehicle.throttle = throttleinput;
+
+        vehicle.brake = 0f;
+
+        //automatic braking on deceleration
+        if (Mathf.Abs(throttleinput) > 0 && Mathf.Sign(vehicle.speed) != Mathf.Sign(throttleinput) && Mathf.Abs(vehicle.speed) > 1f)
+        {
+            vehicle.brake = Mathf.Max(vehicle.brake, Mathf.Abs(throttleinput));
+        }
+
+        vehicle.brake = Mathf.Max(vehicle.brake, Input.GetKey(KeyCode.X) ? 1f : 0f);
+
         vehicle.steeringAngle = Input.GetAxisRaw("Horizontal");
     }
 }

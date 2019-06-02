@@ -5,13 +5,15 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MonoBehaviour
 {
-    [Range(0,1)]
+    [Range(-1,1)]
     public float throttle;
 
-    [Range(0,1)]
+    [Range(-1,1)]
     public float steeringAngle;
 
-    public bool brake;
+    [Range(0,1)]
+    public float brake;
+
     public bool handbrake;
 
     public float maxSteerAngle = 40f;
@@ -21,6 +23,8 @@ public class Vehicle : MonoBehaviour
 
     [HideInInspector]
     public new Rigidbody rigidbody;
+
+    public float speed;
 
     private Drivetrain drivetrain;
 
@@ -99,9 +103,14 @@ public class Vehicle : MonoBehaviour
 
         foreach (var wheel in wheels)
         {
-            if (brake || handbrake)
+            var brakepower = brake;
+            if(handbrake)
             {
-                wheel.ApplyBrake(1);
+                brakepower = 1f;
+            }
+            if(brakepower > 0f)
+            {
+                wheel.ApplyBrake(brakepower);
             }
         }
 
@@ -122,6 +131,8 @@ public class Vehicle : MonoBehaviour
         foreach (var wheel in wheels)
         {
             wheel.UpdateLocalTransform();
-        }    
+        }
+
+        speed = Vector3.Dot(transform.forward, rigidbody.velocity);
     }
 }
