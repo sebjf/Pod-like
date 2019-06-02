@@ -1,0 +1,70 @@
+newmtl texture_2
+Kd 1.000000 1.000000 1.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+map_Kd 2_diffuse.png
+newmtl texture_6
+Kd 1.000000 1.000000 1.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+map_Kd 6_diffuse.png
+newmtl texture_0
+Kd 1.000000 1.000000 1.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+map_Kd 0_diffuse.png
+newmtl texture_5
+Kd 1.000000 1.000000 1.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+map_Kd 5_diffuse.png
+newmtl texture_4
+Kd 1.000000 1.000000 1.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+map_Kd 4_diffuse.png
+newmtl texture_1
+Kd 1.000000 1.000000 1.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+map_Kd 1_diffuse.png
+newmtl texture_3
+Kd 1.000000 1.000000 1.000000
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+map_Kd 3_diffuse.png
+newmtl colour_132_123_123
+Kd 0.517647 0.482353 0.482353
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
+newmtl colour_239_214_214
+Kd 0.937255 0.839216 0.839216
+illum 2
+d 1.000000
+Ns 0.000000
+sharpness 60
+Ni 1.000000
