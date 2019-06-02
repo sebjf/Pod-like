@@ -10,17 +10,10 @@ public class CircuitInspector : Editor {
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("circuitInfo"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("GridPositions"), true);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("StartDirection"));
 
         serializedObject.ApplyModifiedProperties();
-
-        if(GUILayout.Button("Reset"))
-        {
-            (target as Circuit).ImportCircuitInfo();
-        }
-
     }
 
     protected virtual void OnSceneGUI()
