@@ -45,6 +45,8 @@ public class Wheel : MonoBehaviour
     private Vector3 road;
     private float coefficientOfFriction = 1f;
 
+    private float slipForceRange;
+
     [HideInInspector]
     public float wheelsInContact;
 
@@ -98,6 +100,8 @@ public class Wheel : MonoBehaviour
         prevPosition = attachmentPoint;
 
         inertia = mass * (radius * radius) / 2;
+
+        slipForce.postWrapMode = WrapMode.ClampForever;
 
         //annotation = FindObjectOfType<GraphOverlay>().CreateAnnotation();
         //annotation.world = transform;
@@ -225,8 +229,8 @@ public class Wheel : MonoBehaviour
         Quaternion q = rotation * rigidBody.inertiaTensorRotation;
         a = q * Vector3.Scale(rigidBody.inertiaTensor, (Quaternion.Inverse(q) * a));
         var Ft = a / r;
-        
-        var slipAngle = Mathf.Abs(Mathf.Acos(Vector3.Dot(velocity.normalized, forward)));
+
+        var slipAngle = Mathf.Abs(Mathf.Acos(Mathf.Clamp(Vector3.Dot(velocity.normalized, forward),-1f,1f)));
         var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale;
 
         Ft = Ft.normalized * Mathf.Min(Ft.magnitude, Fs);
@@ -239,6 +243,7 @@ public class Wheel : MonoBehaviour
         var Fn = Vector3.Dot(Physics.gravity * (rigidBody.mass / wheelsInContact), -road) * coefficientOfFriction;
         var g_force_mag = Mathf.Min(g_force.magnitude, Fn);
         rigidBody.AddForce(-g_force.normalized * g_force_mag, ForceMode.Force);
+
 
         //Debug.Log(Fn.ToString() + " " + g_force.magnitude.ToString());
     }

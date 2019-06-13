@@ -9,19 +9,10 @@ public class VehicleAgent : Agent
     private Vehicle vehicle;
     private Rigidbody body;
 
+    private Waypoints waypoints;
+
     private Vector3 startposition;
     private Quaternion startrotation;
-
-    public GameObject road;
-    private Waypoint[] waypoints;
-
-    private class TrackSegment
-    {
-        public Waypoint wp1;
-        public Waypoint wp2;
-    }
-
-    private TrackSegment s;
 
     public bool logToConsole = false;
 
@@ -29,133 +20,115 @@ public class VehicleAgent : Agent
     {
         vehicle = GetComponent<Vehicle>();
         body = GetComponent<Rigidbody>();
+        waypoints = GameObject.FindObjectOfType<Waypoints>();
 
         startposition = transform.position;
         startrotation = transform.rotation;
 
         GetComponent<VehicleControllerInput>().enabled = false;
 
-        waypoints = road.GetComponentsInChildren<Waypoint>().ToArray();
+        previousDistance = 0f;
+        totalDistance = 0f;
+        startTime = Time.time;
+
+        observations = new Observation[10];
     }
 
     public override void CollectObservations()
     {
-        AddVectorObs(Vector3.Dot(body.velocity, transform.forward) * 0.01f);
-        AddVectorObs(transform.InverseTransformPoint(waypoints.Last().transform.position).normalized);
-        
-        //AddVectorObs(transform.InverseTransformPoint(s.wp1.transform.position).normalized);
-        //AddVectorObs(s.wp1.width);
-        AddVectorObs(cross);
-        //AddVectorObs(transform.InverseTransformPoint(s.wp2.transform.position).normalized);
-        //AddVectorObs(s.wp2.width);
+        AddVectorObs(transform.InverseTransformVector(body.velocity) * 0.1f);
+
+        for (int i = 0; i < 10; i++)
+        {
+            // the waypoints 20 m ahead in 2 m increments along the centreline, normalised by 20 m
+            var sampleposition = waypoints.Evaluate(body.position) + (i * 10);
+            var mp = waypoints.Midline(sampleposition);
+            var w = waypoints.Width(sampleposition);
+            var t = waypoints.Tangent(sampleposition);
+
+            observations[i].left = mp - t * w * 0.5f;
+            observations[i].right = mp + t * w * 0.5f;
+
+            AddVectorObs(transform.InverseTransformPoint(observations[i].left)  / 100f);
+            AddVectorObs(transform.InverseTransformPoint(observations[i].right) / 100f);
+        }
     }
 
-    private void UpdateSegment()
+    public struct Observation
     {
-        if(waypoints == null || waypoints.Length <= 0)
-        {
-            waypoints = road.GetComponentsInChildren<Waypoint>().ToArray();
-        }
-
-        if(s == null)
-        {
-            s = new TrackSegment();
-        }
-
-        if(s.wp1 == null)
-        {
-            s.wp1 = waypoints[0];
-        }
-        
-        if(s.wp2 == null)
-        {
-            s.wp2 = waypoints[1];
-        }
-
-        foreach (var waypoint in waypoints)
-        {
-            if ((waypoint.transform.position - transform.position).magnitude < (s.wp1.transform.position - transform.position).magnitude)
-            {
-                s.wp1 = waypoint;
-
-                if (s.wp1.next != null)
-                {
-                    s.wp2 = waypoint.next;
-                }
-                else
-                {
-                    s.wp2 = s.wp1;
-                }
-            }
-        }
-
-        var t = Vector3.Dot((s.wp2.transform.position - s.wp1.transform.position).normalized, (transform.position - s.wp1.transform.position));
-        p = s.wp1.transform.position + s.wp1.normal * t;
-        var tn = t / (s.wp2.transform.position - s.wp1.transform.position).magnitude;
-        width = Mathf.Lerp(s.wp1.width, s.wp2.width, tn);
-        tangent = Vector3.Lerp(s.wp1.tangent, s.wp2.tangent, tn);
-        cross = (transform.position - p).magnitude / width * Vector3.Dot((transform.position - p).normalized, s.wp1.tangent);
+        public Vector3 left;
+        public Vector3 right;
+        public float width;
     }
 
+    Observation[] observations;
+
+    float distance;
     float previousDistance;
-    float previousDistanceReduction;
-    int i;
-
-    Vector3 p;
-    float width;
-    Vector3 tangent;
-    float cross;
-
+    float distanceTravelled;
+    float averageDistancePerTime;
+    float totalDistance;
+    float forwardspeed;
+    float startTime;
+    float angle;
+    float margin;
+    
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        vehicle.throttle = Mathf.Clamp(vectorAction[0], -1, 1);
+        var throttle = Mathf.Clamp(vectorAction[0], -1, 1);
+        if(throttle < 0)
+        {
+            vehicle.brake = Mathf.Abs(throttle);
+            vehicle.throttle = 0f;
+        }
+        else
+        {
+            vehicle.brake = 0f;
+            vehicle.throttle = throttle;
+        }
+
         vehicle.steeringAngle = Mathf.Clamp(vectorAction[1], -1, 1);
 
-        UpdateSegment();
+        distance = waypoints.Evaluate(body.position);
+        distanceTravelled = distance - previousDistance;
 
-        /*
-        var orientation = Vector3.Dot(transform.forward, s.wp1.normal);
-        if(orientation < 0)
+        if(distanceTravelled < 0 && Mathf.Abs(distanceTravelled) > (waypoints.totalLength / 2)) // we have crossed over the finish line
         {
-            AddReward(-0.25f);
-        }
-        else
-        {
-            AddReward(0.25f);
-        }
-        */
-        
-        var forwardspeed = Vector3.Dot(body.angularVelocity, transform.forward);
-        if(forwardspeed < 0)
-        {
-            AddReward(-0.05f);
-        }
-        else
-        {
-            AddReward(0.025f);
-            AddReward(forwardspeed * 0.01f);
-        }
-        
-        
-        if(Mathf.Abs(cross) < 0.8f)
-        {
-            AddReward(0.05f);
-        }
-        else
-        {
-            AddReward(-0.05f);
+            //distanceTravelled = (waypoints.totalLength - previousDistance) + distance;
+            distanceTravelled = 1f;
         }
 
-        var distance = (waypoints.Last().transform.position - transform.position).magnitude;
-        var distanceReduction = previousDistance - distance;
         previousDistance = distance;
-        if(distanceReduction > 0)
+
+        if(distanceTravelled < 0.01)
         {
-            AddReward(0.05f);
+            AddReward(-1f);
         }
-        else
+        if(distanceTravelled > 0)
         {
-            AddReward(-0.01f);
+            AddReward(0.5f);
+            AddReward(distanceTravelled);
+        }
+
+        totalDistance += distanceTravelled;
+        averageDistancePerTime = totalDistance / ((Time.time - startTime) + Mathf.Epsilon);
+        if (!float.IsNaN(averageDistancePerTime))
+        {
+            //AddReward(averageDistancePerTime * 0.01f);
+        }
+
+        angle = Vector3.Dot(waypoints.Normal(distance), transform.forward);
+        if (angle < 0)
+        {
+            AddReward(-1f);
+        }
+
+        var mp = waypoints.Midline(distance);
+        var width = waypoints.Width(distance);
+        margin = (width / 2) - (body.position - mp).magnitude;
+        if (margin < 0)
+        {
+            AddReward(-10f);
         }
 
         if (logToConsole)
@@ -168,21 +141,35 @@ public class VehicleAgent : Agent
     {
         transform.position = startposition;
         transform.rotation = startrotation;
-        previousDistance = (waypoints.Last().transform.position - transform.position).magnitude;
+        body.velocity = Vector3.zero;
+        previousDistance = 0f;
+        totalDistance = 0f;
+        startTime = Time.time;
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
-        UpdateSegment();
-        Gizmos.color = Color.green;
+        UnityEditor.Handles.BeginGUI();
+        GUIStyle style = new GUIStyle();
 
-        Gizmos.DrawWireSphere(s.wp1.transform.position, 0.5f);
-        Gizmos.DrawWireSphere(s.wp2.transform.position, 0.5f);
+        string content = "";
+        content += "Distance: " + distance + "\n";
+        content += "distanceTravelled: " + distanceTravelled + "\n";
+        content += "angle: " + angle + "\n";
+        content += "margin: " + margin + "\n";
 
-        Gizmos.color = Color.red;
-        
-        Gizmos.DrawWireSphere(p, 0.25f);
-        Gizmos.DrawLine(p, p + tangent * width);
-        Gizmos.DrawLine(p, p - tangent * width);
+        UnityEditor.Handles.Label(transform.position, content, style);
+
+        UnityEditor.Handles.EndGUI();
+
+        if (observations != null)
+        {
+            Gizmos.color = Color.red;
+            for (int i = 0; i < observations.Length; i++)
+            {
+                Gizmos.DrawWireSphere(observations[i].left, 1f);
+                Gizmos.DrawWireSphere(observations[i].right, 1f);
+            }
+        }
     }
 }

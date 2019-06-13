@@ -18,8 +18,15 @@ public class DeformationModelInspector : Editor
 
         var model = (target as DeformationModel);
 
-        EditorGUILayout.LabelField("Points: " + model.mesh.nodes.Length);
-        EditorGUILayout.LabelField("Edges: " + model.mesh.edges.Length);
+        if (model.mesh != null)
+        {
+            EditorGUILayout.LabelField("Points: " + model.mesh.nodes.Length);
+            EditorGUILayout.LabelField("Edges: " + model.mesh.edges.Length);
+        }
+        else
+        {
+            EditorGUILayout.LabelField("No Mesh");
+        }
 
         if (GUILayout.Button("Create"))
         {

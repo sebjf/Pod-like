@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: VehicleLearning
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 5
+    vectorObservationSize: 63
     numStackedVectorObservations: 1
     vectorActionSize: 02000000
     cameraResolutions: []
