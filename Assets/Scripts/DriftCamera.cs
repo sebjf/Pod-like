@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public class DriftCamera : MonoBehaviour
@@ -23,7 +24,7 @@ public class DriftCamera : MonoBehaviour
     {
         if(cameraRig == null)
         {
-            cameraRig = FindObjectOfType<CamRig>();
+            cameraRig = FindObjectsOfType<CamRig>().Where(x => x.enabled).First();
         }
 
         GetComponent<GraphOverlay>().vehicleBody = cameraRig.GetComponentInParent<Rigidbody>();

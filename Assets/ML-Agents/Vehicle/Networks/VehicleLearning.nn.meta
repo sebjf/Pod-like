@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: 42a565bc99aeea645a2e09ab757bc482
+guid: cd0796d14468b384fae34c124c39c139
 ScriptedImporter:
   fileIDToRecycleName:
-    11400000: Assets/ML-Agents/Vehicle/Networks/VehicleLearning.nn
+    11400002: Assets/ML-Agents/Vehicle/Networks/VehicleLearning.nn
   externalObjects: {}
   userData: 
   assetBundleName: 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 [Serializable]
 public class Waypoint   // we can keep waypoint as a class and use references, so long as we are careful not to expect them to remain between serialisation. using class also means we can compare to null.
@@ -82,7 +83,7 @@ public class Waypoint   // we can keep waypoint as a class and use references, s
 
     public bool Contains(float distance)
     {
-        if(distance >= start && distance < end)
+        if(distance >= start && distance <= end)
         {
             return true;
         }
@@ -93,6 +94,13 @@ public class Waypoint   // we can keep waypoint as a class and use references, s
     {
         return (distance - start) / length;
     }
+}
+
+[Serializable]
+public struct WaypointsSpatialMap
+{
+    public int[] indices;
+    public float resolution;
 }
 
 public struct Position
@@ -108,8 +116,10 @@ public struct Position
 public class Waypoints : MonoBehaviour
 {
     public List<Waypoint> waypoints = new List<Waypoint>();
-
     public float totalLength;
+
+    [NonSerialized]
+    public WaypointsBroadphase broadphase;
 
     [NonSerialized]
     public List<Waypoint> selected = new List<Waypoint>();
@@ -129,6 +139,21 @@ public class Waypoints : MonoBehaviour
                 return selected.Last();
             }
             return null;
+        }
+    }
+
+    private void Start()
+    {
+        broadphase = new WaypointsBroadphase();
+        broadphase.Initialise(this);
+    }
+
+    public void InitialiseTemporaryBroadphase()
+    {
+        if (broadphase == null)
+        {
+            broadphase = new WaypointsBroadphase();
+            broadphase.Initialise(this);
         }
     }
 
@@ -158,6 +183,18 @@ public class Waypoints : MonoBehaviour
             waypoints[i].end = totalLength + length;
             totalLength += length;
         }
+
+        // some checks
+
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            if(waypoints[i].length <= 0)
+            {
+                Debug.LogError("Degenerate waypoints: " + i);
+            }
+        }
+
+        broadphase = null;
     }
 
     //https://stackoverflow.com/questions/1082917/mod-of-negative-number-is-melting-my-brain
@@ -171,6 +208,10 @@ public class Waypoints : MonoBehaviour
         return ((k %= n) < 0) ? k + n : k;
     }
 
+    public Waypoint Waypoint(int index)
+    {
+        return waypoints[mod(index, waypoints.Count)];
+    }
 
     public Waypoint Next(Waypoint current)
     {
@@ -216,14 +257,24 @@ public class Waypoints : MonoBehaviour
     /// <summary>
     /// Returns the absolute distance along the track for the position
     /// </summary>
-    public float Evaluate(Vector3 position)
+    public float Evaluate(Vector3 position, float currentDistance)
     {
         float smallestDistance = float.MaxValue;
         Waypoint closest = null;
 
-        for (int i = 0; i < waypoints.Count; i++)
+        int start = 0;
+        int end = waypoints.Count;
+
+        if(currentDistance != -1)
         {
-            var wp = waypoints[i];
+            start = Query(currentDistance).waypoint.index;
+            start -= 2;
+            end = start + 8;
+        } 
+
+        for (int i = start; i < end; i++)
+        {
+            var wp = Waypoint(i);
             var dir = (Next(wp).position - wp.position).normalized;
             var t = Project(wp, position);
             var projected = wp.position + dir * t;
@@ -249,39 +300,63 @@ public class Waypoints : MonoBehaviour
 
     private WaypointQuery Query(float distance)
     {
-        var trackdistance = mod(distance, totalLength);
+        distance = mod(distance, totalLength);
+        distance = Mathf.Clamp(distance, 0, totalLength);
 
-        for (int i = 0; i < waypoints.Count; i++)
+        var cells = broadphase.Evaluate(distance);
+        var cell = cells[0];
+        var wp = waypoints[cell];
+
+        if (!wp.Contains(distance))
         {
-            var wp = waypoints[i];
-            if (wp.Contains(trackdistance))
+            if(Next(wp).Contains(distance))
             {
-                return new WaypointQuery()
-                {
-                    distance = trackdistance,
-                    waypoint = wp,
-                    t = wp.Evaluate(trackdistance)
-                };
-
+                wp = Next(wp);
+            }
+            if(Previous(wp).Contains(distance))
+            {
+                wp = Previous(wp);
             }
         }
 
-        throw new Exception("Invalid Distance");
+        if(!wp.Contains(distance))
+        {
+            for (int i = 0; i < waypoints.Count; i++)
+            {
+                wp = waypoints[i];
+                if(wp.Contains(distance))
+                {
+                    break;
+                }
+            }
+        }
+
+        if (!wp.Contains(distance))
+        {
+            throw new Exception("Invalid Distance " + distance);
+        }
+
+        return new WaypointQuery()
+        {
+            distance = distance,
+            waypoint = wp,
+            t = wp.Evaluate(distance)
+        };
     }
 
     public Vector3 Midline(float distance)
     {
-        var result = Query(distance);
-        var wp = result.waypoint;
-        var dir = (Next(wp).position - wp.position);
-        return wp.position + dir * result.t;
+        return Midline(Query(distance));
     }
 
     public float Width(float distance)
     {
-        var result = Query(distance);
-        var wp = result.waypoint;
-        return Mathf.Lerp(wp.width, Next(wp).width, result.t);
+        return Width(Query(distance));
+    }
+
+    public Vector3 Tangent(float distance)
+    {
+        return Tangent(Query(distance));
     }
 
     public Vector3 Normal(float distance)
@@ -291,11 +366,42 @@ public class Waypoints : MonoBehaviour
         return Vector3.Lerp(wp.normal, Next(wp).normal, result.t);
     }
 
-    public Vector3 Tangent(float distance)
+    private Vector3 Midline(WaypointQuery result)
     {
-        var result = Query(distance);
+        var wp = result.waypoint;
+        var dir = (Next(wp).position - wp.position);
+        return wp.position + dir * result.t;
+    }
+
+    private float Width(WaypointQuery result)
+    {
+        var wp = result.waypoint;
+        return Mathf.Lerp(wp.width, Next(wp).width, result.t);
+    }
+
+    private Vector3 Tangent(WaypointQuery result)
+    {
         var wp = result.waypoint;
         return Vector3.Lerp(wp.tangent, Next(wp).tangent, result.t);
+    }
+
+    public struct Edge
+    {
+        public Vector3 left;
+        public Vector3 right;
+    }
+
+    public Edge Edges(float distance)
+    {
+        var query = Query(distance);
+
+        var mp = Midline(query);
+        var w = Width(query);
+        var t = Tangent(query);
+        Edge edge;
+        edge.left = mp - t * w * 0.5f;
+        edge.right = mp + t * w * 0.5f;
+        return edge;
     }
 
     public IEnumerable<Waypoint> Raycast(Ray ray)

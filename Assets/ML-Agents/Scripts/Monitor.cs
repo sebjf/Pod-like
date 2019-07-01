@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 namespace MLAgents
@@ -344,23 +343,6 @@ namespace MLAgents
 
         }
 
-        void OnEnable()
-        {
-            SceneView.onSceneGUIDelegate += this.OnSceneGUI;
-        }
-
-        void OnDisable()
-        {
-            SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
-        }
-
-        void OnSceneGUI(SceneView sceneView)
-        {
-            Handles.BeginGUI();
-            OnGUI(sceneView.camera);
-            Handles.EndGUI();
-        }
-
         /// Initializes the canvas.
         static void InstantiateCanvas()
         {
@@ -379,20 +361,13 @@ namespace MLAgents
         }
 
         /// <summary> <inheritdoc/> </summary>
-        private void OnGUI()
-        {
-            OnGUI(Camera.main);
-        }
-
-        void OnGUI(Camera mainCamera)
+        void OnGUI()
         {
             if (!initialized)
             {
                 Initialize();
                 initialized = true;
             }
-
-            int listItems = 0;
 
             var toIterate = displayTransformValues.Keys.ToList();
             foreach (Transform target in toIterate)
@@ -407,18 +382,17 @@ namespace MLAgents
                 Camera cam = transformCamera[target];
                 if (cam == null)
                 {
-                    cam = mainCamera;
+                    cam = Camera.main;
                 }
 
-                float widthScaler = (cam.pixelWidth / 1000f);
+                float widthScaler = (Screen.width / 1000f);
                 float keyPixelWidth = 100 * widthScaler;
                 float keyPixelHeight = 20 * widthScaler;
                 float paddingwidth = 10 * widthScaler;
 
                 float scale = 1f;
-
-                var origin = new Vector3(10f, cam.pixelHeight - 10f);
-
+                var origin = new Vector3(
+                    Screen.width / 2 - keyPixelWidth, Screen.height);
                 if (!(target == canvas.transform))
                 {
                     Vector3 cam2obj = target.position - cam.transform.position;
@@ -428,7 +402,7 @@ namespace MLAgents
                     Vector3 worldPosition = cam.WorldToScreenPoint(
                         target.position + new Vector3(0, verticalOffset, 0));
                     origin = new Vector3(
-                        worldPosition.x - keyPixelWidth * scale, cam.pixelHeight - worldPosition.y);
+                        worldPosition.x - keyPixelWidth * scale, Screen.height - worldPosition.y);
                 }
 
                 keyPixelWidth *= scale;
@@ -439,6 +413,7 @@ namespace MLAgents
                 {
                     continue;
                 }
+
 
                 Dictionary<string, DisplayValue> displayValues = displayTransformValues[target];
 

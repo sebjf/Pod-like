@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 using UnityEditor;
 
 [CustomEditor(typeof(Waypoints))]
@@ -13,15 +14,16 @@ public class WaypointsEditor : Editor
 
         serializedObject.Update();
 
-       // EditorGUILayout.PropertyField(serializedObject.FindProperty(""))
-
-
         serializedObject.ApplyModifiedProperties();
 
         EditorGUILayout.LabelField("Waypoints: " + component.waypoints.Count);
         EditorGUILayout.LabelField("Length: " + component.totalLength);
 
-        GUILayout.Button("Hello");
+        if (GUILayout.Button("Recompute"))
+        {
+            Undo.RecordObject(component, "Recompute");
+            component.Recompute();
+        }
     }
 
     public struct SelectionRectangle
@@ -90,12 +92,12 @@ public class WaypointsEditor : Editor
         //prevent left click changing focus
         //https://answers.unity.com/questions/564457/intercepting-left-click-in-scene-view-for-custom-e.html
 
-        if (Event.current.type == EventType.Layout) 
+        if (Event.current.type == EventType.Layout)
         {
             HandleUtility.AddDefaultControl(0);
         }
 
-        if((Event.current.modifiers & EventModifiers.Alt) != 0)
+        if ((Event.current.modifiers & EventModifiers.Alt) != 0)
         {
             return; // in navigation mode
         }
@@ -118,7 +120,7 @@ public class WaypointsEditor : Editor
             selectionRectangle.start = Event.current.mousePosition;
         }
 
-        if(Event.current.type == EventType.MouseDrag && Event.current.button == 0)
+        if (Event.current.type == EventType.MouseDrag && Event.current.button == 0)
         {
             selectionRectangle.end = Event.current.mousePosition;
             selectionBoxActive = true;
@@ -129,7 +131,7 @@ public class WaypointsEditor : Editor
         RaycastHit raycast;
         bool selectedPoint = Physics.Raycast(ray, out raycast);
 
-        if(selectedPoint)
+        if (selectedPoint)
         {
             component.highlightedPoint = raycast.point;
         }
@@ -151,7 +153,7 @@ public class WaypointsEditor : Editor
             component.highlighted.Clear();
             foreach (var waypoint in component.waypoints)
             {
-                if(selectionRectangle.rect.Contains(HandleUtility.WorldToGUIPoint(waypoint.position)))
+                if (selectionRectangle.rect.Contains(HandleUtility.WorldToGUIPoint(waypoint.position)))
                 {
                     component.highlighted.Add(waypoint);
                 }
@@ -181,7 +183,7 @@ public class WaypointsEditor : Editor
                 component.selected.AddRange(component.highlighted);
             }
             else
-            { 
+            {
                 if (selectedPoint)
                 {
                     if (component.lastSelected != null || component.waypoints.Count <= 0)
@@ -208,7 +210,7 @@ public class WaypointsEditor : Editor
             }
         }
 
-        if(Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Delete)
+        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Delete)
         {
             foreach (var item in component.selected)
             {
@@ -249,7 +251,7 @@ public class WaypointsEditor : Editor
         RaycastHit raycast;
         if (Physics.Raycast(new Ray(waypoint.position + waypoint.up * 0.01f, -waypoint.tangent), out raycast))
         {
-            if(raycast.distance < 100f)
+            if (raycast.distance < 100f)
             {
                 waypoint.left = raycast.point;
             }
@@ -282,10 +284,17 @@ public class WaypointsEditor : Editor
     [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected | GizmoType.Active)]
     static void DrawGizmoForWaypointsEditor(Waypoints component, GizmoType gizmoType)
     {
+        Profiler.BeginSample("Draw Waypoints Editor");
+
         Gizmos.color = Color.green;
         foreach (var waypoint in component.waypoints)
         {
-            Gizmos.DrawWireSphere(waypoint.position, 1f);
+            var size = 1f;
+            if(waypoint.index == 0)
+            {
+                size = 2f;
+            }
+            Gizmos.DrawWireSphere(waypoint.position, size);
         }
 
         Gizmos.color = Color.yellow;
@@ -319,5 +328,13 @@ public class WaypointsEditor : Editor
             Gizmos.DrawLine(component.lastSelected.position, component.highlightedPoint.Value);
             Gizmos.DrawLine(component.lastSelected.position, component.Next(component.lastSelected).position);
         }
+
+        Profiler.EndSample();
+
+        if (component.broadphase == null)
+        {
+            component.InitialiseTemporaryBroadphase();
+        }
+        //component.broadphase.OnDrawGizmos();
     }
 }
