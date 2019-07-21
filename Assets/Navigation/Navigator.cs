@@ -6,7 +6,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Navigator : MonoBehaviour
 {
-    private Waypoints wp;
+    [HideInInspector]
+    public Waypoints waypoints;
 
     [NonSerialized]
     public float distance = -1;
@@ -19,14 +20,14 @@ public class Navigator : MonoBehaviour
     // Update is called once per frame
     public void FixedUpdate()
     {
-        if(wp == null)
+        if(waypoints == null)
         {
-            wp = FindObjectOfType<Waypoints>();
+            waypoints = FindObjectOfType<Waypoints>();
         }
 
-        wp.InitialiseTemporaryBroadphase();
+        waypoints.InitialiseTemporaryBroadphase();
 
-        distance = wp.Evaluate(transform.position, distance);
+        distance = waypoints.Evaluate(transform.position, distance);
     }
 
     private void OnDrawGizmos()
@@ -36,12 +37,13 @@ public class Navigator : MonoBehaviour
             FixedUpdate();
         }
 
-        var midline = wp.Midline(distance);
+        var midline = waypoints.Midline(distance);
 
         Gizmos.DrawLine(midline, transform.position);
 
-        var normal = wp.Normal(distance);
+        var normal = waypoints.Normal(distance);
 
+        Gizmos.color = Color.red;
         Gizmos.DrawRay(midline, normal);
     }
 }

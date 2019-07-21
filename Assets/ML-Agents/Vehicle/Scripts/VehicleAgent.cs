@@ -20,6 +20,14 @@ public class VehicleAgent : Agent
 
     public bool logToConsole = false;
 
+    private void Awake()
+    {
+        trackObservations = new AngleAxesObservations();
+        trackObservations.interval = 10;
+        trackObservations.numIntervals = 15;
+        trackObservations.targetSample = 3;
+    }
+
     public override void InitializeAgent()
     {
         vehicle = GetComponent<Vehicle>();
@@ -36,7 +44,6 @@ public class VehicleAgent : Agent
         totalDistance = 0f;
         startTime = Time.time;
 
-        observations = new Observation[20];
         breadcrumbs = new FixedLengthStack<Vector3>(10);
 
         navigator.Reset();
@@ -82,9 +89,72 @@ public class VehicleAgent : Agent
         }
     }
 
+    public class AngleAxesObservations
+    {
+        public float interval;
+        public int numIntervals;
+        public int targetSample;
+
+        public struct Sample
+        {
+            public Vector3 midpoint;
+            public float width;
+            public Vector3 trajectory;
+            public float angle;
+            public Vector3 tangent;
+        }
+
+        public Sample[] samples;
+
+        public void Evaluate(Navigator navigator)
+        {
+            var waypoints = navigator.waypoints;
+
+            if (samples == null || samples.Length < numIntervals)
+            {
+                samples = new Sample[numIntervals];
+            }
+
+            Profiler.BeginSample("Track Observations");
+
+            for (int i = 0; i < numIntervals; i++)
+            {
+                var location = navigator.distance + (i * interval);
+                location = Mathf.Floor(location / interval) * interval; // round down to nearest interval step
+
+                var query = waypoints.Query(location);
+
+                var midpoint = waypoints.Midline(query);
+                samples[i].midpoint = midpoint;
+                samples[i].width = waypoints.Width(query);
+                samples[i].tangent = waypoints.Tangent(query);
+
+                var next = waypoints.Midline(location + interval);
+                var prev = waypoints.Midline(location - interval);
+
+                var trajectory = (next - midpoint).normalized;
+                samples[i].trajectory = trajectory;
+
+                var prevTrajectory = (midpoint - prev).normalized;
+
+                samples[i].angle = Vector3.Dot(prevTrajectory, trajectory);
+            }
+
+            Profiler.EndSample();
+        }
+
+        public Vector3 EvaluateTargetpoint(float w)
+        {
+            return samples[targetSample].midpoint + samples[targetSample].tangent * w * samples[targetSample].width * 0.5f;
+        }
+    }
+
+
     private FixedLengthStack<Vector3> breadcrumbs;
     private float breadcrumbTime;
     private float breadcrumbInterval = 0.5f;
+
+    private AngleAxesObservations trackObservations;
 
     private void CollectBreadcrumbs(Vector3 position)
     {
@@ -99,53 +169,26 @@ public class VehicleAgent : Agent
     {
         Profiler.BeginSample("Collect Observations");
 
-        CollectBreadcrumbs(transform.position);
-
-        AddVectorObs(transform.InverseTransformVector(body.velocity) * 0.1f);
-        AddVectorObs(vehicle.steeringAngle);
-
-        for (int i = 0; i < 15; i++)
+        foreach (var item in trackObservations.samples)
         {
-            // the waypoints 20 m ahead in 2 m increments along the centreline, normalised by 20 m
-
-            Profiler.BeginSample("Edges Determination");
-            var location = navigator.distance + (i * 25);
-            location = Mathf.Floor(location / 25) * 25; // round down to nearest 20
-            var edges = waypoints.Edges(location);
-            Profiler.EndSample();
-
-            observations[i].left = edges.left;
-            observations[i].right = edges.right;
-
-            AddVectorObs(transform.InverseTransformPoint(observations[i].left)  / 250f);
-            AddVectorObs(transform.InverseTransformPoint(observations[i].right) / 250f);
-        }
-
-        foreach (var item in breadcrumbs.Items())
-        {
-            AddVectorObs(transform.InverseTransformPoint(item) / 200f);
+            AddVectorObs(item.angle); // there is a deliberate mistake here
+            AddVectorObs(item.width);
         }
 
         Profiler.EndSample();
     }
 
-    public struct Observation
-    {
-        public Vector3 left;
-        public Vector3 right;
-        public float width;
-    }
+    private float distance;
+    private float previousDistance;
+    private float distanceTravelled;
+    private float totalDistance;
+    private float forwardspeed;
+    private float startTime;
+    private float angle;
+    private float margin;
 
-    Observation[] observations;
-
-    float distance;
-    float previousDistance;
-    float distanceTravelled;
-    float totalDistance;
-    float forwardspeed;
-    float startTime;
-    float angle;
-    float margin;
+    private float target = 0.1f;
+    private Vector3 targetPoint;
     
     public override void AgentAction(float[] vectorAction, string textAction)
     {
@@ -248,6 +291,12 @@ public class VehicleAgent : Agent
         breadcrumbs.Reset();
     }
 
+    private void FixedUpdate()
+    {
+        trackObservations.Evaluate(navigator);
+        GetComponent<Autopilot>().target = trackObservations.EvaluateTargetpoint(target);
+    }
+
 #if UNITY_EDITOR
 
     private void OnDrawGizmosSelected()
@@ -265,14 +314,17 @@ public class VehicleAgent : Agent
 
         UnityEditor.Handles.EndGUI();
 
-        if (observations != null)
+        if (trackObservations != null)
         {
             Gizmos.color = Color.red;
-            for (int i = 0; i < observations.Length; i++)
+            foreach (var item in trackObservations.samples)
             {
-                Gizmos.DrawWireSphere(observations[i].left, 1f);
-                Gizmos.DrawWireSphere(observations[i].right, 1f);
+                Gizmos.DrawWireSphere(item.midpoint, 0.5f);
+                Gizmos.DrawLine(item.midpoint - item.tangent * item.width * 0.5f, item.midpoint + item.tangent * item.width * 0.5f);
             }
+
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(trackObservations.EvaluateTargetpoint(target), 1f);
         }
 
         if (breadcrumbs != null)

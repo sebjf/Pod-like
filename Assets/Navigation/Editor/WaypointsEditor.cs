@@ -106,14 +106,18 @@ public class WaypointsEditor : Editor
 
         // do the handles first so they will use the mouse events
 
-        if ((Event.current.modifiers & EventModifiers.Control) > 0)
+        if ((Event.current.modifiers & EventModifiers.Control) <= 0)
         {
             foreach (var waypoint in component.selected)
             {
-                waypoint.left = Handles.PositionHandle(waypoint.left, Quaternion.LookRotation(waypoint.normal, waypoint.up));
-                waypoint.right = Handles.PositionHandle(waypoint.right, Quaternion.LookRotation(waypoint.normal, waypoint.up));
+                var rotation = Quaternion.LookRotation(waypoint.normal, waypoint.up);
+                waypoint.position = Handles.PositionHandle(waypoint.position, rotation);
+                waypoint.width = Handles.ScaleSlider(waypoint.width, waypoint.left, waypoint.normal, rotation, HandleUtility.GetHandleSize(waypoint.left), 0.01f);
+                waypoint.width = Handles.ScaleSlider(waypoint.width, waypoint.right, waypoint.normal, rotation, HandleUtility.GetHandleSize(waypoint.right), 0.01f);
             }
         }
+
+        component.Recompute();
 
         if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
         {

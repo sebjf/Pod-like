@@ -103,16 +103,6 @@ public struct WaypointsSpatialMap
     public float resolution;
 }
 
-public struct Position
-{
-    public float absolute;
-    public float normalised;
-    public Vector3 normal;
-    public float width;
-    public float transverse;
-}
-
-
 public class Waypoints : MonoBehaviour
 {
     public List<Waypoint> waypoints = new List<Waypoint>();
@@ -173,6 +163,11 @@ public class Waypoints : MonoBehaviour
         for (int i = 0; i < waypoints.Count; i++)
         {
             waypoints[i].index = i;
+        }
+
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            waypoints[i].normal = Vector3.Lerp((Next(waypoints[i]).position - waypoints[i].position).normalized, (waypoints[i].position - Previous(waypoints[i]).position).normalized, 0.5f);
         }
 
         totalLength = 0;
@@ -290,15 +285,14 @@ public class Waypoints : MonoBehaviour
         return Mathf.Lerp(closest.start, closest.end, Project(closest, position) / closest.length);
     }
 
-    struct WaypointQuery
+    public struct WaypointQuery
     {
         public Waypoint waypoint;
         public float t;
         public float distance;
     }
 
-
-    private WaypointQuery Query(float distance)
+    public WaypointQuery Query(float distance)
     {
         distance = mod(distance, totalLength);
         distance = Mathf.Clamp(distance, 0, totalLength);
@@ -366,23 +360,29 @@ public class Waypoints : MonoBehaviour
         return Vector3.Lerp(wp.normal, Next(wp).normal, result.t);
     }
 
-    private Vector3 Midline(WaypointQuery result)
+    public Vector3 Midline(WaypointQuery result)
     {
         var wp = result.waypoint;
         var dir = (Next(wp).position - wp.position);
         return wp.position + dir * result.t;
     }
 
-    private float Width(WaypointQuery result)
+    public float Width(WaypointQuery result)
     {
         var wp = result.waypoint;
         return Mathf.Lerp(wp.width, Next(wp).width, result.t);
     }
 
-    private Vector3 Tangent(WaypointQuery result)
+    public Vector3 Tangent(WaypointQuery result)
     {
         var wp = result.waypoint;
         return Vector3.Lerp(wp.tangent, Next(wp).tangent, result.t);
+    }
+
+    public Vector3 Normal(WaypointQuery result)
+    {
+        var wp = result.waypoint;
+        return Vector3.Lerp(wp.normal, Next(wp).normal, result.t);
     }
 
     public struct Edge
