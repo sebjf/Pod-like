@@ -85,6 +85,7 @@ public class LightprobeTextureManager : LightprobeManager
         LightmapSettings.lightProbes.bakedProbes = bakedProbes;
     }
 
+#if UNITY_EDITOR
     public override void UpdateSamples()
     {
         if (controllers == null)
@@ -219,4 +220,5 @@ public class LightprobeTextureManager : LightprobeManager
         var u = 1.0f - v - w;
         return new Vector3(u, v, w);
     }
+#endif
 }

@@ -3590,8 +3590,7 @@ MonoBehaviour:
   broadcastHub:
     broadcastingBrains:
     - {fileID: 11400000, guid: 1ff3808f6dcfffd4d91e3e794f305601, type: 2}
-    _brainsToControl:
-    - {fileID: 11400000, guid: 1ff3808f6dcfffd4d91e3e794f305601, type: 2}
+    _brainsToControl: []
   maxSteps: 2000
   trainingConfiguration:
     width: 80
@@ -25682,7 +25681,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &720051396
 Transform:
   m_ObjectHideFlags: 0
@@ -61620,7 +61619,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 695825223, guid: 34bf19b448eb55f45bec18b993a5ee90, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 695825225, guid: 34bf19b448eb55f45bec18b993a5ee90, type: 3}
       propertyPath: numCars

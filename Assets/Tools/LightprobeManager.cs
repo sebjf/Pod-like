@@ -15,6 +15,7 @@ public class LightprobeManager : MonoBehaviour
 
     public List<Vector3> superprobes;
 
+#if UNITY_EDITOR
     public virtual void UpdateSamples()
     {
         LightProbeGroup lightProbeGroup = GetComponent<LightProbeGroup>();
@@ -25,6 +26,7 @@ public class LightprobeManager : MonoBehaviour
             manager.OnLightProbesUpdate();
         }
     }
+#endif
 
     public virtual void OnLightProbesUpdate()
     {

@@ -248,6 +248,8 @@ public class VehicleAgent : Agent
         breadcrumbs.Reset();
     }
 
+#if UNITY_EDITOR
+
     private void OnDrawGizmosSelected()
     {
         UnityEditor.Handles.BeginGUI();
@@ -282,4 +284,6 @@ public class VehicleAgent : Agent
             }
         }
     }
+
+#endif
 }

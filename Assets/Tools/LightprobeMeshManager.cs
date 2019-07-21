@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class LightprobeMeshManager : LightprobeManager
 {
+#if UNITY_EDITOR
     public override void UpdateSamples()
     {
         var meshtransform = this.mesh.transform;
@@ -27,4 +28,5 @@ public class LightprobeMeshManager : LightprobeManager
 
         base.UpdateSamples();
     }
+#endif
 }
