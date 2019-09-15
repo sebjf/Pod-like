@@ -22,6 +22,31 @@ public class GraphOverlay : MonoBehaviour
         public List<float> latData = new List<float>();
     }
 
+    public class Series
+    {
+        public string name;
+        public Color color = Color.red;
+        public List<float> values;
+    }
+
+    [NonSerialized]
+    private Dictionary<string, Series> series = new Dictionary<string, Series>();
+
+    public Series GetSeries(string name)
+    {
+        if(!series.ContainsKey(name))
+        {
+            series.Add(name, new Series()
+            {
+                name = name,
+                values = new List<float>()
+            });
+        }
+        return series[name];
+    }
+
+    public float y_scale = 1f;
+
 	public int thickness = 1;
 	public float width = 0.35f;
 	public float height = 0.34f;
@@ -238,7 +263,18 @@ public class GraphOverlay : MonoBehaviour
 			}
 		}
 
-		m_Texture.SetPixels32(m_Pixels);
+        foreach (var series in this.series.Values)
+        {
+            int cursor = Mathf.Max(series.values.Count - samplesOnScreen - stepsBack, 0);
+
+            // Forward slip.
+            for (int i = cursor; i < series.values.Count - 1 - stepsBack; ++i)
+            {
+                DrawLine(PlotSpace(cursor, i, series.values[i] * y_scale), PlotSpace(cursor, i + 1, series.values[i + 1] * y_scale), series.color);
+            }
+        }
+
+        m_Texture.SetPixels32(m_Pixels);
 		m_Texture.Apply();
 
         if (vehicleBody)
@@ -246,7 +282,6 @@ public class GraphOverlay : MonoBehaviour
             var vehicle = vehicleBody.GetComponent<Vehicle>();
             m_SpeedText.text = string.Format("Speed: {0:0.00} m/s, {1:0} mph", vehicle.speed, vehicle.speed * 2.237);
         }
-
 
         foreach (var item in annotations)
         {

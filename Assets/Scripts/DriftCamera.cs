@@ -26,8 +26,6 @@ public class DriftCamera : MonoBehaviour
         {
             cameraRig = FindObjectsOfType<CamRig>().Where(x => x.enabled).First();
         }
-
-        GetComponent<GraphOverlay>().vehicleBody = cameraRig.GetComponentInParent<Rigidbody>();
     }
 
     private void FixedUpdate ()
@@ -43,6 +41,8 @@ public class DriftCamera : MonoBehaviour
 
         if(advancedOptions.updateCameraInUpdate)
             UpdateCamera ();
+
+        GetComponent<GraphOverlay>().vehicleBody = cameraRig.GetComponentInParent<Rigidbody>();
     }
 
     private void LateUpdate ()

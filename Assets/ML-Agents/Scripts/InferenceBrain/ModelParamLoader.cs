@@ -1,7 +1,9 @@
-﻿#if ENABLE_TENSORFLOW
+#if ENABLE_TENSORFLOW
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using Barracuda;
 
 namespace MLAgents.InferenceBrain
 {
@@ -38,7 +40,7 @@ namespace MLAgents.InferenceBrain
             modelParamLoader.GenerateChecks();
             return modelParamLoader;
         }
-        
+
         private ModelParamLoader(TFSharpInferenceEngine engine, BrainParameters brainParameters)
         {
             _engine = engine;
@@ -46,59 +48,59 @@ namespace MLAgents.InferenceBrain
         }
 
         /// <summary>
-        /// Generates the Tensor inputs that are expected to be present in the Model. 
+        /// Generates the Tensor inputs that are expected to be present in the Model.
         /// </summary>
-        /// <returns>Tensor IEnumerable with the expected Tensor inputs</returns>
-        public IReadOnlyList<Tensor> GetInputTensors()
+        /// <returns>TensorProxy IEnumerable with the expected Tensor inputs</returns>
+        public IReadOnlyList<TensorProxy> GetInputTensors()
         {
             return _engine?.InputFeatures();
         }
 
         /// <summary>
-        /// Generates the Tensor outputs that are expected to be present in the Model. 
+        /// Generates the Tensor outputs that are expected to be present in the Model.
         /// </summary>
-        /// <returns>Tensor IEnumerable with the expected Tensor outputs</returns>
-        public IReadOnlyList<Tensor> GetOutputTensors()
+        /// <returns>TensorProxy IEnumerable with the expected Tensor outputs</returns>
+        public IReadOnlyList<TensorProxy> GetOutputTensors()
         {
-            var tensorList = new List<Tensor>();
+            var tensorList = new List<TensorProxy>();
             if (_brainParameters.vectorActionSpaceType == SpaceType.continuous)
             {
-                tensorList.Add(new Tensor()
+                tensorList.Add(new TensorProxy()
                 {
                     Name = TensorNames.ActionOutput,
                     Shape = new long[]
                     {
                         -1, _brainParameters.vectorActionSize[0]
                     },
-                    ValueType = Tensor.TensorType.FloatingPoint,
+                    ValueType = TensorProxy.TensorType.FloatingPoint,
                     Data = null
                 });
             }
             else
             {
                 tensorList.Add(
-                    new Tensor()
+                    new TensorProxy()
                     {
                         Name = TensorNames.ActionOutput,
                         Shape = new long[]
                         {
                             -1, _brainParameters.vectorActionSize.Sum()
                         },
-                        ValueType = Tensor.TensorType.FloatingPoint,
+                        ValueType = TensorProxy.TensorType.FloatingPoint,
                         Data = null
                     });
             }
             var memory = GetIntScalar(TensorNames.MemorySize);
             if (memory > 0)
             {
-                tensorList.Add(new Tensor()
+                tensorList.Add(new TensorProxy()
                 {
                     Name = TensorNames.RecurrentOutput,
                     Shape = new long[2]
                     {
                         -1, memory
                     },
-                    ValueType = Tensor.TensorType.FloatingPoint,
+                    ValueType = TensorProxy.TensorType.FloatingPoint,
                     Data = null
                 });
             }
@@ -108,36 +110,37 @@ namespace MLAgents.InferenceBrain
         /// <summary>
         /// Queries the InferenceEngine for the value of a variable in the graph given its name.
         /// Only works with int32 Tensors with zero dimensions containing a unique element.
-        /// If the node was not found or could not be retrieved, the value -1 will be returned. 
+        /// If the node was not found or could not be retrieved, the value -1 will be returned.
         /// </summary>
         /// <param name="name">The name of the Tensor variable</param>
         /// <returns>The value of the scalar variable in the model. (-1 if not found)</returns>
         private int GetIntScalar(string name)
         {
-            var outputs = new Tensor[]
+            var outputs = new TensorProxy[]
             {
-                new Tensor()
+                new TensorProxy()
                 {
                     Name = name,
-                    ValueType = Tensor.TensorType.Integer,
-                    Shape = new long[] { },
-                    Data = new long[1]
+                    ValueType = TensorProxy.TensorType.Integer,
+                    Shape = new long[] {},
+                    Data = new Tensor(1, 1)
                 },
             };
             try
             {
-                _engine.ExecuteGraph(new Tensor[0], outputs);
+                _engine.ExecuteGraph(new TensorProxy[0], outputs);
             }
-            catch
+            catch (Exception ex)
             {
+                UnityEngine.Debug.LogError($"Failed to execute GetIntScalar()\n{ex}");
                 return -1;
             }
-            return (outputs[0].Data as int[])[0];
+            return (int)outputs[0].Data[0];
         }
 
         /// <summary>
         /// Retrieves an IEnumerable of string corresponding to the failed compatibility checks
-        /// between the InferenceEngine and the BrainParameters. 
+        /// between the InferenceEngine and the BrainParameters.
         /// </summary>
         public IEnumerable<string> GetChecks()
         {
@@ -206,7 +209,7 @@ namespace MLAgents.InferenceBrain
                 case 0:
                     isContinuous = ModelActionType.Discrete;
                     break;
-                case 1: 
+                case 1:
                     isContinuous = ModelActionType.Continuous;
                     break;
                 default:
@@ -223,12 +226,12 @@ namespace MLAgents.InferenceBrain
         /// <param name="requiredScalarFields"> Mapping from node names to int values</param>
         private void CheckIntScalarPresenceHelper(Dictionary<string, int> requiredScalarFields)
         {
-            foreach(var field in requiredScalarFields)
-            if (field.Value == -1)
-            {
-                _failedModelChecks.Add(
-                    $"Missing node in the model provided : {field.Key}");
-            }
+            foreach (var field in requiredScalarFields)
+                if (field.Value == -1)
+                {
+                    _failedModelChecks.Add(
+                        $"Missing node in the model provided : {field.Key}");
+                }
         }
 
         /// <summary>
@@ -254,15 +257,15 @@ namespace MLAgents.InferenceBrain
             // If there are not enough Visual Observation Input compared to what the
             // Brain Parameters expect.
             for (var visObsIndex = 0;
-                visObsIndex < _brainParameters.cameraResolutions.Length;
-                visObsIndex++)
+                 visObsIndex < _brainParameters.cameraResolutions.Length;
+                 visObsIndex++)
             {
                 if (!tensorsNames.Contains(
                     TensorNames.VisualObservationPlaceholderPrefix + visObsIndex))
                 {
                     _failedModelChecks.Add(
                         "The model does not contain a Visual Observation Placeholder Input " +
-                        "for visual observation "+visObsIndex+".");
+                        "for visual observation " + visObsIndex + ".");
                 }
             }
             // If the model has a non-negative memory size but requires a recurrent input
@@ -284,7 +287,7 @@ namespace MLAgents.InferenceBrain
                 }
             }
         }
-        
+
         /// <summary>
         /// Generates failed checks that correspond to outputs expected by the model that are not
         /// present in the BrainParameters.
@@ -300,7 +303,7 @@ namespace MLAgents.InferenceBrain
             {
                 _failedModelChecks.Add("The model does not contain an Action Output Node.");
             }
-            
+
             // If there is no Recurrent Output but the model is Recurrent.
             if (memory > 0)
             {
@@ -311,7 +314,7 @@ namespace MLAgents.InferenceBrain
                 }
             }
         }
-        
+
         /// <summary>
         /// Generates failed checks that correspond to inputs shapes incompatibilities between
         /// the model and the BrainParameters.
@@ -319,15 +322,15 @@ namespace MLAgents.InferenceBrain
         private void CheckInputTensorShape()
         {
             var tensorTester =
-                new Dictionary<string, Func<Tensor, string>>()
-                {
-                    {TensorNames.VectorObservationPlacholder, CheckVectorObsShape},
-                    {TensorNames.PreviousActionPlaceholder, CheckPreviousActionShape},
-                    {TensorNames.RandomNormalEpsilonPlaceholder, ((tensor) => null)},
-                    {TensorNames.ActionMaskPlaceholder, ((tensor) => null)},
-                    {TensorNames.SequenceLengthPlaceholder, ((tensor) => null)},
-                    {TensorNames.RecurrentInPlaceholder, ((tensor) => null)},
-                };
+                new Dictionary<string, Func<TensorProxy, string>>()
+            {
+                {TensorNames.VectorObservationPlacholder, CheckVectorObsShape},
+                {TensorNames.PreviousActionPlaceholder, CheckPreviousActionShape},
+                {TensorNames.RandomNormalEpsilonPlaceholder, ((tensor) => null)},
+                {TensorNames.ActionMaskPlaceholder, ((tensor) => null)},
+                {TensorNames.SequenceLengthPlaceholder, ((tensor) => null)},
+                {TensorNames.RecurrentInPlaceholder, ((tensor) => null)},
+            };
             for (var obsIndex = 0; obsIndex < _brainParameters.cameraResolutions.Length; obsIndex++)
             {
                 var index = obsIndex;
@@ -353,7 +356,7 @@ namespace MLAgents.InferenceBrain
                 }
             }
         }
-        
+
         /// <summary>
         /// Checks that the shape of the Vector Observation input placeholder is the same in the
         /// model and in the Brain Parameters.
@@ -361,7 +364,7 @@ namespace MLAgents.InferenceBrain
         /// <param name="tensor"> The tensor that is expected by the model</param>
         /// <returns>If the Check failed, returns a string containing information about why the
         /// check failed. If the check passed, returns null.</returns>
-        private string CheckVectorObsShape(Tensor tensor)
+        private string CheckVectorObsShape(TensorProxy tensor)
         {
             var vecObsSizeBp = _brainParameters.vectorObservationSize;
             var numStackedVector = _brainParameters.numStackedVectorObservations;
@@ -375,7 +378,7 @@ namespace MLAgents.InferenceBrain
             }
             return null;
         }
-        
+
         /// <summary>
         /// Checks that the shape of the Previous Vector Action input placeholder is the same in the
         /// model and in the Brain Parameters.
@@ -383,11 +386,11 @@ namespace MLAgents.InferenceBrain
         /// <param name="tensor"> The tensor that is expected by the model</param>
         /// <returns>If the Check failed, returns a string containing information about why the
         /// check failed. If the check passed, returns null.</returns>
-        private string CheckPreviousActionShape(Tensor tensor)
+        private string CheckPreviousActionShape(TensorProxy tensor)
         {
             var numberActionsBp = _brainParameters.vectorActionSize.Length;
             var numberActionsT = tensor.Shape[1];
-            if  (numberActionsBp != numberActionsT)
+            if (numberActionsBp != numberActionsT)
             {
                 return string.Format(
                     "Previous Action Size of the model does not match. " +
@@ -396,7 +399,7 @@ namespace MLAgents.InferenceBrain
             }
             return null;
         }
-        
+
         /// <summary>
         /// Checks that the shape of the visual observation input placeholder is the same in the
         /// model and in the Brain Parameters.
@@ -405,7 +408,7 @@ namespace MLAgents.InferenceBrain
         /// <param name="visObsIndex"> The index of the visual observation.</param>
         /// <returns>If the Check failed, returns a string containing information about why the
         /// check failed. If the check passed, returns null.</returns>
-        private string CheckVisualObsShape(Tensor tensor, int visObsIndex)
+        private string CheckVisualObsShape(TensorProxy tensor, int visObsIndex)
         {
             var resolutionBp = _brainParameters.cameraResolutions[visObsIndex];
             var widthBp = resolutionBp.width;
@@ -414,16 +417,16 @@ namespace MLAgents.InferenceBrain
             var heightT = tensor.Shape[1];
             var widthT = tensor.Shape[2];
             var pixelT = tensor.Shape[3];
-            if  ((widthBp != widthT) || (heightBp != heightT) || (pixelBp != pixelT))
+            if ((widthBp != widthT) || (heightBp != heightT) || (pixelBp != pixelT))
             {
                 return string.Format(
                     "The visual Observation {0} of the model does not match. " +
-                    "Received Tensor of shape [?x{1}x{2}x{3}] but was expecting [?x{4}x{5}x{6}].",
+                    "Received TensorProxy of shape [?x{1}x{2}x{3}] but was expecting [?x{4}x{5}x{6}].",
                     visObsIndex, widthBp, heightBp, pixelBp, widthT, heightT, pixelT);
             }
             return null;
         }
-        
+
         /// <summary>
         /// Generates failed checks that correspond to output shapes incompatibilities between
         /// the model and the BrainParameters.
@@ -458,7 +461,7 @@ namespace MLAgents.InferenceBrain
                     "suggest Continuous Control.");
                 return;
             }
-            var tensorTester = new Dictionary<string, Func<Tensor, int, string>>();
+            var tensorTester = new Dictionary<string, Func<TensorProxy, int, string>>();
             if (_brainParameters.vectorActionSpaceType == SpaceType.continuous)
             {
                 tensorTester[TensorNames.ActionOutput] = CheckContinuousActionOutputShape;
@@ -491,10 +494,10 @@ namespace MLAgents.InferenceBrain
         /// by the model.</param>
         /// <returns>If the Check failed, returns a string containing information about why the
         /// check failed. If the check passed, returns null.</returns>
-        private string CheckDiscreteActionOutputShape(Tensor tensor, int modelActionSize)
+        private string CheckDiscreteActionOutputShape(TensorProxy tensor, int modelActionSize)
         {
             var bpActionSize = _brainParameters.vectorActionSize.Sum();
-            if  (modelActionSize != bpActionSize)
+            if (modelActionSize != bpActionSize)
             {
                 return string.Format(
                     "Action Size of the model does not match. " +
@@ -503,7 +506,7 @@ namespace MLAgents.InferenceBrain
             }
             return null;
         }
-        
+
         /// <summary>
         /// Checks that the shape of the continuous action output is the same in the
         /// model and in the Brain Parameters.
@@ -513,10 +516,10 @@ namespace MLAgents.InferenceBrain
         /// by the model.</param>
         /// <returns>If the Check failed, returns a string containing information about why the
         /// check failed. If the check passed, returns null.</returns>
-        private string CheckContinuousActionOutputShape(Tensor tensor, int modelActionSize)
+        private string CheckContinuousActionOutputShape(TensorProxy tensor, int modelActionSize)
         {
             var bpActionSize = _brainParameters.vectorActionSize[0];
-            if  (modelActionSize != bpActionSize)
+            if (modelActionSize != bpActionSize)
             {
                 return string.Format(
                     "Action Size of the model does not match. " +
