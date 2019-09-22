@@ -429,6 +429,9 @@ public class DeformationModel : MonoBehaviour
 
     private void OnDestroy()
     {
-        simulation.Release();
+        if (simulation != null)
+        {
+            simulation.Release();
+        }
     }
 }

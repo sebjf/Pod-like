@@ -308,6 +308,11 @@ namespace MLAgents
             // Try to launch the communicator by usig the arguments passed at launch
             try
             {
+                if (Application.isEditor)
+                {
+                    throw new System.Exception(); // no command line arguments in editor mode
+                }
+
                 var args = ReadArgs();
                 communicator = new RpcCommunicator(
                     new CommunicatorParameters

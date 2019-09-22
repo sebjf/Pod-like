@@ -12,16 +12,6 @@ using System.Linq;
 /// </summary> 
 public class GraphOverlay : MonoBehaviour
 {
-    [Serializable]
-    public class WheelConfig
-    {
-        public WheelCollider collider;
-        public bool visible;
-
-        public List<float> longData = new List<float>();
-        public List<float> latData = new List<float>();
-    }
-
     public class Series
     {
         public string name;
@@ -45,12 +35,16 @@ public class GraphOverlay : MonoBehaviour
         return series[name];
     }
 
+    protected RawImage imageComponent;
+
     public float y_scale = 1f;
 
 	public int thickness = 1;
 	public float width = 0.35f;
 	public float height = 0.34f;
-	public float widthSeconds = 2f; 
+
+    public float widthSeconds = 2f; 
+
 	public float heightMeters = 3f;
 	public Color32 bgColor = Color.white;
 	public Color32 forwardColor = Color.red;
@@ -58,11 +52,8 @@ public class GraphOverlay : MonoBehaviour
 	public Color32 guidesColor = Color.blue;
 	public Color32 zeroColor = Color.black;
 
-    public Rigidbody vehicleBody;
-
 	[Range(0f, 10f)]
 	public float timeTravel;
-	public List<WheelConfig> wheelConfigs = new List<WheelConfig>();
 
 	Color32[] m_PixelsBg;
 	Color32[] m_Pixels;
@@ -79,45 +70,6 @@ public class GraphOverlay : MonoBehaviour
     const int k_InfoFontSize = 16;
     const float k_MaxRecordTimeTravel = 0.01f;
 
-    public class Annotation
-    {
-        public Transform world;
-        public string label;
-
-        public Text textbox;
-        public RectTransform uitransform;
-    }
-
-    private List<Annotation> annotations = new List<Annotation>();
-
-    public Annotation CreateAnnotation()
-    {
-        var canvas = FindObjectOfType<Canvas>().gameObject;
-
-        // Add speed textbox.
-        var infoGo = new GameObject(k_InfoTextName);
-        infoGo.transform.parent = canvas.transform;
-        var textComponent = infoGo.AddComponent<Text>();
-        var textXform = infoGo.GetComponent<RectTransform>();
-
-        textComponent.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        textComponent.fontSize = k_InfoFontSize;
-        textComponent.color = Color.red;
-
-        textXform.anchorMin = Vector2.up;
-        textXform.anchorMax = Vector2.up;
-        textXform.pivot = Vector2.up;
-        textXform.anchoredPosition = new Vector2(k_GUIScreenEdgeOffset, -m_HeightPixels - k_GUIScreenEdgeOffset);
-        textXform.sizeDelta = new Vector2(100, 100);
-
-        var annotation = new Annotation();
-        annotation.textbox = textComponent;
-        annotation.uitransform = textXform;
-
-        annotations.Add(annotation);
-        return annotation;
-    }
-
     public void SetLabel(string label, string content)
     {
         GetComponentsInChildren<Text>().Where(c => c.gameObject.name == label).First().text = content;
@@ -125,34 +77,20 @@ public class GraphOverlay : MonoBehaviour
 
     private void Awake()
     {
-        // Add GUI infrastructure.
-        var eventSystem = new GameObject(k_EventSystemName);
-        eventSystem.AddComponent<EventSystem>();
-        eventSystem.AddComponent<StandaloneInputModule>();
+        imageComponent = GetComponent<RawImage>();
     }
 
     void Start()
 	{
         var canvas = FindObjectOfType<Canvas>().gameObject;
 
-		// Add a raw image object.
-        var rawImageGO = new GameObject(k_GraphImageName);
-		rawImageGO.transform.parent = canvas.transform;
-		var imageComponent = rawImageGO.AddComponent<RawImage>();
-		var imageXform = rawImageGO.GetComponent<RectTransform>();
-
-		imageXform.anchorMin = Vector2.up;
-        imageXform.anchorMax = Vector2.up;
-        imageXform.pivot = Vector2.up;
-        imageXform.anchoredPosition = new Vector2(k_GUIScreenEdgeOffset, -k_GUIScreenEdgeOffset);
-
-		// Set up our texture.
-		m_WidthPixels = (int)(Screen.width * width);
-		m_HeightPixels = (int)(Screen.height * height);
-		m_Texture = new Texture2D(m_WidthPixels, m_HeightPixels);
+        // Set up our texture.
+        m_WidthPixels = (int)imageComponent.rectTransform.rect.width;
+        m_HeightPixels = (int)imageComponent.rectTransform.rect.height;
+        m_Texture = new Texture2D(m_WidthPixels, m_HeightPixels);
 
 		imageComponent.texture = m_Texture;
-		imageComponent.SetNativeSize();
+        imageComponent.SetNativeSize();
 
 		m_Pixels = new Color32[m_WidthPixels * m_HeightPixels];
 		m_PixelsBg = new Color32[m_WidthPixels * m_HeightPixels];
@@ -161,68 +99,6 @@ public class GraphOverlay : MonoBehaviour
 	    {
 	        m_PixelsBg[i] = bgColor;
 	    }
-
-		SetupWheelConfigs();
-
-		// Add speed textbox.
-        var infoGo = new GameObject(k_InfoTextName);
-		infoGo.transform.parent = canvas.transform;
-		m_SpeedText = infoGo.AddComponent<Text>();
-		var textXform = infoGo.GetComponent<RectTransform>();
-
-		m_SpeedText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-        m_SpeedText.fontSize = k_InfoFontSize;
-
-        textXform.anchorMin = Vector2.up;
-        textXform.anchorMax = Vector2.up;
-        textXform.pivot = Vector2.up;
-        textXform.anchoredPosition = new Vector2(k_GUIScreenEdgeOffset, -m_HeightPixels - k_GUIScreenEdgeOffset);
-		var rect = textXform.sizeDelta;
-		rect.x = m_WidthPixels;
-		textXform.sizeDelta = rect;
-	}
-
-	void Reset()
-	{
-		SetupWheelConfigs ();
-	}
-
-
-    public void SetupWheelConfigs ()
-    {
-        wheelConfigs.Clear();
-
-        // Locate all the wheels.
-        if (vehicleBody)
-        {
-            foreach (var wheel in vehicleBody.GetComponentsInChildren<WheelCollider>())
-            {
-                var wheelConfig = new WheelConfig();
-                wheelConfig.visible = true;
-                wheelConfig.collider = wheel;
-
-                wheelConfigs.Add(wheelConfig);
-            }
-        }
-    }
-
-	void FixedUpdate()
-	{
-		foreach (var wheelConfig in wheelConfigs)
-		{
-			WheelHit hit;
-			if (!wheelConfig.collider.GetGroundHit(out hit))
-			{
-                // No hit!
-				continue;
-			}
-
-            if (Mathf.Abs(timeTravel) < k_MaxRecordTimeTravel)// TODO: solve this mystery
-			{
-				wheelConfig.longData.Add(hit.forwardSlip);
-				wheelConfig.latData.Add(hit.sidewaysSlip);
-			}
-		}
 	}
 
 	void Update()
@@ -243,26 +119,6 @@ public class GraphOverlay : MonoBehaviour
 		int samplesOnScreen = (int)(widthSeconds / Time.fixedDeltaTime);
 		int stepsBack = (int)(timeTravel / Time.fixedDeltaTime);
 
-		foreach (var wheelConfig in wheelConfigs)
-		{
-			if (!wheelConfig.visible)
-				continue;
-				
-			int cursor = Mathf.Max(wheelConfig.longData.Count - samplesOnScreen - stepsBack, 0);
-
-			// Forward slip.
-			for (int i = cursor; i < wheelConfig.longData.Count - 1 - stepsBack; ++i)
-			{
-				DrawLine( PlotSpace(cursor, i, wheelConfig.longData[i]), PlotSpace(cursor, i + 1, wheelConfig.longData[i + 1]), forwardColor );
-			}
-
-			// Sideways slip.
-			for (int i = cursor; i < wheelConfig.latData.Count - 1 - stepsBack; ++i)
-			{
-				DrawLine( PlotSpace(cursor, i, wheelConfig.latData[i]), PlotSpace(cursor, i + 1, wheelConfig.latData[i + 1]), sidewaysColor );
-			}
-		}
-
         foreach (var series in this.series.Values)
         {
             int cursor = Mathf.Max(series.values.Count - samplesOnScreen - stepsBack, 0);
@@ -276,18 +132,6 @@ public class GraphOverlay : MonoBehaviour
 
         m_Texture.SetPixels32(m_Pixels);
 		m_Texture.Apply();
-
-        if (vehicleBody)
-        {
-            var vehicle = vehicleBody.GetComponent<Vehicle>();
-            m_SpeedText.text = string.Format("Speed: {0:0.00} m/s, {1:0} mph", vehicle.speed, vehicle.speed * 2.237);
-        }
-
-        foreach (var item in annotations)
-        {
-            item.uitransform.position = GetComponent<Camera>().WorldToScreenPoint(item.world.position);
-            item.textbox.text = item.label;
-        }
 	}
 
 	// Convert time-value to the pixel plot space.

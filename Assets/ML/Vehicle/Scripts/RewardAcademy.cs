@@ -29,7 +29,7 @@ public class RewardAcademy : MonoBehaviour
 
         if(agent.IsDone())
         {
-            Debug.Log(agent.TotalDistanceTravelled + ", " + agent.GetCumulativeReward());
+            Debug.Log(agent.navigator.TotalDistanceTravelled + ", " + agent.GetCumulativeReward());
         }
 
         if(agent.IsDone())        

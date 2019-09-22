@@ -8,7 +8,6 @@ public class WheelManagerInspector : Editor
 {
     public override void OnInspectorGUI()
     {
-        EditorUtility.SetDirty((target as WheelManager));
         serializedObject.Update();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("wheelAssignments"), true);
         serializedObject.ApplyModifiedProperties();

@@ -46,9 +46,9 @@ public class Autopilot : MonoBehaviour
         }
 
     }
-
-    private void Update()
+    private void OnDrawGizmosSelected()
     {
-
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(target, 1f);
     }
 }

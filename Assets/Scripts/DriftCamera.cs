@@ -13,6 +13,9 @@ public class DriftCamera : MonoBehaviour
         public KeyCode switchViewKey = KeyCode.Space;
     }
 
+    [HideInInspector]
+    public CamRig[] cameraRigs;
+
     public CamRig cameraRig;
 
     public float smoothing = 6f;
@@ -20,14 +23,14 @@ public class DriftCamera : MonoBehaviour
 
     bool m_ShowingSideView;
 
-    private void Awake()
+    private void Start()
     {
-        if(cameraRig == null)
+        cameraRigs = FindObjectsOfType<CamRig>().Where(x => x.enabled).ToArray();
+        if (cameraRig == null)
         {
-            cameraRig = FindObjectsOfType<CamRig>().Where(x => x.enabled).First();
+            cameraRig = cameraRigs[0];
         }
     }
-
     private void FixedUpdate ()
     {
         if(advancedOptions.updateCameraInFixedUpdate)
@@ -41,8 +44,6 @@ public class DriftCamera : MonoBehaviour
 
         if(advancedOptions.updateCameraInUpdate)
             UpdateCamera ();
-
-        GetComponent<GraphOverlay>().vehicleBody = cameraRig.GetComponentInParent<Rigidbody>();
     }
 
     private void LateUpdate ()
@@ -53,11 +54,6 @@ public class DriftCamera : MonoBehaviour
 
     private void UpdateCamera ()
     {
-        if(cameraRig == null)
-        {
-            cameraRig = FindObjectOfType<CamRig>();
-        }
-
         if (m_ShowingSideView)
         {
             transform.position = cameraRig.sideView.position;

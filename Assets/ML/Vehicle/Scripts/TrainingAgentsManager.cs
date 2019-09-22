@@ -41,7 +41,7 @@ public class TrainingAgentsManager : MonoBehaviour
 
         children = transform.Cast<Transform>().ToList();
 
-        var waypoints = GetComponentInParent<Waypoints>();
+        var waypoints = GetComponentInParent<TrackGeometry>();
         float spacing = waypoints.totalLength / children.Count;
 
         for (int i = 0; i < children.Count; i++)

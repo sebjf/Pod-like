@@ -25,16 +25,8 @@ public class CarSwitcher : MonoBehaviour
 
 			vehicles[m_VehicleId].SetActive(true);
 
-			var graph = GetComponent<GraphOverlay>();
-			if (graph)
-			{
-				graph.vehicleBody = vehicles[m_VehicleId].GetComponent<Rigidbody>();
-				graph.SetupWheelConfigs();
-			}
-
 			// Setup the new one.
 			Transform vehicleT = vehicles[m_VehicleId].transform;
-			m_DriftCamera.cameraRig = vehicleT.GetComponentInChildren<CamRig>();
         }
 
 		if (Input.GetKeyUp(KeyCode.R))

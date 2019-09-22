@@ -7,14 +7,33 @@ using UnityEngine;
 public class Navigator : MonoBehaviour
 {
     [HideInInspector]
-    public Waypoints waypoints;
+    public TrackGeometry waypoints;
 
-    [NonSerialized]
-    public float distance = -1;
+    /// <summary>
+    /// Total Distance in Track Space travelled by the car (distance travelled across all laps)
+    /// </summary>
+    [HideInInspector]
+    public float TotalDistanceTravelled;
+
+    /// <summary>
+    /// Distance around Track in Track Space (the distance along a single lap)
+    /// </summary>
+    [HideInInspector]
+    public float TrackDistance;
+
+    [HideInInspector]
+    public float PreviousTrackDistance;
+
+    [HideInInspector]
+    public float distanceTravelledInFrame;
 
     public void Reset()
     {
-        distance = -1f;
+        TrackDistance = -1;
+        FixedUpdate();
+        PreviousTrackDistance = TrackDistance;
+        TotalDistanceTravelled = 0f;
+        distanceTravelledInFrame = 0f;
     }
 
     // Update is called once per frame
@@ -22,12 +41,23 @@ public class Navigator : MonoBehaviour
     {
         if(waypoints == null)
         {
-            waypoints = FindObjectOfType<Waypoints>();
+            waypoints = FindObjectOfType<TrackGeometry>();
         }
 
-        waypoints.InitialiseTemporaryBroadphase();
+        waypoints.InitialiseBroadphase();
 
-        distance = waypoints.Evaluate(transform.position, distance);
+        TrackDistance = waypoints.Evaluate(transform.position, TrackDistance);
+
+        distanceTravelledInFrame = TrackDistance - PreviousTrackDistance;
+
+        if (distanceTravelledInFrame < 0 && Mathf.Abs(distanceTravelledInFrame) > (waypoints.totalLength / 2)) // we have crossed over the finish line
+        {
+            distanceTravelledInFrame = (waypoints.totalLength - PreviousTrackDistance) + TrackDistance;
+        }
+
+        TotalDistanceTravelled += distanceTravelledInFrame;
+
+        PreviousTrackDistance = TrackDistance;
     }
 
     private void OnDrawGizmos()
@@ -37,11 +67,11 @@ public class Navigator : MonoBehaviour
             FixedUpdate();
         }
 
-        var midline = waypoints.Midline(distance);
+        var midline = waypoints.Midline(TrackDistance);
 
         Gizmos.DrawLine(midline, transform.position);
 
-        var normal = waypoints.Normal(distance);
+        var normal = waypoints.Normal(TrackDistance);
 
         Gizmos.color = Color.red;
         Gizmos.DrawRay(midline, normal);

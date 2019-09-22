@@ -168,9 +168,10 @@ GameObject:
   - component: {fileID: 1230204972}
   - component: {fileID: 3377283260564951050}
   - component: {fileID: 343465207}
-  - component: {fileID: 3885885454538487376}
   - component: {fileID: 1697420620939968213}
   - component: {fileID: 8687983544768177585}
+  - component: {fileID: 1677533840991851040}
+  - component: {fileID: 7185422284977984932}
   m_Layer: 0
   m_Name: Gamma
   m_TagString: Untagged
@@ -223,7 +224,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474698328}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 089d0af9d8c24f1428597c24fd910892, type: 3}
   m_Name: 
@@ -54322,29 +54323,6 @@ MonoBehaviour:
     - {fileID: 1223322117}
     - {fileID: 1223322116}
     - {fileID: 1223322115}
---- !u!114 &3885885454538487376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474698328}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c10fd0947614d641a297ce56d66e6ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  brain: {fileID: 11400000, guid: 1ff3808f6dcfffd4d91e3e794f305601, type: 2}
-  agentParameters:
-    agentCameras: []
-    agentRenderTextures: []
-    maxStep: 0
-    resetOnDone: 1
-    onDemandDecision: 0
-    numberOfActionsBetweenDecisions: 1
-  resetOnCollision: 1
-  logToConsole: 0
-  TotalDistanceTravelled: 0
 --- !u!114 &1697420620939968213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54358,6 +54336,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: {fileID: 0}
+  TotalDistanceTravelled: 12.743038
+  TrackDistance: 12.743038
+  PreviousTrackDistance: 12.743038
+  distanceTravelledInFrame: 0
 --- !u!114 &8687983544768177585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54372,6 +54354,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {x: 0, y: 0, z: 0}
   speed: 0
+--- !u!114 &1677533840991851040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474698328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2819612bc3458bc48b7587535b24cbc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brain: {fileID: 11400000, guid: 1ff3808f6dcfffd4d91e3e794f305601, type: 2}
+  agentParameters:
+    agentCameras: []
+    agentRenderTextures: []
+    maxStep: 0
+    resetOnDone: 1
+    onDemandDecision: 0
+    numberOfActionsBetweenDecisions: 1
+  resetOnCollision: 1
+--- !u!114 &7185422284977984932
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474698328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 719d5f75822053d43af2afebe2cc1369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lookAtTarget: {fileID: 48921566}
+  positionTarget: {fileID: 1780430346}
+  sideView: {fileID: 159124328}
 --- !u!1 &681467350
 GameObject:
   m_ObjectHideFlags: 0
@@ -54658,7 +54676,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1575151656}
-  - component: {fileID: 8486235990400217601}
   m_Layer: 0
   m_Name: CamRig
   m_TagString: Untagged
@@ -54683,21 +54700,6 @@ Transform:
   m_Father: {fileID: 474698329}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8486235990400217601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1575151655}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 719d5f75822053d43af2afebe2cc1369, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lookAtTarget: {fileID: 48921566}
-  positionTarget: {fileID: 1780430346}
-  sideView: {fileID: 159124328}
 --- !u!1 &1780430345
 GameObject:
   m_ObjectHideFlags: 0
@@ -55306,15 +55308,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
---- !u!4 &1992238941 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1991851487}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1991818109 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: 39f485bdd322f674586d9fcea5b0eb2b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1991851487}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1992238941 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b,
     type: 3}
   m_PrefabInstance: {fileID: 1991851487}
   m_PrefabAsset: {fileID: 0}

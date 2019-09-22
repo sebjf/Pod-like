@@ -22,7 +22,7 @@ default:
             strength: 1.0
             gamma: 0.99
 
-VehicleLearning:
+Sandman:
     normalize: false
     batch_size: 2560
     buffer_size: 25600
@@ -37,6 +37,31 @@ VehicleLearning:
     max_steps: 1.0e7
     hidden_units: 1024
     num_layers: 3
+    num_epoch: 2
+    reward_signals:
+        extrinsic:
+            strength: 1.0
+            gamma: 0.9
+        curiosity:
+            strength: 0.02
+            gamma: 0.99
+            encoding_size: 256
+
+Ariadne:
+    normalize: false
+    batch_size: 2560
+    buffer_size: 25600
+    summary_freq: 1000
+    time_horizon: 1000
+    sequence_length: 64
+    learning_rate: 1.0e-4
+    lambd: 0.95
+    beta: 1e-3
+    use_recurrent: false
+    use_curiosity: true
+    max_steps: 1.0e7
+    hidden_units: 128
+    num_layers: 2
     num_epoch: 2
     reward_signals:
         extrinsic:

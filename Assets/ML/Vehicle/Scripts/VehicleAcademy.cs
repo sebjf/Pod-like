@@ -24,7 +24,7 @@ public class VehicleAcademy : Academy
         if(!isTraining)
         {
             // use reflection so we can more easily update the version of ml-agents
-            typeof(Academy).GetField("m_MaxSteps", System.Reflection.BindingFlags.NonPublic).SetValue(this, 0);
+            typeof(Academy).GetField("m_MaxSteps", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this, 0);
         }
 
         if(isTraining)
@@ -38,6 +38,20 @@ public class VehicleAcademy : Academy
             testCars.SetActive(true);
             trainingCars.SetActive(false);
         }
+
+        // turn off all objects that do not have a brain loaded
+        foreach (var agent in FindObjectsOfType<VehicleAgent>())
+        {
+            if (agent.brain != null)
+            {
+                if (!broadcastHub.broadcastingBrains.Contains(agent.brain))
+                {
+                    agent.gameObject.SetActive(false);
+                }
+            }
+        }
+
+        base.InitializeAcademy();
     }
 
 
