@@ -21,6 +21,8 @@ public class VehicleAgent : Agent
 
     public bool resetOnCollision = true;
 
+    public bool crashed = false;
+
     public override void InitializeAgent()
     {
         body = GetComponent<Rigidbody>();
@@ -45,10 +47,15 @@ public class VehicleAgent : Agent
         Profiler.BeginSample("Agent Action");
 
         target = Mathf.Clamp(vectorAction[0], -1, 1);
-        speed = Mathf.Clamp(vectorAction[1], 0, 1);
+        speed = Mathf.Clamp(vectorAction[0], 0, 1);
 
         speed = speed * 150f;
         pilot.speed = speed;
+
+        if(crashed)
+        {
+            pilot.speed = 0f;
+        }
 
         AddReward(navigator.distanceTravelledInFrame);
 
@@ -76,9 +83,10 @@ public class VehicleAgent : Agent
 
         if (angle < 30f)
         {
-            Done();
-            ResetReward();
-            AddReward(-100f);
+            //AddReward(-100);
+            //Done();
+            //AgentReset();
+            crashed = true;
         }
     }
 
@@ -87,6 +95,7 @@ public class VehicleAgent : Agent
         ResetPositionOnTrack(startingDistance, 25, 4);
         navigator.Reset();
         body.velocity = Vector3.zero;
+        crashed = false;
     }
 
     public void ResetPositionOnTrack(float trackdistance, float fowardvariation, float lateralvariation)

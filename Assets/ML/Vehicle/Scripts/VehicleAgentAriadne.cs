@@ -48,24 +48,27 @@ public class VehicleAgentAriadne : VehicleAgent
     {
         base.OnDrawGizmosSelected();
 
-        if (path != null)
+        if (UnityEditor.Selection.activeTransform == this.transform)
         {
-            var graph = FindObjectOfType<GraphOverlay>();
-            if (graph != null)
+            if (path != null)
             {
-                graph.widthSeconds = Time.fixedDeltaTime * numObservations;
-                var series = graph.GetSeries("Observations");
-                series.values.Clear();
+                var graph = FindObjectOfType<GraphOverlay>();
+                if (graph != null)
+                {
+                    graph.widthSeconds = Time.fixedDeltaTime * numObservations;
+                    var series = graph.GetSeries("Observations");
+                    series.values.Clear();
+                    for (int i = 0; i < numObservations; i++)
+                    {
+                        series.values.Add(path.Curvature(navigator.TrackDistance + i * pathInterval));
+                    }
+                }
+
+                Gizmos.color = Color.yellow;
                 for (int i = 0; i < numObservations; i++)
                 {
-                    series.values.Add(path.Curvature(navigator.TrackDistance + i * pathInterval));
+                    Gizmos.DrawWireSphere(path.Evaluate(navigator.TrackDistance + i * pathInterval), 0.5f);
                 }
-            }
-
-            Gizmos.color = Color.yellow;
-            for (int i = 0; i < numObservations; i++)
-            {
-                Gizmos.DrawWireSphere(path.Evaluate(navigator.TrackDistance + i * pathInterval), 0.5f);
             }
         }
 

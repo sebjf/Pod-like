@@ -1224,6 +1224,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &82571281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2623,6 +2624,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &112279283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2998,6 +3000,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &114283232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3830,6 +3833,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &128234353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4359,7 +4363,8 @@ MonoBehaviour:
   broadcastHub:
     broadcastingBrains:
     - {fileID: 11400000, guid: 13a1b0b75072e514a80c2c9e8a177d5d, type: 2}
-    m_BrainsToControl: []
+    m_BrainsToControl:
+    - {fileID: 11400000, guid: 13a1b0b75072e514a80c2c9e8a177d5d, type: 2}
   m_MaxSteps: 2000
   m_TrainingConfiguration:
     width: 80
@@ -4598,6 +4603,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &149790784
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5594,6 +5600,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &168704484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6340,6 +6347,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &179521911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6857,6 +6865,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &198187866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7467,6 +7476,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &208815140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8858,6 +8868,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &242366338
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21263,6 +21274,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &304030240
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21545,6 +21557,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &307119501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24763,6 +24776,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &383540314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28977,6 +28991,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &508834947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29385,6 +29400,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &513515811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33768,6 +33784,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!1 &641941831
 GameObject:
   m_ObjectHideFlags: 0
@@ -34646,6 +34663,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &650881978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36949,6 +36967,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &715726237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37246,6 +37265,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &719492885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37687,6 +37707,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &724175506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39420,6 +39441,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &782633741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41044,6 +41066,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &844485059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41540,6 +41563,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &868630092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42103,6 +42127,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &877372679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44028,6 +44053,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &946802058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46025,6 +46051,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1014538704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48248,6 +48275,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1073736665
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48681,17 +48709,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3885885454538487376, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3885885454538487376, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: brain
-      value: 
-      objectReference: {fileID: 11400000, guid: 8ed269eb1a81cea4fa5b8de3411f13f8,
-        type: 2}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x
       value: 27.1
@@ -48736,6 +48753,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3885885454538487376, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3885885454538487376, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: brain
+      value: 
+      objectReference: {fileID: 11400000, guid: 8ed269eb1a81cea4fa5b8de3411f13f8,
+        type: 2}
     - target: {fileID: 3819372694604359179, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: m_Enabled
@@ -48841,6 +48869,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1082963805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51637,6 +51666,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1180937729
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53553,6 +53583,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1216335013 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7185422284977984932, guid: 18c0919ec78c5d242b13903617a9e1ae,
@@ -54738,6 +54769,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1260669342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58358,6 +58390,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1400853914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58640,6 +58673,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1400934953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59666,6 +59700,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1425691527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61465,6 +61500,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1485130684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61873,6 +61909,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1492458772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64720,6 +64757,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1581724298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68185,6 +68223,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1672322147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68969,6 +69008,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1683536429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69421,6 +69461,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1699071704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72941,6 +72982,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1805058264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73410,6 +73452,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1813458078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74204,6 +74247,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1841365621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74531,6 +74575,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1855510651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77611,6 +77656,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1959366855
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77924,6 +77970,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &1961717922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80731,6 +80778,7 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
+  crashed: 0
 --- !u!114 &2078336333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82679,11 +82727,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   y_scale: 1
-  thickness: 1
-  width: 0.35
-  height: 0.34
   widthSeconds: 2
-  heightMeters: 3
+  height: 1
   bgColor:
     serializedVersion: 2
     rgba: 4294967295

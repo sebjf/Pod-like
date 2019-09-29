@@ -39,13 +39,9 @@ public class GraphOverlay : MonoBehaviour
 
     public float y_scale = 1f;
 
-	public int thickness = 1;
-	public float width = 0.35f;
-	public float height = 0.34f;
-
     public float widthSeconds = 2f; 
 
-	public float heightMeters = 3f;
+	public float height = 1f;
 	public Color32 bgColor = Color.white;
 	public Color32 forwardColor = Color.red;
 	public Color32 sidewaysColor = Color.green;
@@ -109,7 +105,7 @@ public class GraphOverlay : MonoBehaviour
 		// Draw guides.
         DrawLine(new Vector2(0f, m_HeightPixels * 0.5f), new Vector2(m_WidthPixels, m_HeightPixels * 0.5f), zeroColor);
 
-		float guide = 1f / heightMeters * m_HeightPixels;
+		float guide = 1f / height * m_HeightPixels;
         float upperGuide = m_HeightPixels * 0.5f - guide;
         float lowerGuide = m_HeightPixels * 0.5f + guide;
 		DrawLine(new Vector2(0f, upperGuide), new Vector2(m_WidthPixels, upperGuide), guidesColor);
@@ -139,8 +135,8 @@ public class GraphOverlay : MonoBehaviour
 	{
 		float x = (sample - cursor) * Time.fixedDeltaTime / widthSeconds * m_WidthPixels;
 
-		float v = value + heightMeters / 2;
-		float y = v / heightMeters * m_HeightPixels;
+		float v = value + height / 2;
+		float y = v / height * m_HeightPixels;
 
 		if (y < 0)
 			y = 0;
