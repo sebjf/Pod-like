@@ -52,7 +52,7 @@ Ariadne:
     batch_size: 1024
     buffer_size: 25600
     summary_freq: 1000
-    time_horizon: 1000
+    time_horizon: 2000
     sequence_length: 64
     learning_rate: 1.0e-4
     lambd: 0.95
@@ -66,7 +66,7 @@ Ariadne:
     reward_signals:
         extrinsic:
             strength: 1.0
-            gamma: 0.8
+            gamma: 0.99
         curiosity:
             strength: 0.05
             gamma: 0.99

@@ -44,10 +44,8 @@ public class VehicleAgent : Agent
     
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        Profiler.BeginSample("Agent Action");
-
         target = Mathf.Clamp(vectorAction[0], -1, 1);
-        speed = Mathf.Clamp(vectorAction[0], 0, 1);
+        speed = Mathf.Clamp(vectorAction[1], 0, 1);
 
         speed = speed * 150f;
         pilot.speed = speed;
@@ -58,8 +56,6 @@ public class VehicleAgent : Agent
         }
 
         AddReward(navigator.distanceTravelledInFrame);
-
-        Profiler.EndSample();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -83,10 +79,10 @@ public class VehicleAgent : Agent
 
         if (angle < 30f)
         {
-            //AddReward(-100);
-            //Done();
-            //AgentReset();
             crashed = true;
+            AddReward(-1000);
+            Done();
+            AgentReset();
         }
     }
 

@@ -26,18 +26,6 @@ public class VehicleAgentAriadne : VehicleAgent
         AddVectorObs(transform.InverseTransformVector(body.velocity) * 0.01f);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         pilot.target = path.Evaluate(navigator.TrackDistance + 20f);
@@ -71,8 +59,6 @@ public class VehicleAgentAriadne : VehicleAgent
                 }
             }
         }
-
-
     }
 #endif
 }
