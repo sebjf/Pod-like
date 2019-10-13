@@ -80,7 +80,7 @@ public class VehicleAgent : Agent
         if (angle < 30f)
         {
             crashed = true;
-            AddReward(-1000);
+            AddReward(-2000);
             Done();
             AgentReset();
         }

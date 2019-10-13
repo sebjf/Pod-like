@@ -14,6 +14,8 @@ public class VehicleAcademy : Academy
         }
     }
 
+    public int maxSteps;
+
     public GameObject trainingCars;
     public GameObject testCars;
 
@@ -21,10 +23,12 @@ public class VehicleAcademy : Academy
     {
         Monitor.SetActive(true);
 
-        if(!isTraining)
+        if(isTraining)
         {
-            // use reflection so we can more easily update the version of ml-agents
-            typeof(Academy).GetField("m_MaxSteps", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this, 0);
+            foreach (var item in FindObjectsOfType<VehicleAgent>())
+            {
+                item.agentParameters.maxStep = maxSteps;
+            }   
         }
 
         if(isTraining)

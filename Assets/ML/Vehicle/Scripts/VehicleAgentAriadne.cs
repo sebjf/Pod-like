@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class VehicleAgentAriadne : VehicleAgent
 {
-    protected ShortestPath path;
+    public ShortestPath path;
 
     protected int numObservations = 20;
     protected float pathInterval = 25;

@@ -2625,6 +2625,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &112279283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4362,10 +4363,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   broadcastHub:
     broadcastingBrains:
-    - {fileID: 11400000, guid: 13a1b0b75072e514a80c2c9e8a177d5d, type: 2}
+    - {fileID: 11400000, guid: 1ff3808f6dcfffd4d91e3e794f305601, type: 2}
     m_BrainsToControl:
     - {fileID: 11400000, guid: 13a1b0b75072e514a80c2c9e8a177d5d, type: 2}
-  m_MaxSteps: 2000
+    - {fileID: 11400000, guid: 1ff3808f6dcfffd4d91e3e794f305601, type: 2}
   m_TrainingConfiguration:
     width: 80
     height: 80
@@ -4380,6 +4381,7 @@ MonoBehaviour:
     targetFrameRate: -1
   resetParameters:
     m_ResetParameters: []
+  maxSteps: 2000
   trainingCars: {fileID: 1312826367}
   testCars: {fileID: 720051395}
 --- !u!4 &145423677
@@ -4408,7 +4410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42007170ca5123148a94f62738af573b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 641619902}
+  agent: {fileID: 1216335012}
   maxSteps: 1000000000
   numActions: 2
 --- !u!1 &148197016
@@ -5601,6 +5603,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &168704484
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29401,6 +29404,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &513515811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33779,12 +33783,13 @@ MonoBehaviour:
   agentParameters:
     agentCameras: []
     agentRenderTextures: []
-    maxStep: 0
+    maxStep: 2000
     resetOnDone: 1
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!1 &641941831
 GameObject:
   m_ObjectHideFlags: 0
@@ -36968,6 +36973,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &715726237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41067,6 +41073,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &844485059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42128,6 +42135,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &877372679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48767,12 +48775,12 @@ PrefabInstance:
     - target: {fileID: 3819372694604359179, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8687983544768177585, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 343465207, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_Enabled
@@ -48870,6 +48878,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1082963805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53574,7 +53583,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31f40b3c8c0fc5943bcaf4c4bce82239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  brain: {fileID: 0}
+  brain: {fileID: 11400000, guid: 8ed269eb1a81cea4fa5b8de3411f13f8, type: 2}
   agentParameters:
     agentCameras: []
     agentRenderTextures: []
@@ -53584,6 +53593,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1216335013 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7185422284977984932, guid: 18c0919ec78c5d242b13903617a9e1ae,
@@ -59701,6 +59711,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1425691527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60593,6 +60604,10 @@ PrefabInstance:
     - target: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_Name
       value: Sandman
+      objectReference: {fileID: 0}
+    - target: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -64758,6 +64773,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1581724298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68224,6 +68240,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1672322147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69009,6 +69026,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1683536429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72983,6 +73001,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1805058264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73453,6 +73472,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1813458078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74248,6 +74268,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1841365621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75331,6 +75352,10 @@ PrefabInstance:
     - target: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_Name
       value: Ariadne
+      objectReference: {fileID: 0}
+    - target: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -77971,6 +77996,7 @@ MonoBehaviour:
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
   crashed: 0
+  path: {fileID: 0}
 --- !u!114 &1961717922
 MonoBehaviour:
   m_ObjectHideFlags: 0

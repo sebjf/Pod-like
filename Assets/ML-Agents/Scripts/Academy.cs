@@ -37,10 +37,12 @@ namespace MLAgents
         [Tooltip("Height of the environment window in pixels.")]
         public int height;
 
-        [Tooltip("Rendering quality of environment. (Higher is better quality.)")][Range(0, 5)]
+        [Tooltip("Rendering quality of environment. (Higher is better quality.)")]
+        [Range(0, 5)]
         public int qualityLevel;
 
-        [Tooltip("Speed at which environment is run. (Higher is faster.)")][Range(1f, 100f)]
+        [Tooltip("Speed at which environment is run. (Higher is faster.)")]
+        [Range(1f, 100f)]
         public float timeScale;
 
         [Tooltip("Frames per second (FPS) engine attempts to maintain.")]
@@ -95,7 +97,7 @@ namespace MLAgents
         [SerializeField]
         public BroadcastHub broadcastHub = new BroadcastHub();
 
-        private const string k_KApiVersion = "API-9";
+        private const string k_KApiVersion = "API-10";
 
         /// Temporary storage for global gravity value
         /// Used to restore oringal value when deriving Academy modifies it
@@ -112,14 +114,6 @@ namespace MLAgents
         // Fields provided in the Inspector
 
         [FormerlySerializedAs("maxSteps")]
-        [SerializeField]
-        [Tooltip("Total number of steps per global episode.\nNon-positive " +
-            "values correspond to episodes without a maximum number of \n" +
-            "steps. Once the step counter reaches this maximum value, the " +
-            "environment will reset.")]
-        int m_MaxSteps;
-
-        [FormerlySerializedAs("trainingConfiguration")]
         [SerializeField]
         [Tooltip("The engine-level settings which correspond to rendering " +
             "quality and engine speed during Training.")]
@@ -147,7 +141,7 @@ namespace MLAgents
         [Tooltip("List of custom parameters that can be changed in the " +
             "environment when it resets.")]
         public ResetParameters resetParameters;
-        public CommunicatorObjects.CustomResetParameters customResetParameters;
+        public CommunicatorObjects.CustomResetParametersProto customResetParameters;
 
         // Fields not provided in the Inspector.
 
@@ -166,15 +160,6 @@ namespace MLAgents
         /// or absence of a communicator. Furthermore, it can be modified by an
         /// external Brain during reset via <see cref="SetIsInference"/>.
         bool m_IsInference = true;
-
-        /// The done flag of the academy. When set to true, the academy will
-        /// call <see cref="AcademyReset"/> instead of <see cref="AcademyStep"/>
-        /// at step time. If true, all agents done flags will be set to true.
-        bool m_Done;
-
-        /// Whether the academy has reached the maximum number of steps for the
-        /// current episode.
-        bool m_MaxStepReached;
 
         /// The number of episodes completed by the environment. Incremented
         /// each time the environment is reset.
@@ -197,13 +182,6 @@ namespace MLAgents
         /// Pointer to the batcher currently in use by the Academy.
         Batcher m_BrainBatcher;
 
-        /// Used to write error messages.
-        StreamWriter m_LogWriter;
-
-        /// The path to where the log should be written.
-        string m_LogPath;
-
-
         // Flag used to keep track of the first time the Academy is reset.
         bool m_FirstAcademyReset;
 
@@ -224,7 +202,7 @@ namespace MLAgents
         // Academy's maxStepReached, done and stepCount values. The agents rely
         // on this event to update their own values of max step reached and done
         // in addition to aligning on the step count of the global episode.
-        public event System.Action<bool, bool, int> AgentSetStatus;
+        public event System.Action<int> AgentSetStatus;
 
         // Signals to all the agents at each environment step so they can reset
         // if their flag has been set to done (assuming the agent has requested a
@@ -275,7 +253,7 @@ namespace MLAgents
                     parms.port = int.Parse(args[i + 1]);
                 }
 
-                if(args[i] == "--host")
+                if (args[i] == "--host")
                 {
                     parms.host = args[i + 1];
                 }
@@ -305,14 +283,10 @@ namespace MLAgents
                 brain.SetToControlledExternally();
             }
 
-            // Try to launch the communicator by usig the arguments passed at launch
-            try
-            {
-                if (Application.isEditor)
-                {
-                    throw new System.Exception(); // no command line arguments in editor mode
-                }
+            communicator = null;
 
+            if (controlledBrains.ToList().Count > 0)
+            {
                 var args = ReadArgs();
                 communicator = new RpcCommunicator(
                     new CommunicatorParameters
@@ -320,23 +294,6 @@ namespace MLAgents
                         host = args.host,
                         port = args.port
                     });
-            }
-            // If it fails, we check if there are any external brains in the scene
-            // If there are : Launch the communicator on the default port
-            // If there arn't, there is no need for a communicator and it is set
-            // to null
-            catch
-            {
-                communicator = null;
-                if (controlledBrains.ToList().Count > 0)
-                {
-                    communicator = new RpcCommunicator(
-                        new CommunicatorParameters
-                        {
-                            host = "localhost",
-                            port = 5005
-                        });
-                }
             }
 
             m_BrainBatcher = new Batcher(communicator);
@@ -351,7 +308,7 @@ namespace MLAgents
                 m_IsCommunicatorOn = true;
 
                 var academyParameters =
-                    new CommunicatorObjects.UnityRLInitializationOutput();
+                    new CommunicatorObjects.UnityRLInitializationOutputProto();
                 academyParameters.Name = gameObject.name;
                 academyParameters.Version = k_KApiVersion;
                 foreach (var brain in exposedBrains)
@@ -371,15 +328,6 @@ namespace MLAgents
 
                 var pythonParameters = m_BrainBatcher.SendAcademyParameters(academyParameters);
                 Random.InitState(pythonParameters.Seed);
-                Application.logMessageReceived += HandleLog;
-                m_LogPath = Path.GetFullPath(".") + "/UnitySDK.log";
-                using (var fs = File.Open(m_LogPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-                {
-                    m_LogWriter = new StreamWriter(fs);
-                    m_LogWriter.WriteLine(System.DateTime.Now.ToString());
-                    m_LogWriter.WriteLine(" ");
-                    m_LogWriter.Close();
-                }
             }
 
             // If a communicator is enabled/provided, then we assume we are in
@@ -387,13 +335,14 @@ namespace MLAgents
             // in inference mode.
             m_IsInference = !m_IsCommunicatorOn;
 
-            BrainDecideAction += () => {};
-            DestroyAction += () => {};
-            AgentSetStatus += (m, d, i) => {};
-            AgentResetIfDone += () => {};
-            AgentSendState += () => {};
-            AgentAct += () => {};
-            AgentForceReset += () => {};
+            BrainDecideAction += () => { };
+            DestroyAction += () => { };
+            AgentSetStatus += (i) => { };
+            AgentResetIfDone += () => { };
+            AgentSendState += () => { };
+            AgentAct += () => { };
+            AgentForceReset += () => { };
+
 
             // Configure the environment using the configurations provided by
             // the developer in the Editor.
@@ -411,18 +360,6 @@ namespace MLAgents
                     resetParameters[kv.Key] = kv.Value;
                 }
                 customResetParameters = newResetParameters.CustomResetParameters;
-            }
-        }
-
-        void HandleLog(string logString, string stackTrace, LogType type)
-        {
-            using (var fs = File.Open(m_LogPath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite))
-            {
-                m_LogWriter = new StreamWriter(fs);
-                m_LogWriter.WriteLine(type.ToString());
-                m_LogWriter.WriteLine(logString);
-                m_LogWriter.WriteLine(stackTrace);
-                m_LogWriter.Close();
             }
         }
 
@@ -550,25 +487,6 @@ namespace MLAgents
         }
 
         /// <summary>
-        /// Sets the done flag to true.
-        /// </summary>
-        public void Done()
-        {
-            m_Done = true;
-        }
-
-        /// <summary>
-        /// Returns whether or not the academy is done.
-        /// </summary>
-        /// <returns>
-        /// <c>true</c>, if academy is done, <c>false</c> otherwise.
-        /// </returns>
-        public bool IsDone()
-        {
-            return m_Done;
-        }
-
-        /// <summary>
         /// Returns whether or not the communicator is on.
         /// </summary>
         /// <returns>
@@ -633,20 +551,7 @@ namespace MLAgents
                 ForcedFullReset();
             }
 
-            if ((m_StepCount >= m_MaxSteps) && m_MaxSteps > 0)
-            {
-                m_MaxStepReached = true;
-                Done();
-            }
-
-            AgentSetStatus(m_MaxStepReached, m_Done, m_StepCount);
-
-            m_BrainBatcher.RegisterAcademyDoneFlag(m_Done);
-
-            if (m_Done)
-            {
-                EnvironmentReset();
-            }
+            AgentSetStatus(m_StepCount);
 
             AgentResetIfDone();
 
@@ -669,8 +574,6 @@ namespace MLAgents
         {
             m_StepCount = 0;
             m_EpisodeCount++;
-            m_Done = false;
-            m_MaxStepReached = false;
             AcademyReset();
         }
 

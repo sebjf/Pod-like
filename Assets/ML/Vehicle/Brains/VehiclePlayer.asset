@@ -13,24 +13,20 @@ MonoBehaviour:
   m_Name: VehiclePlayer
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 2
+    vectorObservationSize: 23
     numStackedVectorObservations: 1
-    vectorActionSize: 03000000
+    vectorActionSize: 02000000
     cameraResolutions: []
     vectorActionDescriptions:
     - 
     - 
-    - 
     vectorActionSpaceType: 1
-  keyContinuousPlayerActions:
-  - key: 120
-    index: 1
-    value: 1
+  keyContinuousPlayerActions: []
   axisContinuousPlayerActions:
   - axis: Vertical
     index: 0
     scale: 1
   - axis: Horizontal
-    index: 2
+    index: 1
     scale: 1
   discretePlayerActions: []
