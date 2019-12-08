@@ -21,16 +21,12 @@ public class VehicleAgent : Agent
 
     public bool resetOnCollision = true;
 
-    public bool crashed = false;
-
     public override void InitializeAgent()
     {
         body = GetComponent<Rigidbody>();
         navigator = GetComponent<Navigator>();
         waypoints = GetComponentInParent<TrackGeometry>();
         pilot = GetComponent<Autopilot>();
-
-        //GetComponent<VehicleControllerInput>().enabled = false;
 
         navigator.Reset();
         startingDistance = navigator.TrackDistance;
@@ -49,11 +45,6 @@ public class VehicleAgent : Agent
 
         speed = speed * 150f;
         pilot.speed = speed;
-
-        if(crashed)
-        {
-            pilot.speed = 0f;
-        }
 
         AddReward(navigator.distanceTravelledInFrame);
     }
@@ -79,8 +70,7 @@ public class VehicleAgent : Agent
 
         if (angle < 30f)
         {
-            crashed = true;
-            AddReward(-2000);
+            AddReward(-1000);
             Done();
             AgentReset();
         }
@@ -88,10 +78,10 @@ public class VehicleAgent : Agent
 
     public override void AgentReset()
     {
-        ResetPositionOnTrack(startingDistance, 25, 4);
+        var academy = GetComponentInParent<VehicleAcademy>();
+        ResetPositionOnTrack(startingDistance, academy.positionVariation.x, academy.positionVariation.y);
         navigator.Reset();
         body.velocity = Vector3.zero;
-        crashed = false;
     }
 
     public void ResetPositionOnTrack(float trackdistance, float fowardvariation, float lateralvariation)

@@ -29,7 +29,7 @@ public class TrainingAgentsManager : MonoBehaviour
         var children = transform.Cast<Transform>().ToList();
         foreach (Transform child in children)
         {
-         //   DestroyImmediate(child.gameObject);
+            DestroyImmediate(child.gameObject);
         }
 
         for (int i = 0; i < numCars - children.Count; i++)

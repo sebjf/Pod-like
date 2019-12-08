@@ -11,7 +11,7 @@ public class AngleAxesObservations
         interval = 25;
         numIntervals = 20;
         balance = 0.2f;
-        targetSample = (int)(numIntervals * balance + 3);
+        targetSample = (int)(numIntervals * balance + 1);
     }
 
     public float interval;

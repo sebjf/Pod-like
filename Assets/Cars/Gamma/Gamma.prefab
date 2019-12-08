@@ -170,7 +170,6 @@ GameObject:
   - component: {fileID: 343465207}
   - component: {fileID: 1697420620939968213}
   - component: {fileID: 8687983544768177585}
-  - component: {fileID: 1677533840991851040}
   - component: {fileID: 7185422284977984932}
   m_Layer: 0
   m_Name: Gamma
@@ -54336,10 +54335,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: {fileID: 0}
-  TotalDistanceTravelled: 12.743038
-  TrackDistance: 12.743038
-  PreviousTrackDistance: 12.743038
-  distanceTravelledInFrame: 0
+  TotalDistanceTravelled: 253.44963
+  TrackDistance: 253.44963
+  PreviousTrackDistance: 253.44963
+  distanceTravelledInFrame: 17.303406
 --- !u!114 &8687983544768177585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54354,27 +54353,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {x: 0, y: 0, z: 0}
   speed: 0
---- !u!114 &1677533840991851040
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474698328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2819612bc3458bc48b7587535b24cbc3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  brain: {fileID: 11400000, guid: 1ff3808f6dcfffd4d91e3e794f305601, type: 2}
-  agentParameters:
-    agentCameras: []
-    agentRenderTextures: []
-    maxStep: 0
-    resetOnDone: 1
-    onDemandDecision: 0
-    numberOfActionsBetweenDecisions: 1
-  resetOnCollision: 1
 --- !u!114 &7185422284977984932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55308,15 +55286,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
---- !u!1 &1991818109 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 100002, guid: 39f485bdd322f674586d9fcea5b0eb2b,
-    type: 3}
-  m_PrefabInstance: {fileID: 1991851487}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1992238941 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1991851487}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1991818109 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100002, guid: 39f485bdd322f674586d9fcea5b0eb2b,
     type: 3}
   m_PrefabInstance: {fileID: 1991851487}
   m_PrefabAsset: {fileID: 0}

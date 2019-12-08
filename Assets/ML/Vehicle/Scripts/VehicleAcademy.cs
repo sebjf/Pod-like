@@ -19,15 +19,22 @@ public class VehicleAcademy : Academy
     public GameObject trainingCars;
     public GameObject testCars;
 
+    public Vector2 positionVariation;
+
     public override void InitializeAcademy()
     {
         Monitor.SetActive(true);
 
-        if(isTraining)
+        foreach (var item in FindObjectsOfType<VehicleAgent>())
         {
-            foreach (var item in FindObjectsOfType<VehicleAgent>())
+            item.agentParameters.resetOnDone = true;
+            item.resetOnCollision = false;
+            item.agentParameters.maxStep = 0;
+
+            if (isTraining)
             {
                 item.agentParameters.maxStep = maxSteps;
+                item.resetOnCollision = true;
             }   
         }
 
@@ -58,6 +65,8 @@ public class VehicleAcademy : Academy
         base.InitializeAcademy();
     }
 
-
-
+    public override void AcademyReset()
+    {
+        base.AcademyReset();
+    }
 }
