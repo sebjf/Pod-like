@@ -23,9 +23,9 @@ public class DashboardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(cameraController.cameraRig != null)
+        if(cameraController.Target != null)
         {
-            var vehicle = cameraController.cameraRig.GetComponent<Vehicle>();
+            var vehicle = cameraController.Target.GetComponent<Vehicle>();
             if (vehicle)
             {
                 m_SpeedText.text = string.Format("Speed: {0:0.00} m/s, {1:0} mph", vehicle.speed, vehicle.speed * 2.237);

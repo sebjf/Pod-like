@@ -16,7 +16,7 @@ public class DriftCamera : MonoBehaviour
     [HideInInspector]
     public CamRig[] cameraRigs;
 
-    public CamRig cameraRig;
+    public CamRig Target;
 
     public float smoothing = 6f;
     public AdvancedOptions advancedOptions;
@@ -26,9 +26,9 @@ public class DriftCamera : MonoBehaviour
     private void Start()
     {
         cameraRigs = FindObjectsOfType<CamRig>().Where(x => x.enabled).ToArray();
-        if (cameraRig == null)
+        if (Target == null)
         {
-            cameraRig = cameraRigs[0];
+            Target = cameraRigs[0];
         }
     }
     private void FixedUpdate ()
@@ -56,13 +56,13 @@ public class DriftCamera : MonoBehaviour
     {
         if (m_ShowingSideView)
         {
-            transform.position = cameraRig.sideView.position;
-            transform.rotation = cameraRig.sideView.transform.rotation;
+            transform.position = Target.sideView.position;
+            transform.rotation = Target.sideView.transform.rotation;
         }
         else
         {
-            transform.position = Vector3.Lerp(transform.position, cameraRig.positionTarget.position, Time.deltaTime * smoothing);
-            transform.LookAt(cameraRig.lookAtTarget);
+            transform.position = Vector3.Lerp(transform.position, Target.positionTarget.position, Time.deltaTime * smoothing);
+            transform.LookAt(Target.lookAtTarget);
         }
     }
 }

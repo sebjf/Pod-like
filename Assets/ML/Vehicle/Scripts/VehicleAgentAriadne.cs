@@ -4,15 +4,8 @@ using UnityEngine;
 
 public class VehicleAgentAriadne : VehicleAgent
 {
-    public ShortestPath path;
-
     protected int numObservations = 20;
     protected float pathInterval = 25;
-
-    private void Awake()
-    {
-        path = GetComponentInParent<ShortestPath>();
-    }
 
     public override void CollectObservations()
     {
@@ -20,25 +13,18 @@ public class VehicleAgentAriadne : VehicleAgent
 
         for (int i = 0; i < numObservations; i++)
         {
-            AddVectorObs(path.Curvature(navigator.TrackDistance + i * pathInterval));
+            AddVectorObs(waypoints.Curvature(navigator.TrackDistance + i * pathInterval));
         }
 
         AddVectorObs(transform.InverseTransformVector(body.velocity) * 0.01f);
     }
 
-    private void FixedUpdate()
-    {
-        pilot.target = path.Evaluate(navigator.TrackDistance + 20f);
-    }
-
 #if UNITY_EDITOR
-    protected override void OnDrawGizmosSelected()
+    protected void OnDrawGizmos()
     {
-        base.OnDrawGizmosSelected();
-
-        if (UnityEditor.Selection.activeTransform == this.transform)
+        if (FindObjectOfType<DriftCamera>().Target == gameObject.GetComponent<CamRig>())
         {
-            if (path != null)
+            if (waypoints != null)
             {
                 var graph = FindObjectOfType<GraphOverlay>();
                 if (graph != null)
@@ -48,14 +34,14 @@ public class VehicleAgentAriadne : VehicleAgent
                     series.values.Clear();
                     for (int i = 0; i < numObservations; i++)
                     {
-                        series.values.Add(path.Curvature(navigator.TrackDistance + i * pathInterval));
+                        series.values.Add(waypoints.Curvature(navigator.TrackDistance + i * pathInterval));
                     }
                 }
 
                 Gizmos.color = Color.yellow;
                 for (int i = 0; i < numObservations; i++)
                 {
-                    Gizmos.DrawWireSphere(path.Evaluate(navigator.TrackDistance + i * pathInterval), 0.5f);
+                    Gizmos.DrawWireSphere(waypoints.Evaluate(navigator.TrackDistance + i * pathInterval, 0f), 0.5f);
                 }
             }
         }

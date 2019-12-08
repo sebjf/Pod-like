@@ -18,7 +18,7 @@ public class CameraButton : MonoBehaviour
     {
         GetComponent<Button>().onClick.AddListener(new UnityEngine.Events.UnityAction(() =>
         {
-            cameraController.cameraRig = cameraRig;
+            cameraController.Target = cameraRig;
         }));
     }
 

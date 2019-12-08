@@ -46,7 +46,7 @@ public class Navigator : MonoBehaviour
 
         waypoints.InitialiseBroadphase();
 
-        TrackDistance = waypoints.Evaluate(transform.position, TrackDistance);
+        TrackDistance = waypoints.Distance(transform.position, TrackDistance);
 
         distanceTravelledInFrame = TrackDistance - PreviousTrackDistance;
 

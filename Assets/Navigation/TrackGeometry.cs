@@ -104,6 +104,9 @@ public class TrackGeometry : MonoBehaviour
     public List<Waypoint> waypoints = new List<Waypoint>();
     public float totalLength;
 
+    public float curvatureSampleDistance;
+    public int curvatureSampleCount;
+
     [NonSerialized]
     public WaypointsBroadphase1D broadphase1d;
 
@@ -252,7 +255,7 @@ public class TrackGeometry : MonoBehaviour
     /// <summary>
     /// Returns the absolute distance along the track for the position
     /// </summary>
-    public float Evaluate(Vector3 position, float currentDistance)
+    public float Distance(Vector3 position, float currentDistance)
     {
         float smallestDistance = float.MaxValue;
         Waypoint closest = null;
@@ -419,5 +422,26 @@ public class TrackGeometry : MonoBehaviour
                 yield return waypoint;
             }
         }
+    }
+
+    public float Curvature(float v)
+    {
+        var k = 0f;
+
+        for (int i = -curvatureSampleCount; i < curvatureSampleCount; i++)
+        {
+            var norm0 = Normal(v + ((i + 0) * curvatureSampleDistance));
+            var norm1 = Normal(v + ((i + 1) * curvatureSampleDistance));
+            var c = 1f - Vector3.Dot(norm0, norm1);
+            c *= Mathf.Sign(Vector3.Dot(Vector3.Cross(norm0, norm1), Vector3.up));
+            k += c;
+        }
+
+        return k;
+    }
+
+    public Vector3 Evaluate(float d, float w)
+    {
+        return Query(d).Position(w);
     }
 }

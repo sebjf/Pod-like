@@ -100,7 +100,7 @@ public class TrackPath : MonoBehaviour
             var tangent = (wp - prev).normalized;
             var actual = (next - wp).normalized;
 
-            var k = (1 - Vector3.Dot(tangent, actual)) * 1f;
+            var k = (1 - Vector3.Dot(tangent, actual));
 
             curvature += k;
         }
