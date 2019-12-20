@@ -236,6 +236,11 @@ public class TrackGeometry : MonoBehaviour
         return Mathf.Lerp(current.width, Next(current).width, t);
     }
 
+    public float Width(float distance)
+    {
+        return Query(distance).Width;
+    }
+
     /// <summary>
     /// Length of the medial segment between start and the next waypoint
     /// </summary>
