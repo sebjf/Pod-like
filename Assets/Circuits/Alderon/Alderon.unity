@@ -4013,7 +4013,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145423675}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5280ba1e6c85b47458a5e2dd8a58138a, type: 3}
   m_Name: 
@@ -4062,14 +4062,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145423675}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42007170ca5123148a94f62738af573b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agent: {fileID: 641619902}
   maxSteps: 1000000000
   numActions: 2
+  agents: {fileID: 720051396}
 --- !u!1 &145498596
 GameObject:
   m_ObjectHideFlags: 0

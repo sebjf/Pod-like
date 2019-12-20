@@ -42,7 +42,7 @@ public class VehicleAcademy : Academy
         {
             testCars.SetActive(false);
             trainingCars.SetActive(true);
-            GetComponent<RewardAcademy>().enabled = false;
+            GetComponent<MockAcademy>().enabled = false;
         }
         else
         {

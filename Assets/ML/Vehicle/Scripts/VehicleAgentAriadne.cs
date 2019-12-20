@@ -14,7 +14,7 @@ public class VehicleAgentAriadne : VehicleAgent
         for (int i = 0; i < numObservations; i++)
         {
             AddVectorObs(waypoints.Curvature(navigator.TrackDistance + i * pathInterval));
-            AddVectorObs(waypoints.Width(navigator.TrackDistance + i * pathInterval));
+            AddVectorObs(waypoints.Width(navigator.TrackDistance + i * pathInterval) * 0.01f);
         }
 
         AddVectorObs(transform.InverseTransformVector(body.velocity) * 0.01f);
@@ -31,11 +31,18 @@ public class VehicleAgentAriadne : VehicleAgent
                 if (graph != null)
                 {
                     graph.widthSeconds = Time.fixedDeltaTime * numObservations;
-                    var series = graph.GetSeries("Observations");
+                    var series = graph.GetSeries("Curvatures");
                     series.values.Clear();
                     for (int i = 0; i < numObservations; i++)
                     {
                         series.values.Add(waypoints.Curvature(navigator.TrackDistance + i * pathInterval));
+                    }
+
+                    series = graph.GetSeries("Widths");
+                    series.values.Clear();
+                    for (int i = 0; i < numObservations; i++)
+                    {
+                        series.values.Add(waypoints.Width(navigator.TrackDistance + i * pathInterval) * 0.01f);
                     }
                 }
 
