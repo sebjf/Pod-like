@@ -94,7 +94,9 @@ namespace MLAgents
         /// </summary>
         private void BrainDecideAction()
         {
+            UnityEngine.Profiling.Profiler.BeginSample("Send Brain Info");
             m_BrainBatcher?.SendBrainInfo(name, m_AgentInfos);
+            UnityEngine.Profiling.Profiler.EndSample();
             DecideAction();
         }
 
