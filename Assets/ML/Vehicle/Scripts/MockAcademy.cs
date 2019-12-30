@@ -45,12 +45,13 @@ public class MockAcademy : MonoBehaviour
             activeAgents.ForEach(a => a.Done());
         }
 
+        activeAgents.ForEach(agent => agent.ResetReward());
+
         activeAgents.ForEach(agent =>
         {
             if (agent.IsDone())
             {
                 agent.AgentReset();
-                agent.ResetReward();
                 agent.ClearDone();
 
                 timesteps = 0;
