@@ -17,6 +17,10 @@ public class VehicleAgentAriadne : VehicleAgent
             AddVectorObs(waypoints.Width(navigator.TrackDistance + i * pathInterval) * 0.01f);
         }
 
+        var tracknormal = waypoints.Normal(navigator.TrackDistance);
+        var carnormal = transform.forward;
+        AddVectorObs((1f - Vector3.Dot(tracknormal, carnormal)) * Mathf.Sign(Vector3.Dot(Vector3.Cross(tracknormal, carnormal), Vector3.up)));
+
         AddVectorObs(transform.InverseTransformVector(body.velocity) * 0.01f);
     }
 
