@@ -2,9 +2,9 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using UnityEngine.Serialization;
+using UnityEngine.Profiling;
 #if UNITY_EDITOR
 using UnityEditor;
-
 #endif
 
 /**
@@ -393,7 +393,7 @@ namespace MLAgents
             Screen.SetResolution(config.width, config.height, false);
             QualitySettings.SetQualityLevel(config.qualityLevel, true);
             Time.timeScale = config.timeScale;
-            Time.captureFramerate = 60;
+            //Time.captureFramerate = 60;
             Application.targetFrameRate = config.targetFrameRate;
         }
 
@@ -515,6 +515,8 @@ namespace MLAgents
         /// </summary>
         void EnvironmentStep()
         {
+            Profiler.BeginSample("Environment Step");
+
             if (m_ModeSwitched)
             {
                 ConfigureEnvironment();
@@ -555,16 +557,31 @@ namespace MLAgents
 
             AgentResetIfDone();
 
+            Profiler.BeginSample("Agent Send State");
+
             AgentSendState();
+
+            Profiler.EndSample();
+            Profiler.BeginSample("Decide Action");
 
             BrainDecideAction();
 
+            Profiler.EndSample();
+            Profiler.BeginSample("Academy Step");
+
             AcademyStep();
+
+            Profiler.EndSample();
+            Profiler.BeginSample("Agent Act");
 
             AgentAct();
 
+            Profiler.EndSample();
+
             m_StepCount += 1;
             m_TotalStepCount += 1;
+
+            Profiler.EndSample();
         }
 
         /// <summary>
