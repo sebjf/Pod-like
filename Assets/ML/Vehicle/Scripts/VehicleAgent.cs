@@ -51,7 +51,7 @@ public class VehicleAgent : Agent
 
     private void FixedUpdate()
     {
-        pilot.target = waypoints.Evaluate(navigator.TrackDistance + 10, target);
+        pilot.target = waypoints.Evaluate(navigator.TrackDistance + 20, target);
     }
 
     private void OnCollisionEnter(Collision collision)
