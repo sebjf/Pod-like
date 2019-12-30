@@ -46,7 +46,7 @@ public class VehicleAgent : Agent
         speed = speed * 150f;
         pilot.speed = speed;
 
-        AddReward(navigator.distanceTravelledInFrame);
+        AddReward((navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 100f);
     }
 
     private void FixedUpdate()
