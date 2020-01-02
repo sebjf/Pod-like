@@ -54272,7 +54272,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      slipForceScale: 20000
+      slipForceScale: 40
       forwardSlipForce:
         serializedVersion: 2
         m_Curve:
@@ -54315,7 +54315,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      forwardSlipForceScale: 20000
+      forwardSlipForceScale: 40
       brakingTorque: 2000
     wheels:
     - {fileID: 1223322118}
@@ -54749,7 +54749,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 20000
+  slipForceScale: 40
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -54792,7 +54792,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardSlipScale: 20000
+  forwardSlipScale: 40
   brakingTorque: 2000
   steers: 0
   drives: 1

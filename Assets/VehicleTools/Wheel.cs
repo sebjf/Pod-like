@@ -185,7 +185,7 @@ public class Wheel : MonoBehaviour
 
         //Jung, S., Kim, T.Y., &Yoo, W.S. (2018). Advanced slip ratio for ensuring numerical stability of low - speed driving simulation. Part I: Longitudinal slip ratio.
         //Proceedings of the Institution of Mechanical Engineers, Part D: Journal of Automobile Engineering. http://doi.org/10.1177/0954407018759738
-        var Vtm = 1.1f * (Time.fixedDeltaTime / 2) * forwardSlipScale * (((radius * radius) / inertia) + ( 1f / (rigidBody.mass / wheelsInContact)));
+        var Vtm = 1.1f * (Time.fixedDeltaTime / 2) * forwardSlipScale * (rigidBody.mass / wheelsInContact) * (((radius * radius) / inertia) + ( 1f / (rigidBody.mass / wheelsInContact)));
 
         var slip = ((angularVelocity * radius) - Vr) / (Mathf.Max(Mathf.Abs(Vr), Vtm));
 
@@ -194,7 +194,7 @@ public class Wheel : MonoBehaviour
             slip = 0f;
         }
 
-        var Fr = forwardSlipForce.Evaluate(Mathf.Abs(slip)) * Mathf.Sign(slip) * forwardSlipScale;
+        var Fr = forwardSlipForce.Evaluate(Mathf.Abs(slip)) * Mathf.Sign(slip) * forwardSlipScale * (rigidBody.mass / wheelsInContact);
 
         rigidBody.AddForceAtPosition(forward * Fr, attachmentPoint);
 
@@ -225,13 +225,17 @@ public class Wheel : MonoBehaviour
         var Vt = Vector3.Dot(velocity, right) * right;
         var at = Vt / Time.fixedDeltaTime;
 
+        // The force necessary to stop the current attachment point's lateral movement based on its current velocity
+
         var a = (-at / r) / wheelsInContact;
         Quaternion q = rotation * rigidBody.inertiaTensorRotation;
         a = q * Vector3.Scale(rigidBody.inertiaTensor, (Quaternion.Inverse(q) * a));
         var Ft = a / r;
 
+        // The lateral force determined by the slip angle from the direction of travel
+
         var slipAngle = Mathf.Abs(Mathf.Acos(Mathf.Clamp(Vector3.Dot(velocity.normalized, forward),-1f,1f)));
-        var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale;
+        var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale * (rigidBody.mass / wheelsInContact);
 
         Ft = Ft.normalized * Mathf.Min(Ft.magnitude, Fs);
         rigidBody.AddForceAtPosition(Ft, attachmentPoint, ForceMode.Force);
