@@ -35,7 +35,7 @@ public class VehicleAgent : Agent
     }
 
     protected float startingDistance;
-    protected float target = 0.1f;
+    protected float target = 1f;
     protected float speed;
     
     public override void AgentAction(float[] vectorAction, string textAction)
