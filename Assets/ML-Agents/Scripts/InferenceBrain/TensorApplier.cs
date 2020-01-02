@@ -84,12 +84,7 @@ namespace MLAgents.InferenceBrain
         {
             foreach (var tensor in tensors)
             {
-                if (!m_Dict.ContainsKey(tensor.name))
-                {
-                    throw new UnityAgentsException(
-                        $"Unknown tensorProxy expected as output : {tensor.name}");
-                }
-                m_Dict[tensor.name].Apply(tensor, agentInfos);
+                m_Dict[TensorNames.ActionOutput].Apply(tensor, agentInfos);
             }
         }
     }

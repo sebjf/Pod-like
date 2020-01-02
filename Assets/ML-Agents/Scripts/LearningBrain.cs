@@ -187,8 +187,14 @@ namespace MLAgents
             var outputs = new List<TensorProxy>();
             foreach (var n in names)
             {
-                var output = m_Engine.Peek(n);
-                outputs.Add(TensorUtils.TensorProxyFromBarracuda(output, n));
+                try
+                {
+                    var output = m_Engine.Peek(n);
+                    outputs.Add(TensorUtils.TensorProxyFromBarracuda(output, n));
+                }catch(KeyNotFoundException)
+                {
+                    // if an output name has been manually specified it may not be in all models
+                }
             }
 
             return outputs;

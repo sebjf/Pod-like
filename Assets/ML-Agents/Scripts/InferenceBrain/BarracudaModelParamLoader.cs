@@ -105,7 +105,7 @@ namespace MLAgents.InferenceBrain
                 return names.ToArray();
             }
 
-            names.Add(TensorNames.ActionOutput);
+            names.AddRange(m_Model.outputs);
 
             var memory = GetIntScalar(TensorNames.MemorySize);
             if (memory > 0)
@@ -130,7 +130,13 @@ namespace MLAgents.InferenceBrain
         /// <returns>The value of the scalar variable in the model. (-1 if not found)</returns>
         private int GetIntScalar(string name)
         {
-            return (int)m_Model.GetTensorByName(name)[0];
+            try
+            {
+                return (int)m_Model.GetTensorByName(name)[0];
+            }catch(NullReferenceException)
+            {
+                return -1;
+            }
         }
 
         /// <summary>
