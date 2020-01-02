@@ -66,7 +66,7 @@ public class BlackBox : MonoBehaviour
                     series.values.Clear();
                     for (int i = 0; i < numObservations; i++)
                     {
-                        series.values.Add(waypoints.Curvature(navigator.TrackDistance + i * pathInterval));
+                        series.values.Add(waypoints.Curvature(navigator.TrackDistance + i * pathInterval) * 5f);
                     }
 
                     series = graph.GetSeries("Widths");

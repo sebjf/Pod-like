@@ -13,7 +13,7 @@ public class VehicleAgentAriadne : VehicleAgent
 
         for (int i = 0; i < numObservations; i++)
         {
-            AddVectorObs(waypoints.Curvature(navigator.TrackDistance + i * pathInterval));
+            AddVectorObs(waypoints.Curvature(navigator.TrackDistance + i * pathInterval) * 5f);
             AddVectorObs(waypoints.Width(navigator.TrackDistance + i * pathInterval) * 0.01f);
         }
 

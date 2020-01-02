@@ -15,7 +15,6 @@ public class TrackGeometryEditor : Editor
         serializedObject.Update();
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("curvatureSampleDistance"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("curvatureSampleCount"));
 
         serializedObject.ApplyModifiedProperties();
 

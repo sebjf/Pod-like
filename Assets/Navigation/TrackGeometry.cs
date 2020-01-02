@@ -105,7 +105,6 @@ public class TrackGeometry : MonoBehaviour
     public float totalLength;
 
     public float curvatureSampleDistance;
-    public int curvatureSampleCount;
 
     [NonSerialized]
     public WaypointsBroadphase1D broadphase1d;
@@ -431,18 +430,30 @@ public class TrackGeometry : MonoBehaviour
 
     public float Curvature(float v)
     {
-        var k = 0f;
+        var X = Query(v + curvatureSampleDistance).Midpoint;
+        var Y = Query(v).Midpoint;
+        var Z = Query(v - curvatureSampleDistance).Midpoint;
 
-        for (int i = -curvatureSampleCount; i < curvatureSampleCount; i++)
+        var YX = X - Y;
+        var YZ = Z - Y;
+        var ZY = Y - Z;
+
+        // Compute the direction of the curve
+
+        var c = Mathf.Sign(Vector3.Dot(Vector3.Cross(ZY.normalized, YX.normalized), Vector3.up));
+
+        // https://en.wikipedia.org/wiki/Menger_curvature
+
+        var C = (2f * Mathf.Sin(Mathf.Acos(Vector3.Dot(YX.normalized, YZ.normalized)))) / (X - Y).magnitude;
+
+        C *= c;
+
+        if (float.IsNaN(C))
         {
-            var norm0 = Normal(v + ((i + 0) * curvatureSampleDistance));
-            var norm1 = Normal(v + ((i + 1) * curvatureSampleDistance));
-            var c = 1f - Vector3.Dot(norm0, norm1);
-            c *= Mathf.Sign(Vector3.Dot(Vector3.Cross(norm0, norm1), Vector3.up));
-            k += c;
+            C = 0f;
         }
 
-        return k;
+        return C;
     }
 
     public Vector3 Evaluate(float d, float w)
