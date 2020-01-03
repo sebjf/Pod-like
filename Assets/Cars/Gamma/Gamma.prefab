@@ -54272,7 +54272,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      slipForceScale: 40
+      slipForceScale: 4
       forwardSlipForce:
         serializedVersion: 2
         m_Curve:
@@ -54315,7 +54315,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      forwardSlipForceScale: 40
+      forwardSlipForceScale: 4
       brakingTorque: 2000
     wheels:
     - {fileID: 1223322118}
