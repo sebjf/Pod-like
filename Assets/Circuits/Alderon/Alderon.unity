@@ -3267,13 +3267,12 @@ MonoBehaviour:
   broadcastHub:
     broadcastingBrains:
     - {fileID: 11400000, guid: 13a1b0b75072e514a80c2c9e8a177d5d, type: 2}
-    m_BrainsToControl:
-    - {fileID: 11400000, guid: 13a1b0b75072e514a80c2c9e8a177d5d, type: 2}
+    m_BrainsToControl: []
   m_TrainingConfiguration:
     width: 80
     height: 80
     qualityLevel: 0
-    timeScale: 10
+    timeScale: 1
     targetFrameRate: -1
   m_InferenceConfiguration:
     width: 1280
@@ -33599,6 +33598,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   samplingDistance: 5
+  sampingCount: 30
+  targetDistance: 20
+  maxAcceleration: 20
+  maxDeceleration: 120
+  speedBias: 0.98
 --- !u!1 &959076854
 GameObject:
   m_ObjectHideFlags: 0
@@ -36358,7 +36362,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.1
+      value: 22.56
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.y
@@ -48624,6 +48628,26 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: TotalDistanceTravelled
+      value: 316.9308
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: TrackDistance
+      value: 316.9308
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: PreviousTrackDistance
+      value: 316.9308
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: distanceTravelledInFrame
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1677533840991851040, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: brain
@@ -53755,7 +53779,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -58457,7 +58481,7 @@ PrefabInstance:
     - target: {fileID: 8687983544768177585, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 343465207, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_Enabled
@@ -58517,7 +58541,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   y_scale: 1
-  widthSeconds: 2
+  samplesOnScreen: 20
   height: 1
   bgColor:
     serializedVersion: 2

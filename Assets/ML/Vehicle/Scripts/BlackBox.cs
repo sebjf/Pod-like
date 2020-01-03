@@ -61,7 +61,7 @@ public class BlackBox : MonoBehaviour
                 var graph = FindObjectOfType<GraphOverlay>();
                 if (graph != null)
                 {
-                    graph.widthSeconds = Time.fixedDeltaTime * numObservations;
+                    graph.samplesOnScreen = numObservations;
                     var series = graph.GetSeries("Curvatures");
                     series.values.Clear();
                     for (int i = 0; i < numObservations; i++)

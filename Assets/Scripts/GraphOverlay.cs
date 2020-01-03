@@ -1,6 +1,4 @@
-﻿
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
@@ -17,6 +15,7 @@ public class GraphOverlay : MonoBehaviour
         public string name;
         public Color color = Color.red;
         public List<float> values;
+        public float scale = 1f;
     }
 
     [NonSerialized]
@@ -39,7 +38,7 @@ public class GraphOverlay : MonoBehaviour
 
     public float y_scale = 1f;
 
-    public float widthSeconds = 2f; 
+    public int samplesOnScreen = 20; 
 
 	public float height = 1f;
 	public Color32 bgColor = Color.white;
@@ -111,18 +110,15 @@ public class GraphOverlay : MonoBehaviour
 		DrawLine(new Vector2(0f, upperGuide), new Vector2(m_WidthPixels, upperGuide), guidesColor);
 		DrawLine(new Vector2(0f, lowerGuide), new Vector2(m_WidthPixels, lowerGuide), guidesColor);
 
-		// Draw graphs.
-		int samplesOnScreen = (int)(widthSeconds / Time.fixedDeltaTime);
 		int stepsBack = (int)(timeTravel / Time.fixedDeltaTime);
 
         foreach (var series in this.series.Values)
         {
             int cursor = Mathf.Max(series.values.Count - samplesOnScreen - stepsBack, 0);
 
-            // Forward slip.
             for (int i = cursor; i < series.values.Count - 1 - stepsBack; ++i)
             {
-                DrawLine(PlotSpace(cursor, i, series.values[i] * y_scale), PlotSpace(cursor, i + 1, series.values[i + 1] * y_scale), series.color);
+                DrawLine(PlotSpace(cursor, i, series.values[i] * series.scale * y_scale), PlotSpace(cursor, i + 1, series.values[i + 1] * series.scale * y_scale), series.color);
             }
         }
 
@@ -133,7 +129,7 @@ public class GraphOverlay : MonoBehaviour
 	// Convert time-value to the pixel plot space.
 	Vector2 PlotSpace(int cursor, int sample, float value)
 	{
-		float x = (sample - cursor) * Time.fixedDeltaTime / widthSeconds * m_WidthPixels;
+		float x = (sample - cursor) *  1f / (float)samplesOnScreen * m_WidthPixels;
 
 		float v = value + height / 2;
 		float y = v / height * m_HeightPixels;
@@ -152,7 +148,24 @@ public class GraphOverlay : MonoBehaviour
 		int i;
 		int j;
 
-		if (Mathf.Abs(to.x - from.x) > Mathf.Abs(to.y - from.y))
+        if(float.IsNaN(from.x) || float.IsInfinity(from.x))
+        {
+            from.x = 0;
+        }
+        if (float.IsNaN(from.y) || float.IsInfinity(from.y))
+        {
+            from.y = 0;
+        }
+        if (float.IsNaN(to.x) || float.IsInfinity(to.x))
+        {
+            to.x = 0;
+        }
+        if (float.IsNaN(to.y) || float.IsInfinity(to.y))
+        {
+            to.y = 0;
+        }
+
+        if (Mathf.Abs(to.x - from.x) > Mathf.Abs(to.y - from.y))
 		{
 			// Horizontal line.
 			i = 0;
