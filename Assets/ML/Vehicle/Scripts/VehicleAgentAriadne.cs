@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class VehicleAgentAriadne : VehicleAgent
 {
-    internal int numObservations = 20;
-    internal float pathInterval = 25;
+    internal int numObservations = 25;
+    internal float pathInterval = 5;
 
     public override void CollectObservations()
     {
@@ -22,6 +22,8 @@ public class VehicleAgentAriadne : VehicleAgent
         AddVectorObs((1f - Vector3.Dot(tracknormal, carnormal)) * Mathf.Sign(Vector3.Dot(Vector3.Cross(tracknormal, carnormal), Vector3.up)));
 
         AddVectorObs(transform.InverseTransformVector(body.velocity) * 0.01f);
+
+        // num observations: 25 * 2 + 1 + 3 = 54
     }
 
 #if UNITY_EDITOR
