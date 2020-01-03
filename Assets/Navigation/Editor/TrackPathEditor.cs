@@ -20,9 +20,14 @@ public class TrackPathEditor : Editor
             path.Initialise();
         }
 
-        if (GUILayout.Button("Step"))
+        if (GUILayout.Button("Fit"))
         {
             path.Step(100);
+        }
+
+        if (GUILayout.Button("Step"))
+        {
+            path.Step(1);
         }
     }
 }
