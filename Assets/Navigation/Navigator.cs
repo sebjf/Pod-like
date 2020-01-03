@@ -67,7 +67,7 @@ public class Navigator : MonoBehaviour
             FixedUpdate();
         }
 
-        var midline = waypoints.Midline(TrackDistance);
+        var midline = waypoints.Evaluate(TrackDistance);
 
         Gizmos.DrawLine(midline, transform.position);
 

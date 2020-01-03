@@ -5,6 +5,13 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+public interface IPath
+{
+    float Curvature(float v);
+    Vector3 Evaluate(float distance);
+    float Camber(float v);
+}
+
 
 [Serializable]
 public class Waypoint : IWaypoint1D  // we can keep waypoint as a class and use references, so long as we are careful not to expect them to remain between serialisation. using class also means we can compare to null.
@@ -91,7 +98,7 @@ public class Waypoint : IWaypoint1D  // we can keep waypoint as a class and use 
         return false;
     }
 
-    public float Evaluate(float distance)
+    public float t(float distance)
     {
         return (distance - start) / length;
     }
@@ -99,7 +106,7 @@ public class Waypoint : IWaypoint1D  // we can keep waypoint as a class and use 
     public float Position => start;
 }
 
-public class TrackGeometry : MonoBehaviour
+public class TrackGeometry : MonoBehaviour, IPath
 {
     public List<Waypoint> waypoints = new List<Waypoint>();
     public float totalLength;
@@ -374,14 +381,25 @@ public class TrackGeometry : MonoBehaviour
         {
             distance = distance,
             waypoint = wp,
-            t = wp.Evaluate(distance),
+            t = wp.t(distance),
             next = Next(wp)
         };
     }
 
-    public Vector3 Midline(float distance)
+    public Vector3 Evaluate(float distance)
     {
-        return Midline(Query(distance));
+        return Evaluate(Query(distance));
+    }
+
+    public Vector3 Evaluate(float d, float w)
+    {
+        return Query(d).Position(w);
+    }
+    public Vector3 Evaluate(WaypointQuery result)
+    {
+        var wp = result.waypoint;
+        var dir = (Next(wp).position - wp.position);
+        return wp.position + dir * result.t;
     }
 
     public Vector3 Normal(float distance)
@@ -389,13 +407,6 @@ public class TrackGeometry : MonoBehaviour
         var result = Query(distance);
         var wp = result.waypoint;
         return Vector3.Lerp(wp.normal, Next(wp).normal, result.t);
-    }
-
-    public Vector3 Midline(WaypointQuery result)
-    {
-        var wp = result.waypoint;
-        var dir = (Next(wp).position - wp.position);
-        return wp.position + dir * result.t;
     }
 
     public struct Edge
@@ -444,7 +455,7 @@ public class TrackGeometry : MonoBehaviour
 
         // https://en.wikipedia.org/wiki/Menger_curvature
 
-        var C = (2f * Mathf.Sin(Mathf.Acos(Vector3.Dot(YX.normalized, YZ.normalized)))) / (X - Y).magnitude;
+        var C = (2f * Mathf.Sin(Mathf.Acos(Vector3.Dot(YX.normalized, YZ.normalized)))) / (X - Z).magnitude;
 
         C *= c;
 
@@ -456,8 +467,17 @@ public class TrackGeometry : MonoBehaviour
         return C;
     }
 
-    public Vector3 Evaluate(float d, float w)
+    public float Camber(float v)
     {
-        return Query(d).Position(w);
+        var X = Query(v + curvatureSampleDistance).Midpoint;
+        var Y = Query(v).Midpoint;
+        var Z = Query(v - curvatureSampleDistance).Midpoint;
+
+        var YX = X - Y;
+        var YZ = Z - Y;
+
+        return Vector3.Dot(Vector3.Cross(YX.normalized, YZ.normalized), Vector3.up);
     }
+
+
 }

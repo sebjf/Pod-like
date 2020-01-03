@@ -57,8 +57,8 @@ public class AngleAxesObservations
             samples[i].left = samples[i].midpoint - samples[i].tangent * samples[i].width * 0.5f;
             samples[i].right = samples[i].midpoint + samples[i].tangent * samples[i].width * 0.5f;
 
-            var next = waypoints.Midline(location + interval);
-            var prev = waypoints.Midline(location - interval);
+            var next = waypoints.Evaluate(location + interval);
+            var prev = waypoints.Evaluate(location - interval);
 
             var trajectory = (next - midpoint).normalized;
             samples[i].trajectory = trajectory;

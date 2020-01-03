@@ -98,7 +98,7 @@ public class VehicleAgent : Agent
 
         trackdistance += UnityEngine.Random.Range(-fowardvariation, fowardvariation); ;
 
-        transform.position = waypoints.Midline(trackdistance) + Vector3.up * 2;
+        transform.position = waypoints.Evaluate(trackdistance) + Vector3.up * 2;
         transform.forward = waypoints.Normal(trackdistance);
 
         transform.position = transform.position + (transform.right * UnityEngine.Random.Range(-lateralvariation, lateralvariation));
