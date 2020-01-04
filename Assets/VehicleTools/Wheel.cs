@@ -134,7 +134,7 @@ public class Wheel : MonoBehaviour
 
     public void UpdateVelocity()
     {
-        // its important to compute the wheel velocities independently because they will include a component of the rb's angular velocity linearly
+        // It's important to compute the wheel velocities independently because they will include a component of the rb's angular velocity linearly
         velocity = (position - prevPosition) / Time.fixedDeltaTime;
         prevPosition = position;
 
@@ -183,9 +183,14 @@ public class Wheel : MonoBehaviour
     {
         var Vr = Vector3.Dot(velocity, forward);
 
-        //Jung, S., Kim, T.Y., &Yoo, W.S. (2018). Advanced slip ratio for ensuring numerical stability of low - speed driving simulation. Part I: Longitudinal slip ratio.
-        //Proceedings of the Institution of Mechanical Engineers, Part D: Journal of Automobile Engineering. http://doi.org/10.1177/0954407018759738
-        var Vtm = 1.1f * (Time.fixedDeltaTime / 2) * (forwardSlipScale * (rigidBody.mass / wheelsInContact) * Physics.gravity.magnitude) * (((radius * radius) / inertia) + ( 1f / (rigidBody.mass / wheelsInContact)));
+        // The combination of the slip-force scalar and normal force due to gravity. 
+        // Assume that all four wheels are in contact. Consequently less force is applied when the car comes down from a jump at an angle, 
+        // and one wheel hits the surface before the others, usually causing the car to pivot sharply. This way is less accurate, but more fun.
+        var slipForceScale = (forwardSlipScale * (rigidBody.mass / 4) * Physics.gravity.magnitude);
+
+        // Jung, S., Kim, T.Y., &Yoo, W.S. (2018). Advanced slip ratio for ensuring numerical stability of low - speed driving simulation. Part I: Longitudinal slip ratio.
+        // Proceedings of the Institution of Mechanical Engineers, Part D: Journal of Automobile Engineering. http://doi.org/10.1177/0954407018759738
+        var Vtm = 1.1f * (Time.fixedDeltaTime / 2) * slipForceScale * (((radius * radius) / inertia) + ( 1f / (rigidBody.mass / wheelsInContact)));
 
         var slip = ((angularVelocity * radius) - Vr) / (Mathf.Max(Mathf.Abs(Vr), Vtm));
 
@@ -194,7 +199,7 @@ public class Wheel : MonoBehaviour
             slip = 0f;
         }
 
-        var Fr = forwardSlipForce.Evaluate(Mathf.Abs(slip)) * Mathf.Sign(slip) * forwardSlipScale * (rigidBody.mass / wheelsInContact) * Physics.gravity.magnitude;
+        var Fr = forwardSlipForce.Evaluate(Mathf.Abs(slip)) * Mathf.Sign(slip) * slipForceScale;
 
         rigidBody.AddForceAtPosition(forward * Fr, attachmentPoint);
 
@@ -234,8 +239,9 @@ public class Wheel : MonoBehaviour
 
         // The lateral force determined by the slip angle from the direction of travel
 
+        var slipForceScale = (this.slipForceScale * (rigidBody.mass / 4) * Physics.gravity.magnitude);
         var slipAngle = Mathf.Abs(Mathf.Acos(Mathf.Clamp(Vector3.Dot(velocity.normalized, forward),-1f,1f)));
-        var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale * (rigidBody.mass / wheelsInContact) * Physics.gravity.magnitude;
+        var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale;
 
         Ft = Ft.normalized * Mathf.Min(Ft.magnitude, Fs);
         rigidBody.AddForceAtPosition(Ft, attachmentPoint, ForceMode.Force);
