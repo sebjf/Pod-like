@@ -90,6 +90,32 @@ public class TrackPath : MonoBehaviour, IPath
         return mod(i - 1, waypoints.Length);
     }
 
+    public float Curvature(float distance, float sampling)
+    {
+        var X = Evaluate(distance + sampling);
+        var Y = Evaluate(distance);
+        var Z = Evaluate(distance - sampling);
+
+        var YX = X - Y;
+        var YZ = Z - Y;
+        var ZY = Y - Z;
+
+        // Compute the direction of the curve
+
+        var c = Mathf.Sign(Vector3.Dot(Vector3.Cross(ZY.normalized, YX.normalized), Vector3.up));
+
+        var C = (2f * Mathf.Sin(Mathf.Acos(Vector3.Dot(YX.normalized, YZ.normalized)))) / (X - Z).magnitude;
+
+        C *= c;
+
+        if (float.IsNaN(C))
+        {
+            C = 0f;
+        }
+
+        return C;
+    }
+
     public float Curvature(float distance)
     {
         var i = broadphase.Evaluate(distance);
@@ -145,46 +171,25 @@ public class TrackPath : MonoBehaviour, IPath
         return track.Query(wp.position).Position(wp.w);
     }
 
-    public delegate float FunctionToOptimise(float distance);
+    public delegate float Function(float distance);
 
-    public void Minimise(int i, FunctionToOptimise func)
+    /// <summary>
+    /// Computes the partial derivative of f(i) with respect to w (the weight or lateral position) using the central difference
+    /// </summary>
+    public float FiniteDifference(int i, Function f, float h = 0.01f) // of f with respect to w
     {
-        var stepsize = 0.01f;
-
-        // get gradient of w
-
         float position = waypoints[i].position;
         float weight = waypoints[i].w;
 
-        var c = func(position);
+        waypoints[i].w = weight + h * 0.5f;
+        var fah1 = f(position);
 
-        waypoints[i].w = weight + stepsize;
-        var c0 = func(position);
-
-        waypoints[i].w = weight - stepsize;
-        var c1 = func(position);
+        waypoints[i].w = weight - h * 0.5f;
+        var fah2 = f(position);
 
         waypoints[i].w = weight; // put w back
 
-        // which direction reduces the function the most?
-
-        var step = 0f;
-        if (c0 < c1)
-        {
-            step = stepsize;
-        }
-        else
-        {
-            step = -stepsize;
-        }
-
-        // move by this direction
-
-        waypoints[i].w += step;
-
-        var limit =  1f - (Barrier / track.Query(position).Width);
-
-        waypoints[i].w = Mathf.Clamp(waypoints[i].w, -limit, limit);
+        return fah1 - fah2;
     }
 
     private void OnDrawGizmos()

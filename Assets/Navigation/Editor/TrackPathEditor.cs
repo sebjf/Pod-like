@@ -17,11 +17,13 @@ public class TrackPathEditor : Editor
 
         if (GUILayout.Button("Generate"))
         {
+            Undo.RecordObject(path, "Reinitialise Path");
             path.Initialise();
         }
 
         if (GUILayout.Button("Fit"))
         {
+            Undo.RecordObject(path, "Optimise Path");
             path.Step(100);
         }
 

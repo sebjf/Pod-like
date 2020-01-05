@@ -11,10 +11,10 @@ public class MinimumCurvaturePath : TrackPath
         int index = 0;
         for (int i = 0; i < waypoints.Length; i++)
         {
-            var C = Mathf.Abs(Curvature(waypoints[i].position));
-            if (C > maxcurvature)
+            var c = Mathf.Abs(Curvature(waypoints[i].position));
+            if (c > maxcurvature)
             {
-                maxcurvature = C;
+                maxcurvature = c;
                 index = i;
             }
         }
@@ -22,7 +22,7 @@ public class MinimumCurvaturePath : TrackPath
         List<int> indicesToUpdate = new List<int>();
         indicesToUpdate.Add(index);
 
-        for (int i = 1; i < 20; i++)
+        for (int i = 1; i < 100; i++)
         {
             indicesToUpdate.Add(index + i);
             indicesToUpdate.Add(index - i);
@@ -43,5 +43,23 @@ public class MinimumCurvaturePath : TrackPath
     {
         return Mathf.Abs(Curvature(current));
     }
+
+    public void Minimise(int i, Function func)
+    {
+        // which direction reduces the function the most?
+
+        var dw = FiniteDifference(i, func);
+
+        // move by this direction
+
+        waypoints[i].w += -dw;
+
+        // limit how close to the edges we can get
+
+        var limit = 1f - (Barrier / track.Query(waypoints[i].position).Width);
+
+        waypoints[i].w = Mathf.Clamp(waypoints[i].w, -limit, limit);
+    }
+
 
 }
