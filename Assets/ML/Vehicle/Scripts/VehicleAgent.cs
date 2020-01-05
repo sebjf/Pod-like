@@ -40,15 +40,13 @@ public class VehicleAgent : Agent
     
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        vectorAction[0] = (vectorAction[0] - 0.5f) * 2f; // convert from 0..1 to -1..1 to support relu on output layer
-
         target = Mathf.Clamp(vectorAction[0], -1, 1);
         speed = Mathf.Clamp(vectorAction[1], 0, 1);
 
         speed = speed * 150f;
         pilot.speed = speed;
 
-        AddReward(-.01f); // gentle negative reward for sitting still
+        AddReward(-.001f); // gentle negative reward for sitting still
         AddReward((navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 100f);
     }
 
