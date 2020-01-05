@@ -48,6 +48,7 @@ public class VehicleAgent : Agent
         speed = speed * 150f;
         pilot.speed = speed;
 
+        AddReward(-.01f); // gentle negative reward for sitting still
         AddReward((navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 100f);
     }
 
