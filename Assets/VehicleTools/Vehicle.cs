@@ -28,26 +28,20 @@ public class Vehicle : MonoBehaviour
 
     private Drivetrain drivetrain;
 
-    private void Awake()
+    public void Awake()
     {
         wheels = GetComponentsInChildren<Wheel>();
         drivetrain = GetComponent<Drivetrain>();
         rigidbody = GetComponent<Rigidbody>();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         drivetrain.throttle = throttle;
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         foreach (var wheel in wheels)
         {

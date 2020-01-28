@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b23992c8eb17439887f5e944bf04a40, type: 3}
-  m_Name: Ariadne
+  m_Name: PathController
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 54
+    vectorObservationSize: 29
     numStackedVectorObservations: 1
-    vectorActionSize: 02000000
+    vectorActionSize: 01000000
     cameraResolutions: []
     vectorActionDescriptions:
     - 
-    - 
     vectorActionSpaceType: 1
-  model: {fileID: 5022602860645237092, guid: c18e3fda1374c7346ac0e4f0905dfc34, type: 3}
+  model: {fileID: 0}
   inferenceDevice: 0

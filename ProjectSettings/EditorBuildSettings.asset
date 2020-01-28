@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Circuits/Alderon/Alderon.unity
+    path: Assets/Tracks/Alderon/Alderon.unity
     guid: 90ab913e26673bd47b1cf2c9bc5d9bf4
   m_configObjects: {}

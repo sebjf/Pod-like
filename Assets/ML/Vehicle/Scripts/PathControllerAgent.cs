@@ -2,19 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VehicleAgentAriadne : VehicleAgent
+public class PathControllerAgent : VehicleAgent
 {
     internal int numObservations = 25;
     internal float pathInterval = 5;
 
     public override void CollectObservations()
     {
-        base.CollectObservations();
-
         for (int i = 0; i < numObservations; i++)
         {
             AddVectorObs(waypoints.Curvature(navigator.TrackDistance + i * pathInterval) * 5f);
-            AddVectorObs(waypoints.Width(navigator.TrackDistance + i * pathInterval) * 0.01f);
         }
 
         var tracknormal = waypoints.Normal(navigator.TrackDistance);
@@ -26,29 +23,41 @@ public class VehicleAgentAriadne : VehicleAgent
         // num observations: 25 * 2 + 1 + 3 = 54
     }
 
+    Vector3 error;
+
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        target = Mathf.Clamp(vectorAction[0], -1, 1);
-        var speed = Mathf.Clamp(vectorAction[1], 0, 1);
+        var speed = Mathf.Clamp(vectorAction[0], 0, 1);
 
         speed = speed * 150f;
         pilot.speed = speed;
 
         AddReward(-.001f); // gentle negative reward for sitting still
         AddReward((navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 100f);
+
+        error = transform.position - waypoints.Evaluate(navigator.TrackDistance, target);
+
+        AddReward(-error.magnitude);
     }
 
 #if UNITY_EDITOR
-    protected void OnDrawGizmos()
+    protected virtual void OnDrawGizmosSelected()
     {
-        if (waypoints != null)
+        if (navigator == null)
         {
-            Gizmos.color = Color.yellow;
-            for (int i = 0; i < numObservations; i++)
-            {
-                Gizmos.DrawWireSphere(waypoints.Evaluate(navigator.TrackDistance + i * pathInterval, 0f), 0.5f);
-            }
+            navigator = GetComponent<Navigator>();
         }
+
+        UnityEditor.Handles.BeginGUI();
+
+        GUIStyle style = new GUIStyle();
+        string content = "";
+        content += "Error: " + error.magnitude;
+
+        UnityEditor.Handles.Label(transform.position, content, style);
+
+        UnityEditor.Handles.EndGUI();
     }
+
 #endif
 }

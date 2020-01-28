@@ -16,6 +16,10 @@ public class GraphOverlay : MonoBehaviour
         public Color color = Color.red;
         public List<float> values;
         public float scale = 1f;
+
+        public Text upperLimitLabel;
+        public Text lowerLimitLabel;
+        public Text labelLabel;
     }
 
     [NonSerialized]
@@ -25,45 +29,53 @@ public class GraphOverlay : MonoBehaviour
     {
         if(!series.ContainsKey(name))
         {
-            series.Add(name, new Series()
-            {
-                name = name,
-                values = new List<float>()
-            });
+            AddSeries(name);
         }
         return series[name];
     }
 
-    protected RawImage imageComponent;
+    private Series AddSeries(string name)
+    {
+        var series = new Series();
+        series.name = name;
+        series.values = new List<float>();
+
+        series.upperLimitLabel = new GameObject(name).AddComponent<Text>();
+        series.upperLimitLabel.rectTransform.SetParent(scaleLabelsUpper.transform, false);
+        series.upperLimitLabel.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+
+        series.lowerLimitLabel = new GameObject(name).AddComponent<Text>();
+        series.lowerLimitLabel.rectTransform.SetParent(scaleLabelsLower.transform, false);
+        series.lowerLimitLabel.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+
+        series.labelLabel = new GameObject(name).AddComponent<Text>();
+        series.labelLabel.rectTransform.SetParent(labels.transform, false);
+        series.labelLabel.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+
+        this.series.Add(name, series);
+        return series;
+    }
+
+    private RawImage imageComponent;
+    public HorizontalOrVerticalLayoutGroup scaleLabelsUpper;
+    public HorizontalOrVerticalLayoutGroup scaleLabelsLower;
+    public HorizontalOrVerticalLayoutGroup labels;
 
     public float y_scale = 1f;
 
     public int samplesOnScreen = 20; 
 
-	public float height = 1f;
-	public Color32 bgColor = Color.white;
-	public Color32 forwardColor = Color.red;
-	public Color32 sidewaysColor = Color.green;
-	public Color32 guidesColor = Color.blue;
-	public Color32 zeroColor = Color.black;
+	public Color32 backgroundColour = Color.white;
+	public Color32 guidesColour = Color.blue;
+	public Color32 zeroColour = Color.black;
 
-	[Range(0f, 10f)]
-	public float timeTravel;
+    public int stepsBack;
 
 	Color32[] m_PixelsBg;
 	Color32[] m_Pixels;
-	Text m_SpeedText;
 	Texture2D m_Texture;	
 	int m_WidthPixels;
 	int m_HeightPixels;
-
-    const string k_EventSystemName = "EventSystem";
-    const string k_GraphCanvasName = "GraphCanvas";
-    const string k_GraphImageName = "RawImage";
-    const string k_InfoTextName = "InfoText";
-    const float k_GUIScreenEdgeOffset = 10f;
-    const int k_InfoFontSize = 16;
-    const float k_MaxRecordTimeTravel = 0.01f;
 
     public void SetLabel(string label, string content)
     {
@@ -72,27 +84,23 @@ public class GraphOverlay : MonoBehaviour
 
     private void Awake()
     {
-        imageComponent = GetComponent<RawImage>();
+        imageComponent = GetComponentInChildren<RawImage>();
     }
 
     void Start()
 	{
-        var canvas = FindObjectOfType<Canvas>().gameObject;
-
         // Set up our texture.
         m_WidthPixels = (int)imageComponent.rectTransform.rect.width;
         m_HeightPixels = (int)imageComponent.rectTransform.rect.height;
         m_Texture = new Texture2D(m_WidthPixels, m_HeightPixels);
-
 		imageComponent.texture = m_Texture;
-        imageComponent.SetNativeSize();
 
 		m_Pixels = new Color32[m_WidthPixels * m_HeightPixels];
 		m_PixelsBg = new Color32[m_WidthPixels * m_HeightPixels];
 
 	    for (int i = 0; i < m_Pixels.Length; ++i)
 	    {
-	        m_PixelsBg[i] = bgColor;
+	        m_PixelsBg[i] = backgroundColour;
 	    }
 	}
 
@@ -102,24 +110,34 @@ public class GraphOverlay : MonoBehaviour
 		Array.Copy(m_PixelsBg, m_Pixels, m_Pixels.Length);
 
 		// Draw guides.
-        DrawLine(new Vector2(0f, m_HeightPixels * 0.5f), new Vector2(m_WidthPixels, m_HeightPixels * 0.5f), zeroColor);
+        DrawLine(new Vector2(0f, m_HeightPixels * 0.5f), new Vector2(m_WidthPixels, m_HeightPixels * 0.5f), zeroColour);
 
-		float guide = 1f / height * m_HeightPixels;
+        /*
+		float guide = 0.5f * m_HeightPixels;
         float upperGuide = m_HeightPixels * 0.5f - guide;
         float lowerGuide = m_HeightPixels * 0.5f + guide;
-		DrawLine(new Vector2(0f, upperGuide), new Vector2(m_WidthPixels, upperGuide), guidesColor);
-		DrawLine(new Vector2(0f, lowerGuide), new Vector2(m_WidthPixels, lowerGuide), guidesColor);
-
-		int stepsBack = (int)(timeTravel / Time.fixedDeltaTime);
+		DrawLine(new Vector2(0f, upperGuide), new Vector2(m_WidthPixels, upperGuide), guidesColour);
+		DrawLine(new Vector2(0f, lowerGuide), new Vector2(m_WidthPixels, lowerGuide), guidesColour);
+        */
 
         foreach (var series in this.series.Values)
         {
-            int cursor = Mathf.Max(series.values.Count - samplesOnScreen - stepsBack, 0);
+            int sampleStart = Mathf.Max(series.values.Count - samplesOnScreen - stepsBack, 0);
+            int sampleEnd = Mathf.Min(sampleStart + samplesOnScreen, series.values.Count);
 
-            for (int i = cursor; i < series.values.Count - 1 - stepsBack; ++i)
+            for (int i = sampleStart; i < sampleEnd - 1; i++)
             {
-                DrawLine(PlotSpace(cursor, i, series.values[i] * series.scale * y_scale), PlotSpace(cursor, i + 1, series.values[i + 1] * series.scale * y_scale), series.color);
+                DrawLine(PlotSpace(sampleStart, i, series.values[i] * series.scale * y_scale), PlotSpace(sampleStart, i + 1, series.values[i + 1] * series.scale * y_scale), series.color);
             }
+
+            series.upperLimitLabel.color = series.color;
+            series.upperLimitLabel.text = string.Format("{0}", (series.scale * y_scale));
+            
+            series.lowerLimitLabel.color = series.color;
+            series.lowerLimitLabel.text = string.Format("-{0}", (series.scale * y_scale));
+
+            series.labelLabel.color = series.color;
+            series.labelLabel.text = series.name;
         }
 
         m_Texture.SetPixels32(m_Pixels);
@@ -129,10 +147,8 @@ public class GraphOverlay : MonoBehaviour
 	// Convert time-value to the pixel plot space.
 	Vector2 PlotSpace(int cursor, int sample, float value)
 	{
-		float x = (sample - cursor) *  1f / (float)samplesOnScreen * m_WidthPixels;
-
-		float v = value + height / 2;
-		float y = v / height * m_HeightPixels;
+		float x = ((sample - cursor) / (float)(samplesOnScreen - 1)) * m_WidthPixels;
+		float y = (value + 0.5f) * m_HeightPixels;
 
 		if (y < 0)
 			y = 0;

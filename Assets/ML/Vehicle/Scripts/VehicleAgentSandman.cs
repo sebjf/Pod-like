@@ -43,10 +43,8 @@ public class VehicleAgentSandman : VehicleAgent
    
 
 #if UNITY_EDITOR
-    protected override void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
-        base.OnDrawGizmosSelected();
-
         if (trackObservations != null)
         {
             Gizmos.color = Color.red;

@@ -169,6 +169,7 @@ public class TrackPath : MonoBehaviour, IPath
     {
         var wp = waypoints[broadphase.Evaluate(distance)];
         return track.Query(wp.position).Position(wp.w);
+
     }
 
     public delegate float Function(float distance);
@@ -189,7 +190,7 @@ public class TrackPath : MonoBehaviour, IPath
 
         waypoints[i].w = weight; // put w back
 
-        return fah1 - fah2;
+        return (fah1 - fah2) / h;
     }
 
     private void OnDrawGizmos()

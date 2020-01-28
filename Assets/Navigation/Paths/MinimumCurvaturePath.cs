@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class MinimumCurvaturePath : TrackPath
 {
+    private float[] gradients;
+
     public override void Step()
     {
         float maxcurvature = float.MinValue;
@@ -20,28 +22,34 @@ public class MinimumCurvaturePath : TrackPath
         }
 
         List<int> indicesToUpdate = new List<int>();
-        indicesToUpdate.Add(index);
 
-        for (int i = 1; i < 100; i++)
+        for (int i = 1; i < 5; i++)
         {
-            indicesToUpdate.Add(index + i);
-            indicesToUpdate.Add(index - i);
+            indicesToUpdate.Add(Wrap(index + i));
+            indicesToUpdate.Add(Wrap(index - i));
         }
+
+        Minimise(index, CurvatureMagnitude);
 
         current = waypoints[index].position;
 
         foreach (var i in indicesToUpdate)
         {
-            Minimise(Wrap(i), CurvatureFunction);
+            Minimise(i, CurvatureFunction);
         } 
         
     }
 
     private float current;
 
+    public float CurvatureMagnitude(float d)
+    {
+        return Mathf.Abs(Curvature(d));
+    }
+
     public float CurvatureFunction(float d)
     {
-        return Mathf.Abs(Curvature(current));
+        return Mathf.Abs(Curvature(current, Mathf.Abs(d - current)));
     }
 
     public void Minimise(int i, Function func)
@@ -52,7 +60,7 @@ public class MinimumCurvaturePath : TrackPath
 
         // move by this direction
 
-        waypoints[i].w += -dw;
+        waypoints[i].w += -dw * 0.01f;
 
         // limit how close to the edges we can get
 

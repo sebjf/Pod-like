@@ -27,7 +27,7 @@ public class ShortestPath : TrackPath
 
         // move by this direction
 
-        waypoints[i].w += -dw * .25f;
+        waypoints[i].w += -dw * .001f;
 
         // limit how close to the edges we can get
 

@@ -6,12 +6,16 @@ using UnityEditor;
 [CustomEditor(typeof(TrackPath),true)]
 public class TrackPathEditor : Editor
 {
+    private int Steps = 100;
+
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Resolution"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Barrier"));
         serializedObject.ApplyModifiedProperties();
+
+        Steps = EditorGUILayout.IntField("Steps", Steps);
 
         TrackPath path = (target as TrackPath);
 
@@ -24,7 +28,7 @@ public class TrackPathEditor : Editor
         if (GUILayout.Button("Fit"))
         {
             Undo.RecordObject(path, "Optimise Path");
-            path.Step(100);
+            path.Step(Steps);
         }
 
         if (GUILayout.Button("Step"))

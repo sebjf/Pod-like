@@ -39,9 +39,14 @@ public class Navigator : MonoBehaviour
     // Update is called once per frame
     public void FixedUpdate()
     {
-        if(waypoints == null)
+        if (waypoints == null)
         {
-            waypoints = FindObjectOfType<TrackGeometry>();
+            waypoints = GetComponentInParent<TrackGeometry>();
+        }
+
+        if (waypoints == null)
+        {
+            return;
         }
 
         waypoints.InitialiseBroadphase();
@@ -65,6 +70,16 @@ public class Navigator : MonoBehaviour
         if(!Application.isPlaying)
         {
             FixedUpdate();
+        }
+
+        if (waypoints == null)
+        {
+            waypoints = GetComponentInParent<TrackGeometry>();
+        }
+
+        if(waypoints == null)
+        {
+            return;
         }
 
         var midline = waypoints.Evaluate(TrackDistance);

@@ -29,30 +29,17 @@ public class VehicleAgent : Agent
         pilot = GetComponent<Autopilot>();
 
         navigator.Reset();
-        startingDistance = navigator.TrackDistance;
+        startPosition = navigator.TrackDistance;
 
         resetOnCollision = FindObjectOfType<VehicleAcademy>().isTraining;
     }
 
-    protected float startingDistance;
-    protected float target = 1f;
-    protected float speed;
-    
-    public override void AgentAction(float[] vectorAction, string textAction)
-    {
-        target = Mathf.Clamp(vectorAction[0], -1, 1);
-        speed = Mathf.Clamp(vectorAction[1], 0, 1);
-
-        speed = speed * 150f;
-        pilot.speed = speed;
-
-        AddReward(-.001f); // gentle negative reward for sitting still
-        AddReward((navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 100f);
-    }
+    protected float startPosition;
+    protected float target = 0f;
 
     private void FixedUpdate()
     {
-        pilot.target = waypoints.Evaluate(navigator.TrackDistance + 20, target);
+        pilot.target = waypoints.Evaluate(navigator.TrackDistance + 10, target);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -85,7 +72,7 @@ public class VehicleAgent : Agent
     public override void AgentReset()
     {
         var academy = GetComponentInParent<VehicleAcademy>();
-        ResetPositionOnTrack(startingDistance, academy.positionVariation.x, academy.positionVariation.y);
+        ResetPositionOnTrack(startPosition, academy.positionVariation.x, academy.positionVariation.y);
         navigator.Reset();
         body.velocity = Vector3.zero;
     }
@@ -109,26 +96,4 @@ public class VehicleAgent : Agent
     {
         typeof(Agent).GetField("m_Done", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(this, false);
     }
-
-#if UNITY_EDITOR
-    protected virtual void OnDrawGizmosSelected()
-    {
-        if(navigator == null)
-        {
-            navigator = GetComponent<Navigator>();
-        }
-
-        UnityEditor.Handles.BeginGUI();
-        GUIStyle style = new GUIStyle();
-
-        string content = "";
-        content += "Distance: " + navigator.TrackDistance + "\n";
-        content += "distanceTravelled: " + navigator.distanceTravelledInFrame + "\n";
-
-        UnityEditor.Handles.Label(transform.position, content, style);
-
-        UnityEditor.Handles.EndGUI();
-    }
-
-#endif
 }
