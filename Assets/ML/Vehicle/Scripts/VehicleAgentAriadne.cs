@@ -27,8 +27,7 @@ public class VehicleAgentAriadne : VehicleAgent
 
     public override void AgentAction(float[] vectorAction, string textAction)
     {
-        target = Mathf.Clamp(vectorAction[0], -1, 1);
-        var speed = Mathf.Clamp(vectorAction[1], 0, 1);
+        var speed = Mathf.Clamp(vectorAction[0], 0, 1);
 
         speed = speed * 150f;
         pilot.speed = speed;
