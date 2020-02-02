@@ -26,6 +26,7 @@ public class TrainingAgentsManager : MonoBehaviour
 
     public void PlaceCars()
     {
+#if UNITY_EDITOR
         var children = transform.Cast<Transform>().ToList();
         foreach (Transform child in children)
         {
@@ -48,6 +49,7 @@ public class TrainingAgentsManager : MonoBehaviour
         {
             children[i].GetComponent<VehicleAgent>().ResetPositionOnTrack(spacing * i, 0, 4);
         }
+#endif
     }
 
     private void PrepCar(GameObject car)
