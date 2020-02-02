@@ -34,7 +34,7 @@ public class TrainingAgentsManager : MonoBehaviour
 
         for (int i = 0; i < numCars - children.Count; i++)
         {
-            var car = GameObject.Instantiate(carPrefab);
+            var car = UnityEditor.PrefabUtility.InstantiatePrefab(carPrefab) as GameObject;
             PrepCar(car);
             car.transform.SetParent(this.transform);
         }

@@ -41,7 +41,7 @@ public class VehicleAgentAriadne : VehicleAgent
 #if UNITY_EDITOR
     protected void OnDrawGizmos()
     {
-        if (waypoints != null)
+        if (waypoints != null && navigator != null)
         {
             Gizmos.color = Color.yellow;
             for (int i = 0; i < numObservations; i++)
