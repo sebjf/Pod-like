@@ -14,7 +14,6 @@ public class VehicleAgentAriadne : VehicleAgent
         for (int i = 0; i < numObservations; i++)
         {
             AddVectorObs(waypoints.Curvature(navigator.TrackDistance + i * pathInterval) * 5f);
-            AddVectorObs(waypoints.Width(navigator.TrackDistance + i * pathInterval) * 0.01f);
         }
 
         var tracknormal = waypoints.Normal(navigator.TrackDistance);
@@ -23,7 +22,7 @@ public class VehicleAgentAriadne : VehicleAgent
 
         AddVectorObs(transform.InverseTransformVector(body.velocity) * 0.01f);
 
-        // num observations: 25 * 2 + 1 + 3 = 54
+        // num observations: 25 * 1 + 1 + 3 = 29
     }
 
     public override void AgentAction(float[] vectorAction, string textAction)
@@ -34,7 +33,10 @@ public class VehicleAgentAriadne : VehicleAgent
         speed = speed * 150f;
         pilot.speed = speed;
 
+        var pathFollowingError = (waypoints.Evaluate(navigator.TrackDistance) - body.position).magnitude;
+
         AddReward(-.001f); // gentle negative reward for sitting still
+        AddReward(-pathFollowingError);
         AddReward((navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 100f);
     }
 
