@@ -532,15 +532,16 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145423675}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5280ba1e6c85b47458a5e2dd8a58138a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   broadcastHub:
     broadcastingBrains:
-    - {fileID: 11400000, guid: 7c5050b87b48bcc48a71db9e13edee47, type: 2}
-    m_BrainsToControl: []
+    - {fileID: 11400000, guid: 13a1b0b75072e514a80c2c9e8a177d5d, type: 2}
+    m_BrainsToControl:
+    - {fileID: 11400000, guid: 13a1b0b75072e514a80c2c9e8a177d5d, type: 2}
   m_TrainingConfiguration:
     width: 80
     height: 80
@@ -581,7 +582,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 145423675}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 42007170ca5123148a94f62738af573b, type: 3}
   m_Name: 

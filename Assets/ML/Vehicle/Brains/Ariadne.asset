@@ -13,13 +13,12 @@ MonoBehaviour:
   m_Name: Ariadne
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 54
+    vectorObservationSize: 29
     numStackedVectorObservations: 1
-    vectorActionSize: 02000000
+    vectorActionSize: 01000000
     cameraResolutions: []
     vectorActionDescriptions:
     - 
-    - 
     vectorActionSpaceType: 1
-  model: {fileID: 5022602860645237092, guid: c18e3fda1374c7346ac0e4f0905dfc34, type: 3}
+  model: {fileID: 0}
   inferenceDevice: 0
