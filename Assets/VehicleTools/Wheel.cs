@@ -173,7 +173,7 @@ public class Wheel : MonoBehaviour
         displacement = Mathf.Clamp(displacement, 0, float.MaxValue);
         height = restDistance - displacement;
 
-        displacementVel = (displacement - prevDisplacement) / Time.deltaTime;
+        displacementVel = (displacement - prevDisplacement) / Time.fixedDeltaTime;
         var Fsuspension = (k * displacement + B * displacementVel) * up;
 
         rigidBody.AddForceAtPosition(Fsuspension, attachmentPoint);
