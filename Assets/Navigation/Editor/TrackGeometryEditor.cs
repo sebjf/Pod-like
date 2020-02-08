@@ -113,6 +113,8 @@ public class TrackGeometryEditor : Editor
             foreach (var waypoint in component.selected)
             {
                 var rotation = Quaternion.LookRotation(waypoint.normal, waypoint.up);
+                rotation = Handles.RotationHandle(rotation, waypoint.position);
+                waypoint.up = (rotation * Vector3.up).normalized;
                 waypoint.position = Handles.PositionHandle(waypoint.position, rotation);
                 waypoint.width = Handles.ScaleSlider(waypoint.width, waypoint.left, waypoint.normal, rotation, HandleUtility.GetHandleSize(waypoint.left), 0.01f);
                 waypoint.width = Handles.ScaleSlider(waypoint.width, waypoint.right, waypoint.normal, rotation, HandleUtility.GetHandleSize(waypoint.right), 0.01f);

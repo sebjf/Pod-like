@@ -54335,8 +54335,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waypoints: {fileID: 0}
   TotalDistanceTravelled: 253.44963
-  TrackDistance: 253.44963
-  PreviousTrackDistance: 253.44963
+  TrackDistance: 1.4437336
+  PreviousTrackDistance: 1.4437336
   distanceTravelledInFrame: 17.303406
 --- !u!114 &7185422284977984932
 MonoBehaviour:

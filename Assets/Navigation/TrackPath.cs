@@ -146,7 +146,7 @@ public class TrackPath : MonoBehaviour, IPath
         return C;
     }
 
-    public float Camber(float v)
+    public float Inclination(float v)
     {
         var i = broadphase.Evaluate(v);
 

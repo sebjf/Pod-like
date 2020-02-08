@@ -9,7 +9,7 @@ public interface IPath
 {
     float Curvature(float v);
     Vector3 Evaluate(float distance);
-    float Camber(float v);
+    float Inclination(float v);
 }
 
 
@@ -467,17 +467,23 @@ public class TrackGeometry : MonoBehaviour, IPath
         return C;
     }
 
-    public float Camber(float v)
+    public float Inclination(float v)
     {
-        var X = Query(v + curvatureSampleDistance).Midpoint;
-        var Y = Query(v).Midpoint;
-        var Z = Query(v - curvatureSampleDistance).Midpoint;
+        var A = Query(v + curvatureSampleDistance).Midpoint;
+        var B = Query(v).Midpoint;
 
-        var YX = X - Y;
-        var YZ = Z - Y;
+        var dY = A.y - B.y;
 
-        return Vector3.Dot(Vector3.Cross(YX.normalized, YZ.normalized), Vector3.up);
+        A.y = 0;
+        B.y = 0;
+        var dX = (A - B).magnitude;
+
+        return (dY / dX);
     }
 
-
+    public float Camber(float v)
+    {
+        var Q = Query(v);
+        return Q.Tangent.y / Q.Width;
+    }
 }
