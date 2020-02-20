@@ -28,6 +28,9 @@ public class Vehicle : MonoBehaviour
 
     private Drivetrain drivetrain;
 
+    [HideInInspector]
+    public int wheelsInContact;
+
     public void Awake()
     {
         wheels = GetComponentsInChildren<Wheel>();
@@ -58,8 +61,7 @@ public class Vehicle : MonoBehaviour
             wheel.UpdateSuspensionForce();
         }
 
-        int wheelsInContact = 0;
-
+        wheelsInContact = 0;
         foreach (var wheel in wheels)
         {
             if(wheel.inContact)

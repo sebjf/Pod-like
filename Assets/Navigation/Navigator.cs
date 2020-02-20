@@ -36,6 +36,11 @@ public class Navigator : MonoBehaviour
         distanceTravelledInFrame = 0f;
     }
 
+    private void Awake()
+    {
+        waypoints = GetComponentInParent<TrackGeometry>();
+    }
+
     // Update is called once per frame
     public void FixedUpdate()
     {

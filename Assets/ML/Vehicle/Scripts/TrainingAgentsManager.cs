@@ -47,7 +47,7 @@ public class TrainingAgentsManager : MonoBehaviour
 
         for (int i = 0; i < children.Count; i++)
         {
-            children[i].GetComponent<VehicleAgent>().ResetPositionOnTrack(spacing * i, 0, 4);
+            children[i].GetComponent<ResetController>().ResetPosition(spacing * i);
         }
 #endif
     }

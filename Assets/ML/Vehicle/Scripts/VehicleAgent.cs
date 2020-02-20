@@ -10,6 +10,7 @@ public class VehicleAgent : Agent
 {
     protected Rigidbody body;
     protected Autopilot pilot;
+    protected ResetController reset;
 
     [HideInInspector]
     [NonSerialized]
@@ -27,19 +28,16 @@ public class VehicleAgent : Agent
         navigator = GetComponent<Navigator>();
         waypoints = GetComponentInParent<TrackGeometry>();
         pilot = GetComponent<Autopilot>();
-
-        navigator.Reset();
-        startPosition = navigator.TrackDistance;
+        reset = GetComponent<ResetController>();
 
         resetOnCollision = FindObjectOfType<VehicleAcademy>().isTraining;
     }
 
-    protected float startPosition;
     protected float target = 0f;
 
     private void FixedUpdate()
     {
-        pilot.target = waypoints.Evaluate(navigator.TrackDistance + 10, target);
+        pilot.target = target;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -72,24 +70,9 @@ public class VehicleAgent : Agent
     public override void AgentReset()
     {
         var academy = GetComponentInParent<VehicleAcademy>();
-        ResetPositionOnTrack(startPosition, academy.positionVariation.x, academy.positionVariation.y);
-        navigator.Reset();
-        body.velocity = Vector3.zero;
-    }
-
-    public void ResetPositionOnTrack(float trackdistance, float fowardvariation, float lateralvariation)
-    {
-        if(waypoints == null)   // ResetPositionOnTrack can be called from the editor...
-        {
-            waypoints = GetComponentInParent<TrackGeometry>();
-        }
-
-        trackdistance += UnityEngine.Random.Range(-fowardvariation, fowardvariation); ;
-
-        transform.position = waypoints.Evaluate(trackdistance) + Vector3.up * 2;
-        transform.forward = waypoints.Normal(trackdistance);
-
-        transform.position = transform.position + (transform.right * UnityEngine.Random.Range(-lateralvariation, lateralvariation));
+        reset.lateralvariation = academy.positionVariation.y;
+        reset.forwardvariation = academy.positionVariation.x;
+        reset.ResetPosition();
     }
 
     public void ClearDone()

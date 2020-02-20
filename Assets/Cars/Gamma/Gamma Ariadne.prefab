@@ -21,34 +21,6 @@ MonoBehaviour:
     onDemandDecision: 0
     numberOfActionsBetweenDecisions: 1
   resetOnCollision: 1
-  graph: {fileID: 0}
---- !u!114 &5106066053930418821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4001992816435297627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af7210a1ad406d44380d8e8d9d41f481, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {x: 0, y: 0, z: 0}
-  speed: 0
---- !u!114 &5364631174640395753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4001992816435297627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cc5595afc03c874f85ee5d824505823, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  graph: {fileID: 0}
 --- !u!114 &1348619060428656757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,6 +39,49 @@ MonoBehaviour:
   Curvature: []
   Camber: []
   Inclination: []
+  Midpoints: []
+--- !u!114 &5106066053930418821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4001992816435297627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af7210a1ad406d44380d8e8d9d41f481, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: 0
+  speed: 0
+--- !u!114 &5364631174640395753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4001992816435297627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc5595afc03c874f85ee5d824505823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  graph: {fileID: 0}
+  reward: 0
+  lateralError: 0
+  traction: 0
+--- !u!114 &7275323363918684758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4001992816435297627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33a6b8e1bea26d4419a22d29ac5cddef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &4001992816094949123
 PrefabInstance:
   m_ObjectHideFlags: 0

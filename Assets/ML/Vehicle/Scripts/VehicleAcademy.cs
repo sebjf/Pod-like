@@ -38,15 +38,18 @@ public class VehicleAcademy : Academy
             }   
         }
 
-        if(isTraining)
+        if (this.enabled)
         {
-            testCars.SetActive(false);
-            trainingCars.SetActive(true);
-        }
-        else
-        {
-            testCars.SetActive(true);
-            trainingCars.SetActive(false);
+            if (isTraining)
+            {
+                testCars.SetActive(false);
+                trainingCars.SetActive(true);
+            }
+            else
+            {
+                testCars.SetActive(true);
+                trainingCars.SetActive(false);
+            }
         }
 
         // turn off all objects that do not have a brain loaded

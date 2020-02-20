@@ -25,6 +25,6 @@ public class VehicleAgentAriadne : VehicleAgent
         speed = speed * 150f;
         pilot.speed = speed;
 
-        AddReward(GetComponent<PathCritic>().reward);
+        AddReward(GetComponent<PathObservations>().reward);
     }
 }

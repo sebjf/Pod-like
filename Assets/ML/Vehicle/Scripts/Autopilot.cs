@@ -2,31 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Navigator))]
 public class Autopilot : MonoBehaviour
 {
-    public Vector3 target;
+    public float target;
     public float speed;
 
     private Vehicle vehicle;
+    private Navigator navigator;
+
+    private Vector3 targetpoint;
 
     private void Awake()
     {
         vehicle = GetComponent<Vehicle>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        navigator = GetComponent<Navigator>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        var target = transform.InverseTransformPoint(this.target);
-        target.y = 0;
-        target.Normalize();
-        var angle = Mathf.Atan2(target.x, target.z);
+        targetpoint = navigator.waypoints.Evaluate(navigator.TrackDistance + 10, target);
+        targetpoint = transform.InverseTransformPoint(targetpoint);
+        targetpoint.y = 0;
+        targetpoint.Normalize();
+        var angle = Mathf.Atan2(targetpoint.x, targetpoint.z);
 
         var extrema = vehicle.maxSteerAngle * Mathf.Deg2Rad;
 
@@ -49,6 +49,6 @@ public class Autopilot : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(target, 1f);
+        Gizmos.DrawWireSphere(targetpoint, 1f);
     }
 }

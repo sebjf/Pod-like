@@ -15,7 +15,7 @@ public class PathController : MonoBehaviour
     private IPath path;
     private Autopilot pilot;
     private Navigator navigator;
-    private Rigidbody rigidbody;
+    private new Rigidbody rigidbody;
 
     private float[] curvatureProfile;
     private float[] profile;
@@ -112,7 +112,6 @@ public class PathController : MonoBehaviour
 
         UpdateSpeedProfile();
 
-        pilot.target = path.Evaluate(navigator.TrackDistance + targetDistance);
         pilot.speed = profile[0];
     }
 }

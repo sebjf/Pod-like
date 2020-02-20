@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathCritic : MonoBehaviour
+public class PathObservations : MonoBehaviour
 {
     private Navigator navigator;
     private TrackGeometry waypoints;
     private Rigidbody body;
+    private Vehicle vehicle;
 
     public GraphOverlay graph;
 
@@ -16,11 +17,15 @@ public class PathCritic : MonoBehaviour
     [HideInInspector]
     public float lateralError;
 
+    [HideInInspector]
+    public float traction;
+
     private void Awake()
     {
         navigator = GetComponent<Navigator>();
         waypoints = GetComponentInParent<TrackGeometry>();
         body = GetComponent<Rigidbody>();
+        vehicle = GetComponent<Vehicle>();
     }
 
     void FixedUpdate()
@@ -30,6 +35,8 @@ public class PathCritic : MonoBehaviour
         lateralError = new Vector3(pathFollowingError.x, 0, pathFollowingError.z).magnitude * 0.01f;
 
         var distanceTravelledReward = (navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 500f;
+
+        traction = vehicle.wheelsInContact;
 
         reward = 0f;
         reward += -0.001f; // gentle disincentive to sit still
