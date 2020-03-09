@@ -11,7 +11,7 @@ public class Autopilot : MonoBehaviour
     private Vehicle vehicle;
     private Navigator navigator;
 
-    private Vector3 targetpoint;
+    private Vector3 worldtarget;
 
     private void Awake()
     {
@@ -22,8 +22,9 @@ public class Autopilot : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        targetpoint = navigator.waypoints.Evaluate(navigator.TrackDistance + 10, target);
-        targetpoint = transform.InverseTransformPoint(targetpoint);
+        worldtarget = navigator.waypoints.Evaluate(navigator.TrackDistance + 10, target);
+
+        var targetpoint = transform.InverseTransformPoint(worldtarget);
         targetpoint.y = 0;
         targetpoint.Normalize();
         var angle = Mathf.Atan2(targetpoint.x, targetpoint.z);
@@ -49,6 +50,6 @@ public class Autopilot : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(targetpoint, 1f);
+        Gizmos.DrawWireSphere(worldtarget, 1f);
     }
 }
