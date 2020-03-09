@@ -6,14 +6,19 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Navigator : MonoBehaviour
 {
-    [HideInInspector]
     public TrackGeometry waypoints;
+
+    [HideInInspector]
+    public float StartingPosition;
 
     /// <summary>
     /// Total Distance in Track Space travelled by the car (distance travelled across all laps)
     /// </summary>
     [HideInInspector]
     public float TotalDistanceTravelled;
+
+    [HideInInspector]
+    public float PreviousTotalDistanceTravelled;
 
     /// <summary>
     /// Distance around Track in Track Space (the distance along a single lap)
@@ -31,14 +36,10 @@ public class Navigator : MonoBehaviour
     {
         TrackDistance = -1;
         FixedUpdate();
+        StartingPosition = TrackDistance;
         PreviousTrackDistance = TrackDistance;
         TotalDistanceTravelled = 0f;
         distanceTravelledInFrame = 0f;
-    }
-
-    private void Awake()
-    {
-        waypoints = GetComponentInParent<TrackGeometry>();
     }
 
     // Update is called once per frame
@@ -56,6 +57,8 @@ public class Navigator : MonoBehaviour
 
         waypoints.InitialiseBroadphase();
 
+        PreviousTrackDistance = TrackDistance;
+
         TrackDistance = waypoints.Distance(transform.position, TrackDistance);
 
         distanceTravelledInFrame = TrackDistance - PreviousTrackDistance;
@@ -65,9 +68,8 @@ public class Navigator : MonoBehaviour
             distanceTravelledInFrame = (waypoints.totalLength - PreviousTrackDistance) + TrackDistance;
         }
 
+        PreviousTotalDistanceTravelled = TotalDistanceTravelled;
         TotalDistanceTravelled += distanceTravelledInFrame;
-
-        PreviousTrackDistance = TrackDistance;
     }
 
     private void OnDrawGizmos()
