@@ -25,6 +25,15 @@ public class VehicleAgentAriadne : VehicleAgent
         speed = speed * 150f;
         pilot.speed = speed;
 
-        AddReward(GetComponent<PathObservations>().reward);
+        var lateralError = GetComponent<PathObservations>().lateralError * 0.01f;
+        var distanceTravelledReward = (navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 500f;
+
+        float reward;
+        reward = 0f;
+        reward += -0.001f; // gentle disincentive to sit still
+        reward += -lateralError * 5;
+        reward += distanceTravelledReward;
+
+        AddReward(reward);
     }
 }
