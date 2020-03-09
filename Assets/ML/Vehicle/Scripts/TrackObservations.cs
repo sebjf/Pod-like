@@ -55,14 +55,24 @@ public class TrackObservations : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    protected void OnDrawGizmos()
+    protected void OnDrawGizmosSelected()
     {
+        if(navigator == null)
+        {
+            navigator = GetComponent<Navigator>();
+        }
+
+        if(waypoints == null)
+        {
+            waypoints = GetComponentInParent<TrackGeometry>();
+        }
+
         if (waypoints != null && navigator != null)
         {
             Gizmos.color = Color.yellow;
             for (int i = 0; i < numObservations; i++)
             {
-                Gizmos.DrawWireSphere(Midpoints[i], 0.25f);
+                Gizmos.DrawWireSphere(waypoints.Evaluate(navigator.TrackDistance + i * pathInterval), 0.25f);
             }
         }
     }
