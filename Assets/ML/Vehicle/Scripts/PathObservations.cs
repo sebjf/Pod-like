@@ -5,46 +5,76 @@ using UnityEngine;
 public class PathObservations : MonoBehaviour
 {
     private Navigator navigator;
-    private TrackGeometry waypoints;
     private Rigidbody body;
     private Vehicle vehicle;
 
     public GraphOverlay graph;
 
     [HideInInspector]
-    public float reward;
+    public float speed;
 
     [HideInInspector]
     public float lateralError;
 
     [HideInInspector]
-    public float traction;
+    public float understeer;
+
+    [HideInInspector]
+    public float oversteer;
+
+    [HideInInspector]
+    public float height;
+
+    [HideInInspector]
+    public bool traction;
 
     private void Awake()
     {
         navigator = GetComponent<Navigator>();
-        waypoints = GetComponentInParent<TrackGeometry>();
         body = GetComponent<Rigidbody>();
         vehicle = GetComponent<Vehicle>();
     }
 
     void FixedUpdate()
     {
-        var pathFollowingError = (waypoints.Evaluate(navigator.TrackDistance) - body.position);
+        var trackCenter = navigator.waypoints.Evaluate(navigator.TrackDistance);
+        var bodyPosition = body.position;
+        var trackForward = navigator.waypoints.Normal(navigator.TrackDistance);
+        var curvature = navigator.waypoints.Curvature(navigator.TrackDistance);
 
-        lateralError = new Vector3(pathFollowingError.x, 0, pathFollowingError.z).magnitude * 0.01f;
+        // poor mans projection
+        var A = new Vector2(trackCenter.x, trackCenter.z);
+        var B = new Vector2(trackCenter.x + trackForward.x, trackCenter.z + trackForward.z);
+        var M = new Vector2(bodyPosition.x, bodyPosition.z);
 
-        var distanceTravelledReward = (navigator.distanceTravelledInFrame / Time.fixedDeltaTime) / 500f;
+        lateralError = (M - A).magnitude;
 
-        traction = vehicle.wheelsInContact;
+        var side = Mathf.Sign((B.x - A.x) * (M.y - A.y) - (B.y - A.y) * (M.x - A.x));
 
-        reward = 0f;
-        reward += -0.001f; // gentle disincentive to sit still
-        reward += -lateralError * 5;
-        reward += distanceTravelledReward;
+        if(side != Mathf.Sign(curvature))
+        {
+            understeer = 0;
+            oversteer = lateralError;
+        }
+        else
+        {
+            oversteer = 0;
+            understeer = lateralError;
+        }
+
+        height = 0;
+        if (vehicle.wheelsInContact < 2)
+        {
+            RaycastHit raycast;
+            if (Physics.Raycast(new Ray(body.position, Vector3.down), out raycast, float.PositiveInfinity, LayerMask.GetMask("Track")))
+            {
+                height = raycast.distance;
+            }
+        }
+
+        traction = vehicle.wheelsInContact > 2;
+        speed = body.velocity.magnitude;
 
         if (graph) graph.GetSeries("lateralError", Color.red).values.Add(-lateralError);
-        if (graph) graph.GetSeries("reward", Color.green).values.Add(reward);
-        if (graph) graph.GetSeries("distance", Color.blue).values.Add(distanceTravelledReward);
     }
 }
