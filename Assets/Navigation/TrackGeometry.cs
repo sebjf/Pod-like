@@ -85,14 +85,7 @@ public abstract class TrackPath : MonoBehaviour
 
     public float Inclination(float v)
     {
-        var X = Query(v + curvatureSampleDistance).Midpoint;
-        var Y = Query(v).Midpoint;
-        var Z = Query(v - curvatureSampleDistance).Midpoint;
-
-        var YX = X - Y;
-        var YZ = Z - Y;
-
-        return Vector3.Dot(Vector3.Cross(YX.normalized, YZ.normalized), Vector3.up);
+        return Vector3.Dot(Query(v).Forward, Vector3.up);
     }
 
     //https://stackoverflow.com/questions/1082917/

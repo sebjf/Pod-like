@@ -6,7 +6,6 @@ using UnityEngine;
 public class TrackObservations : MonoBehaviour
 {
     private Navigator navigator;
-    private TrackGeometry waypoints;
 
     public int numObservations = 25;
     public float pathInterval = 5;
@@ -28,7 +27,6 @@ public class TrackObservations : MonoBehaviour
     private void Awake()
     {
         navigator = GetComponent<Navigator>();
-        waypoints = GetComponentInParent<TrackGeometry>();
 
         Curvature = new float[numObservations];
         Camber = new float[numObservations];
@@ -42,15 +40,16 @@ public class TrackObservations : MonoBehaviour
         {
             var d = navigator.TrackDistance + i * pathInterval;
             var q = navigator.waypoints.Query(d);
-            Curvature[i] = waypoints.Curvature(d) * 5f;
-            Camber[i] = q.Camber * 10f;
-            Inclination[i] = waypoints.Inclination(d) * 1f;
             Midpoints[i] = q.Midpoint;
+            Camber[i] = q.Camber;
+            Curvature[i] = navigator.waypoints.Curvature(d);
+            Inclination[i] = navigator.waypoints.Inclination(d);
+           
         }
 
-        if (graph) graph.GetSeries("Curvature", Color.blue).values = Curvature.ToList();
-        if (graph) graph.GetSeries("Camber", Color.cyan).values = Camber.ToList();
-        if (graph) graph.GetSeries("Inclination", Color.red).values = Inclination.ToList();
+        if (graph) graph.GetSeries("Curvature").values = Curvature.ToList();
+        if (graph) graph.GetSeries("Camber").values = Camber.ToList();
+        if (graph) graph.GetSeries("Inclination").values = Inclination.ToList();
     }
 
 #if UNITY_EDITOR
@@ -61,17 +60,12 @@ public class TrackObservations : MonoBehaviour
             navigator = GetComponent<Navigator>();
         }
 
-        if(waypoints == null)
-        {
-            waypoints = GetComponentInParent<TrackGeometry>();
-        }
-
-        if (waypoints != null && navigator != null)
+        if (navigator != null)
         {
             Gizmos.color = Color.yellow;
             for (int i = 0; i < numObservations; i++)
             {
-                Gizmos.DrawWireSphere(waypoints.Query(navigator.TrackDistance + i * pathInterval).Midpoint, 0.25f);
+                Gizmos.DrawWireSphere(navigator.waypoints.Query(navigator.TrackDistance + i * pathInterval).Midpoint, 0.25f);
             }
         }
     }

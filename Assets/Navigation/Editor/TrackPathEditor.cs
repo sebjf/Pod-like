@@ -11,8 +11,10 @@ public class TrackPathEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("curvatureSampleDistance"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Resolution"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Barrier"));
+
         serializedObject.ApplyModifiedProperties();
 
         Steps = EditorGUILayout.IntField("Steps", Steps);

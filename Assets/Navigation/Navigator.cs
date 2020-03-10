@@ -32,6 +32,11 @@ public class Navigator : MonoBehaviour
     [HideInInspector]
     public float distanceTravelledInFrame;
 
+    private void Start()
+    {
+        Reset();
+    }
+
     public void Reset()
     {
         TrackDistance = -1;

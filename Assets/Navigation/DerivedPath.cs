@@ -74,9 +74,17 @@ public class DerivedPath : TrackWaypoints<DerivedWaypoint>
         var trackdistance = Mathf.Lerp(wp.waypoint.x, wp.next.x, wp.t);        
         var T = track.Query(trackdistance);
 
+        var A = Position(wp.waypoint);
+        var B = Position(wp.next);
+        var C = Position(Next(wp.next));
+
         PathQuery query = new PathQuery();
-        query.Midpoint = Vector3.Lerp(Position(wp.waypoint), Position(wp.next), wp.t);
-        query.Forward = (Position(wp.next) - Position(wp.waypoint)).normalized;
+        query.Midpoint = Vector3.Lerp(A, B, wp.t);
+
+        var a = B - A;
+        var b = C - B;
+
+        query.Forward = Vector3.Lerp(a.normalized, b.normalized, wp.t);
         query.Tangent = T.Tangent;
         query.Camber = T.Camber;
         query.Width = 0;
