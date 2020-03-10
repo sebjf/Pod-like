@@ -15,13 +15,20 @@ public class PathFinderMonitor : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        var pathFinder = UnityEditor.Selection.activeGameObject.GetComponentInChildren<PathFinder>();
-        if (pathFinder)
+        var activateGameObject = UnityEditor.Selection.activeGameObject;
+        if (activateGameObject)
         {
-            GraphOverlay.Plot("Profile", pathFinder.profile.Select(x => x.speed));
-            GraphOverlay.Plot("Speed", pathFinder.profile.Select(x => x.actual));
-            GraphOverlay.Plot("Traction", pathFinder.profile.Select(x => x.traction ? 100f : 0f));
-            GraphOverlay.Plot("Error", pathFinder.profile.Select(x => x.error * 50f));
+            if (activateGameObject.activeInHierarchy)
+            {
+                var pathFinder = UnityEditor.Selection.activeGameObject.GetComponentInChildren<PathFinder>();
+                if (pathFinder)
+                {
+                    GraphOverlay.Plot("Profile", pathFinder.profile.Select(x => x.speed));
+                    GraphOverlay.Plot("Speed", pathFinder.profile.Select(x => x.actual));
+                    GraphOverlay.Plot("Traction", pathFinder.profile.Select(x => x.traction ? 1f : 0f));
+                    GraphOverlay.Plot("Error", pathFinder.profile.Select(x => x.error));
+                }
+            }
         }
 #endif
     }
