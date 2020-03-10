@@ -6,7 +6,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class Navigator : MonoBehaviour
 {
-    public TrackGeometry waypoints;
+    public TrackPath waypoints;
 
     [HideInInspector]
     public float StartingPosition;
@@ -47,15 +47,8 @@ public class Navigator : MonoBehaviour
     {
         if (waypoints == null)
         {
-            waypoints = GetComponentInParent<TrackGeometry>();
-        }
-
-        if (waypoints == null)
-        {
             return;
         }
-
-        waypoints.InitialiseBroadphase();
 
         PreviousTrackDistance = TrackDistance;
 
@@ -89,13 +82,13 @@ public class Navigator : MonoBehaviour
             return;
         }
 
-        var midline = waypoints.Evaluate(TrackDistance);
+        var query = waypoints.Query(TrackDistance);
+
+        var midline = query.Midpoint;
+        var forward = query.Forward;
 
         Gizmos.DrawLine(midline, transform.position);
-
-        var normal = waypoints.Normal(TrackDistance);
-
         Gizmos.color = Color.red;
-        Gizmos.DrawRay(midline, normal);
+        Gizmos.DrawRay(midline, forward);
     }
 }

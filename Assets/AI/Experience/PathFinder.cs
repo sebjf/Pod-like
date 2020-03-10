@@ -31,7 +31,6 @@ public class PathFinder : MonoBehaviour
 
     private Node[] profile;
 
-
     private void Awake()
     {
         autopilot = GetComponent<Autopilot>();
@@ -79,7 +78,7 @@ public class PathFinder : MonoBehaviour
         }
 
         var graph = FindObjectOfType<GraphOverlay>();
-        if(graph)
+        if(graph && graph.isActiveAndEnabled)
         {
             graph.GetSeries("Profile", Color.black).values = profile.Select(x => x.speed).ToList();
             graph.GetSeries("Speed", Color.blue).values = profile.Select(x => x.actual).ToList();
@@ -176,7 +175,7 @@ public class PathFinder : MonoBehaviour
             Gizmos.color = Color.yellow;
             for (int i = 0; i < profileLength; i++)
             {
-                Gizmos.DrawWireSphere(navigator.waypoints.Evaluate(navigator.StartingPosition + i * interval), 0.25f);
+                Gizmos.DrawWireSphere(navigator.waypoints.Query(navigator.StartingPosition + i * interval).Midpoint, 0.25f);
             }
         }
     }

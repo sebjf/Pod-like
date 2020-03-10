@@ -8,8 +8,6 @@ public class PathObservations : MonoBehaviour
     private Rigidbody body;
     private Vehicle vehicle;
 
-    public GraphOverlay graph;
-
     [HideInInspector]
     public float speed;
 
@@ -37,10 +35,12 @@ public class PathObservations : MonoBehaviour
 
     void FixedUpdate()
     {
-        var trackCenter = navigator.waypoints.Evaluate(navigator.TrackDistance);
-        var bodyPosition = body.position;
-        var trackForward = navigator.waypoints.Normal(navigator.TrackDistance);
+        var q = navigator.waypoints.Query(navigator.TrackDistance);
+
+        var trackCenter = q.Midpoint;
+        var trackForward = q.Forward;
         var curvature = navigator.waypoints.Curvature(navigator.TrackDistance);
+        var bodyPosition = body.position;
 
         // poor mans projection
         var A = new Vector2(trackCenter.x, trackCenter.z);
@@ -74,7 +74,5 @@ public class PathObservations : MonoBehaviour
 
         traction = vehicle.wheelsInContact > 2;
         speed = body.velocity.magnitude;
-
-        if (graph) graph.GetSeries("lateralError", Color.red).values.Add(-lateralError);
     }
 }

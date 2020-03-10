@@ -7,7 +7,6 @@ public class TrackObservations : MonoBehaviour
 {
     private Navigator navigator;
     private TrackGeometry waypoints;
-    private Rigidbody body;
 
     public int numObservations = 25;
     public float pathInterval = 5;
@@ -30,7 +29,6 @@ public class TrackObservations : MonoBehaviour
     {
         navigator = GetComponent<Navigator>();
         waypoints = GetComponentInParent<TrackGeometry>();
-        body = GetComponent<Rigidbody>();
 
         Curvature = new float[numObservations];
         Camber = new float[numObservations];
@@ -43,10 +41,11 @@ public class TrackObservations : MonoBehaviour
         for (int i = 0; i < numObservations; i++)
         {
             var d = navigator.TrackDistance + i * pathInterval;
+            var q = navigator.waypoints.Query(d);
             Curvature[i] = waypoints.Curvature(d) * 5f;
-            Camber[i] = waypoints.Camber(d) * 10f;
+            Camber[i] = q.Camber * 10f;
             Inclination[i] = waypoints.Inclination(d) * 1f;
-            Midpoints[i] = waypoints.Evaluate(d);
+            Midpoints[i] = q.Midpoint;
         }
 
         if (graph) graph.GetSeries("Curvature", Color.blue).values = Curvature.ToList();
@@ -72,7 +71,7 @@ public class TrackObservations : MonoBehaviour
             Gizmos.color = Color.yellow;
             for (int i = 0; i < numObservations; i++)
             {
-                Gizmos.DrawWireSphere(waypoints.Evaluate(navigator.TrackDistance + i * pathInterval), 0.25f);
+                Gizmos.DrawWireSphere(waypoints.Query(navigator.TrackDistance + i * pathInterval).Midpoint, 0.25f);
             }
         }
     }

@@ -5,19 +5,277 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public interface IPath
-{
-    float Curvature(float v);
-    Vector3 Evaluate(float distance);
-    float Inclination(float v);
-}
-
-
 [Serializable]
-public class Waypoint : IWaypoint1D  // we can keep waypoint as a class and use references, so long as we are careful not to expect them to remain between serialisation. using class also means we can compare to null.
+public class Waypoint : IWaypoint1D // we can keep waypoint as a class and use references, so long as we are careful not to expect them to remain between serialisation. using class also means we can compare to null.
 {
     public int index;
+    public float start;
+    public float end;
 
+    public float length
+    {
+        get
+        {
+            return end - start;
+        }
+    }
+
+    public bool Contains(float distance)
+    {
+        if (distance >= start && distance <= end)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public float t(float distance)
+    {
+        return (distance - start) / length;
+    }
+
+    public float Distance => start;
+}
+
+// This single query approach won't make much difference when driving one or two cars, 
+// but when collecting experience for 100's (with concomitant cache invalidations) it will.
+public struct PathQuery
+{
+    public Vector3 Midpoint;
+    public Vector3 Tangent;
+    public float Width; // can be zero
+    public Vector3 Forward;
+    public float Camber;
+}
+
+public abstract class TrackPath : MonoBehaviour
+{
+    public float totalLength;
+    public float curvatureSampleDistance;
+
+    public abstract float Distance(Vector3 position, float lastDistance);
+
+    public abstract PathQuery Query(float distance);
+
+    public float Curvature(float v)
+    {
+        var X = Query(v + curvatureSampleDistance).Midpoint;
+        var Y = Query(v).Midpoint;
+        var Z = Query(v - curvatureSampleDistance).Midpoint;
+
+        var YX = X - Y;
+        var YZ = Z - Y;
+        var ZY = Y - Z;
+
+        // Compute the direction of the curve
+        var c = Mathf.Sign(Vector3.Dot(Vector3.Cross(ZY.normalized, YX.normalized), Vector3.up));
+
+        // https://en.wikipedia.org/wiki/Menger_curvature
+        var C = (2f * Mathf.Sin(Mathf.Acos(Vector3.Dot(YX.normalized, YZ.normalized)))) / (X - Z).magnitude;
+
+        C *= c;
+
+        if (float.IsNaN(C))
+        {
+            C = 0f;
+        }
+
+        return C;
+    }
+
+    public float Inclination(float v)
+    {
+        var X = Query(v + curvatureSampleDistance).Midpoint;
+        var Y = Query(v).Midpoint;
+        var Z = Query(v - curvatureSampleDistance).Midpoint;
+
+        var YX = X - Y;
+        var YZ = Z - Y;
+
+        return Vector3.Dot(Vector3.Cross(YX.normalized, YZ.normalized), Vector3.up);
+    }
+
+    //https://stackoverflow.com/questions/1082917/
+    protected static int mod(int k, int n)
+    {
+        return ((k %= n) < 0) ? k + n : k;
+    }
+
+    protected static float mod(float k, float n)
+    {
+        return ((k %= n) < 0) ? k + n : k;
+    }
+}
+
+public abstract class TrackWaypoints<T> : TrackPath where T : Waypoint
+{
+    public List<T> waypoints = new List<T>();
+
+    [NonSerialized]
+    public WaypointsBroadphase1D broadphase1d;
+
+    public T Waypoint(int index)
+    {
+        return waypoints[mod(index, waypoints.Count)];
+    }
+
+    public T Next(T current)
+    {
+        return waypoints[Next(current.index)];
+    }
+
+    public int Next(int current)
+    {
+        return mod(current + 1, waypoints.Count);
+    }
+
+    public T Previous(T current)
+    {
+        return waypoints[mod(current.index - 1, waypoints.Count)];
+    }
+
+    public void InitialiseBroadphase()
+    {
+        if (broadphase1d == null)
+        {
+            broadphase1d = ScriptableObject.CreateInstance(typeof(WaypointsBroadphase1D)) as WaypointsBroadphase1D;
+            broadphase1d.Initialise(waypoints, totalLength);
+        }
+    }
+
+    public struct WaypointQueryResult
+    {
+        public T waypoint;
+        public T next;
+        public float t;
+        public float distance;
+    }
+
+    public WaypointQueryResult WaypointQuery(float distance)
+    {
+        distance = Mathf.Clamp(mod(distance, totalLength), 0, totalLength);
+
+        InitialiseBroadphase();
+
+        var wp = waypoints[broadphase1d.Evaluate(distance)];
+
+        if (!wp.Contains(distance))
+        {
+            if (Next(wp).Contains(distance))
+            {
+                wp = Next(wp);
+            }
+            if (Previous(wp).Contains(distance))
+            {
+                wp = Previous(wp);
+            }
+        }
+
+        if (!wp.Contains(distance))
+        {
+            for (int i = 0; i < waypoints.Count; i++)
+            {
+                wp = waypoints[i];
+                if (wp.Contains(distance))
+                {
+                    break;
+                }
+            }
+        }
+
+        if (!wp.Contains(distance))
+        {
+            throw new Exception("Invalid Distance " + distance);
+        }
+
+        return new WaypointQueryResult()
+        {
+            distance = distance,
+            waypoint = wp,
+            t = wp.t(distance),
+            next = Next(wp)
+        };
+    }
+
+    /// <summary>
+    /// Returns the Euclidean position of wp. This is different to the wp.position member because
+    /// Position() may be called before or after Recompute. Recompute calls this to re-initialise
+    /// the position member.
+    /// When this is called, it is possible to rely on the wp.index however.
+    /// </summary>
+    public abstract Vector3 Position(T wp);
+
+    public virtual void Recompute()
+    {
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            waypoints[i].index = i;
+        }
+
+        totalLength = 0;
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            var length = (Position(Next(waypoints[i]))- Position(waypoints[i])).magnitude;
+            waypoints[i].start = totalLength;
+            waypoints[i].end = totalLength + length;
+            totalLength += length;
+        }
+
+        // some checks
+
+        for (int i = 0; i < waypoints.Count; i++)
+        {
+            if (waypoints[i].length <= 0)
+            {
+                Debug.LogError("Degenerate waypoints: " + i);
+            }
+        }
+
+        broadphase1d = null;
+    }
+
+    /// <summary>
+    /// Returns the absolute distance along the track for the position
+    /// </summary>
+    public override float Distance(Vector3 position, float expectedDistance)
+    {
+        float smallestDistance = float.MaxValue;
+        float result = float.NaN;
+
+        int start = 0;
+        int end = waypoints.Count;
+
+        if (expectedDistance != -1)
+        {
+            start = WaypointQuery(expectedDistance).waypoint.index;
+            start -= 2;
+            end = start + 8;
+        }
+
+        for (int i = start; i < end; i++)
+        {
+            var wp = Waypoint(i);
+            var wpposition = Position(wp);
+            var nxposition = Position(Next(wp));
+            var dir = (nxposition - wpposition).normalized;
+            var distanceFoward = Mathf.Clamp(Vector3.Dot(position - wpposition, dir), 0, wp.length); // projection into line between wp and next
+            var projected = wpposition + dir * distanceFoward;
+            var distance = (position - projected).magnitude;
+
+            if (distance < smallestDistance)
+            {
+                smallestDistance = distance;
+                result = Mathf.Lerp(wp.start, wp.end, distanceFoward / wp.length);
+            }
+        }
+
+        return result;
+    }
+}
+
+[Serializable]
+public class TrackWaypoint : Waypoint
+{
     public Vector3 position
     {
         get
@@ -45,7 +303,6 @@ public class Waypoint : IWaypoint1D  // we can keep waypoint as a class and use 
             right = position + tangent * value * .5f;
         }
     }
-
 
     public Vector3 tangent
     {
@@ -77,55 +334,20 @@ public class Waypoint : IWaypoint1D  // we can keep waypoint as a class and use 
     public Vector3 up;
     public Vector3 left;
     public Vector3 right;
-
-    public float length
-    {
-        get
-        {
-            return end - start;
-        }
-    }
-
-    public float start;
-    public float end;
-
-    public bool Contains(float distance)
-    {
-        if(distance >= start && distance <= end)
-        {
-            return true;
-        }
-        return false;
-    }
-
-    public float t(float distance)
-    {
-        return (distance - start) / length;
-    }
-
-    public float Position => start;
 }
 
-public class TrackGeometry : MonoBehaviour, IPath
+public class TrackGeometry : TrackWaypoints<TrackWaypoint>
 {
-    public List<Waypoint> waypoints = new List<Waypoint>();
-    public float totalLength;
-
-    public float curvatureSampleDistance;
+    [NonSerialized]
+    public List<TrackWaypoint> selected = new List<TrackWaypoint>();
 
     [NonSerialized]
-    public WaypointsBroadphase1D broadphase1d;
-
-    [NonSerialized]
-    public List<Waypoint> selected = new List<Waypoint>();
-
-    [NonSerialized]
-    public List<Waypoint> highlighted = new List<Waypoint>();
+    public List<TrackWaypoint> highlighted = new List<TrackWaypoint>();
 
     [NonSerialized]
     public Vector3? highlightedPoint;
 
-    public Waypoint lastSelected
+    public TrackWaypoint lastSelected
     {
         get
         {
@@ -142,16 +364,7 @@ public class TrackGeometry : MonoBehaviour, IPath
         InitialiseBroadphase();
     }
 
-    public void InitialiseBroadphase()
-    {
-        if (broadphase1d == null)
-        {
-            broadphase1d = ScriptableObject.CreateInstance(typeof(WaypointsBroadphase1D)) as WaypointsBroadphase1D;
-            broadphase1d.Initialise(waypoints, totalLength);
-        }
-    }
-
-    public void Add(Waypoint previous, Waypoint waypoint)
+    public void Add(TrackWaypoint previous, TrackWaypoint waypoint)
     {
         int previousindex = -1;
         if(previous != null)
@@ -162,273 +375,40 @@ public class TrackGeometry : MonoBehaviour, IPath
         Recompute();
     }
 
-    public void Recompute()
+    public override PathQuery Query(float distance)
     {
-        for (int i = 0; i < waypoints.Count; i++)
-        {
-            waypoints[i].index = i;
-        }
+        var wp = WaypointQuery(distance);
+        PathQuery query = new PathQuery();
+
+        var A = wp.waypoint;
+        var B = wp.next;
+        var t = wp.t;
+
+        query.Midpoint = Vector3.Lerp(A.position, B.position, t);
+        query.Width = Mathf.Lerp(A.width,B.width,t);
+        query.Forward = Vector3.Lerp(A.normal, B.normal, t);
+        query.Tangent = Vector3.Lerp(A.tangent, B.tangent, t);
+        query.Camber = query.Tangent.y / query.Width;
+
+        return query;
+    }
+
+    public override Vector3 Position(TrackWaypoint wp)
+    {
+        return wp.position;
+    }
+
+    public override void Recompute()
+    {
+        base.Recompute();
 
         for (int i = 0; i < waypoints.Count; i++)
         {
             waypoints[i].normal = Vector3.Lerp((Next(waypoints[i]).position - waypoints[i].position).normalized, (waypoints[i].position - Previous(waypoints[i]).position).normalized, 0.5f);
         }
-
-        totalLength = 0;
-        for (int i = 0; i < waypoints.Count; i++)
-        {
-            var length = Length(waypoints[i]);
-            waypoints[i].start = totalLength;
-            waypoints[i].end = totalLength + length;
-            totalLength += length;
-        }
-
-        // some checks
-
-        for (int i = 0; i < waypoints.Count; i++)
-        {
-            if(waypoints[i].length <= 0)
-            {
-                Debug.LogError("Degenerate waypoints: " + i);
-            }
-        }
-
-        broadphase1d = null;
     }
 
-    //https://stackoverflow.com/questions/1082917/mod-of-negative-number-is-melting-my-brain
-    private int mod(int k, int n)
-    {
-        return ((k %= n) < 0) ? k + n : k;
-    }
-
-    private float mod(float k, float n)
-    {
-        return ((k %= n) < 0) ? k + n : k;
-    }
-
-    public Waypoint Waypoint(int index)
-    {
-        return waypoints[mod(index, waypoints.Count)];
-    }
-
-    public Waypoint Next(Waypoint current)
-    {
-        return waypoints[NextIndex(current.index)];
-    }
-
-    public int NextIndex(int current)
-    {
-        return mod(current + 1, waypoints.Count);
-    }
-
-    public Waypoint Previous(Waypoint current)
-    {
-        return waypoints[mod(current.index - 1, waypoints.Count)];
-    }
-
-    public Vector3 Tangent(Waypoint current, float t)
-    {
-        return Vector3.Lerp(current.tangent, Next(current).tangent, t);
-    }
-
-    public Vector3 Normal(Waypoint current, float t)
-    {
-        return Vector3.Lerp(current.normal, Next(current).normal, t);
-    }
-
-    public float Width(Waypoint current, float t)
-    {
-        return Mathf.Lerp(current.width, Next(current).width, t);
-    }
-
-    public float Width(float distance)
-    {
-        return Query(distance).Width;
-    }
-
-    /// <summary>
-    /// Length of the medial segment between start and the next waypoint
-    /// </summary>
-    public float Length(Waypoint start)
-    {
-        return (Next(start).position - start.position).magnitude;
-    }
-
-    /// <summary>
-    /// Returns the absolute distance along the midline from wp
-    /// </summary>
-    public float Project(Waypoint wp, Vector3 position)
-    {
-        return Mathf.Clamp(Vector3.Dot(position - wp.position, (Next(wp).position - wp.position).normalized), 0, wp.length);
-    }
-
-    /// <summary>
-    /// Returns the absolute distance along the track for the position
-    /// </summary>
-    public float Distance(Vector3 position, float currentDistance)
-    {
-        float smallestDistance = float.MaxValue;
-        Waypoint closest = null;
-
-        int start = 0;
-        int end = waypoints.Count;
-
-        if(currentDistance != -1)
-        {
-            start = Query(currentDistance).waypoint.index;
-            start -= 2;
-            end = start + 8;
-        } 
-
-        for (int i = start; i < end; i++)
-        {
-            var wp = Waypoint(i);
-            var dir = (Next(wp).position - wp.position).normalized;
-            var t = Project(wp, position);
-            var projected = wp.position + dir * t;
-            var distance = (position - projected).magnitude;
-
-            if(distance < smallestDistance)
-            {
-                smallestDistance = distance;
-                closest = wp;
-            }
-        }
-
-        return Mathf.Lerp(closest.start, closest.end, Project(closest, position) / closest.length);
-    }
-
-    public struct WaypointQuery
-    {
-        public Waypoint waypoint;
-        public Waypoint next;
-        public float t;
-        public float distance;
-
-        /// <summary>
-        /// Position in World Space e across the Track
-        /// </summary>
-        public Vector3 Position(float e)
-        {
-            return Midpoint + Tangent * e * Width * 0.5f;
-        }
-
-        public Vector3 Midpoint
-        {
-            get
-            {
-                return waypoint.position + (next.position - waypoint.position) * t;
-            }
-        }
-
-        public float Width
-        {
-            get
-            {
-                return Mathf.Lerp(waypoint.width, next.width, t);
-            }
-        }
-
-        public Vector3 Tangent
-        {
-            get
-            {
-                return Vector3.Lerp(waypoint.tangent, next.tangent, t);
-            }
-        }
-    }
-
-    public WaypointQuery Query(float distance)
-    {
-        distance = mod(distance, totalLength);
-        distance = Mathf.Clamp(distance, 0, totalLength);
-
-        InitialiseBroadphase();
-
-        var wp = waypoints[broadphase1d.Evaluate(distance)];
-
-        if (!wp.Contains(distance))
-        {
-            if(Next(wp).Contains(distance))
-            {
-                wp = Next(wp);
-            }
-            if(Previous(wp).Contains(distance))
-            {
-                wp = Previous(wp);
-            }
-        }
-
-        if(!wp.Contains(distance))
-        {
-            for (int i = 0; i < waypoints.Count; i++)
-            {
-                wp = waypoints[i];
-                if(wp.Contains(distance))
-                {
-                    break;
-                }
-            }
-        }
-
-        if (!wp.Contains(distance))
-        {
-            throw new Exception("Invalid Distance " + distance);
-        }
-
-        return new WaypointQuery()
-        {
-            distance = distance,
-            waypoint = wp,
-            t = wp.t(distance),
-            next = Next(wp)
-        };
-    }
-
-    public Vector3 Evaluate(float distance)
-    {
-        return Evaluate(Query(distance));
-    }
-
-    public Vector3 Evaluate(float d, float w)
-    {
-        return Query(d).Position(w);
-    }
-    public Vector3 Evaluate(WaypointQuery result)
-    {
-        var wp = result.waypoint;
-        var dir = (Next(wp).position - wp.position);
-        return wp.position + dir * result.t;
-    }
-
-    public Vector3 Normal(float distance)
-    {
-        var result = Query(distance);
-        var wp = result.waypoint;
-        return Vector3.Lerp(wp.normal, Next(wp).normal, result.t);
-    }
-
-    public struct Edge
-    {
-        public Vector3 left;
-        public Vector3 right;
-    }
-
-    public Edge Edges(float distance)
-    {
-        var query = Query(distance);
-
-        var mp = query.Midpoint;
-        var w = query.Width;
-        var t = query.Tangent;
-        Edge edge;
-        edge.left = mp - t * w * 0.5f;
-        edge.right = mp + t * w * 0.5f;
-        return edge;
-    }
-
-    public IEnumerable<Waypoint> Raycast(Ray ray)
+    public IEnumerable<TrackWaypoint> Raycast(Ray ray)
     {
         foreach (var waypoint in waypoints)
         {
@@ -437,53 +417,5 @@ public class TrackGeometry : MonoBehaviour, IPath
                 yield return waypoint;
             }
         }
-    }
-
-    public float Curvature(float v)
-    {
-        var X = Query(v + curvatureSampleDistance).Midpoint;
-        var Y = Query(v).Midpoint;
-        var Z = Query(v - curvatureSampleDistance).Midpoint;
-
-        var YX = X - Y;
-        var YZ = Z - Y;
-        var ZY = Y - Z;
-
-        // Compute the direction of the curve
-
-        var c = Mathf.Sign(Vector3.Dot(Vector3.Cross(ZY.normalized, YX.normalized), Vector3.up));
-
-        // https://en.wikipedia.org/wiki/Menger_curvature
-
-        var C = (2f * Mathf.Sin(Mathf.Acos(Vector3.Dot(YX.normalized, YZ.normalized)))) / (X - Z).magnitude;
-
-        C *= c;
-
-        if (float.IsNaN(C))
-        {
-            C = 0f;
-        }
-
-        return C;
-    }
-
-    public float Inclination(float v)
-    {
-        var A = Query(v + curvatureSampleDistance).Midpoint;
-        var B = Query(v).Midpoint;
-
-        var dY = A.y - B.y;
-
-        A.y = 0;
-        B.y = 0;
-        var dX = (A - B).magnitude;
-
-        return (dY / dX);
-    }
-
-    public float Camber(float v)
-    {
-        var Q = Query(v);
-        return Q.Tangent.y / Q.Width;
     }
 }

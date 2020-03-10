@@ -13,18 +13,12 @@ public class ResetController : MonoBehaviour
     protected Rigidbody body;
 
     [HideInInspector]
-    public float startPosition = -1;
-
-    [HideInInspector]
     [NonSerialized]
     public float forwardvariation = 0; // in m
-    [HideInInspector]
-    [NonSerialized]
-    public float lateralvariation = 0; // normalised width
 
     public void ResetPosition(float startPosition)
     {
-        this.startPosition = startPosition;
+        navigator.StartingPosition = startPosition;
         ResetPosition();
     }
 
@@ -36,16 +30,11 @@ public class ResetController : MonoBehaviour
             navigator.Reset();
         }
 
-        if (startPosition < 0)
-        {
-            startPosition = navigator.TrackDistance;
-        }
-
-        var trackposition = startPosition + UnityEngine.Random.Range(-forwardvariation, forwardvariation);
+        var trackposition = navigator.StartingPosition + UnityEngine.Random.Range(-forwardvariation, forwardvariation);
         var Q = navigator.waypoints.Query(trackposition);
 
-        transform.position = Q.Midpoint + (Vector3.up * 2) + (Q.Tangent * UnityEngine.Random.Range(-lateralvariation, lateralvariation));
-        transform.forward = navigator.waypoints.Normal(trackposition);
+        transform.position = Q.Midpoint + (Vector3.up * 2);
+        transform.forward = Q.Forward;
 
         navigator.Reset();
 
@@ -55,5 +44,6 @@ public class ResetController : MonoBehaviour
         }
 
         body.velocity = Vector3.zero;
+        body.angularVelocity = Vector3.zero;
     }
 }

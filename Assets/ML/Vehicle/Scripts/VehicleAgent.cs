@@ -33,13 +33,6 @@ public class VehicleAgent : Agent
         resetOnCollision = FindObjectOfType<VehicleAcademy>().isTraining;
     }
 
-    protected float target = 0f;
-
-    private void FixedUpdate()
-    {
-        pilot.target = target;
-    }
-
     private void OnCollisionEnter(Collision collision)
     {
         if(!resetOnCollision)
@@ -69,9 +62,6 @@ public class VehicleAgent : Agent
 
     public override void AgentReset()
     {
-        var academy = GetComponentInParent<VehicleAcademy>();
-        reset.lateralvariation = academy.positionVariation.y;
-        reset.forwardvariation = academy.positionVariation.x;
         reset.ResetPosition();
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public interface IWaypoint1D
 {
-    float Position { get; }
+    float Distance { get; }
 }
 
 public class WaypointsBroadphase1D : ScriptableObject
@@ -29,15 +29,15 @@ public class WaypointsBroadphase1D : ScriptableObject
 
         for (int i = 0; i < waypoints.Count; i++)
         {
-            int start = Mathf.FloorToInt(waypoints[i].Position / resolution);
+            int start = Mathf.FloorToInt(waypoints[i].Distance / resolution);
 
-            var length = waypoints[mod(i+1,waypoints.Count)].Position - waypoints[i].Position;
+            var length = waypoints[mod(i+1,waypoints.Count)].Distance - waypoints[i].Distance;
             if(length < 0)
             {
                 length = totalLength - -length;
             }
 
-            int end = Mathf.CeilToInt((waypoints[i].Position + length) / resolution);
+            int end = Mathf.CeilToInt((waypoints[i].Distance + length) / resolution);
 
             for (int c = start; c < end; c++)
             {

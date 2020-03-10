@@ -196,7 +196,7 @@ public class TrackGeometryEditor : Editor
                 {
                     if (component.lastSelected != null || component.waypoints.Count <= 0)
                     {
-                        var wp = new Waypoint()
+                        var wp = new TrackWaypoint()
                         {
                             up = raycast.normal,
                             left = raycast.point + Vector3.left,
@@ -254,7 +254,7 @@ public class TrackGeometryEditor : Editor
         SceneView.RepaintAll();
     }
 
-    private void FindWidth(TrackGeometry component, Waypoint waypoint)
+    private void FindWidth(TrackGeometry component, TrackWaypoint waypoint)
     {
         RaycastHit raycast;
         if (Physics.Raycast(new Ray(waypoint.position + waypoint.up * 0.01f, -waypoint.tangent), out raycast))
@@ -273,7 +273,7 @@ public class TrackGeometryEditor : Editor
         }
     }
 
-    private void FindTangent(TrackGeometry component, Waypoint waypoint)
+    private void FindTangent(TrackGeometry component, TrackWaypoint waypoint)
     {
         var next = component.Next(waypoint);
         var previous = component.Previous(waypoint);

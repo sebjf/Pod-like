@@ -5,7 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Navigator))]
 public class Autopilot : MonoBehaviour
 {
-    public float target;
     public float speed;
 
     private Vehicle vehicle;
@@ -22,7 +21,7 @@ public class Autopilot : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        worldtarget = navigator.waypoints.Evaluate(navigator.TrackDistance + 10, target);
+        worldtarget = navigator.waypoints.Query(navigator.TrackDistance + 10).Midpoint;
 
         var targetpoint = transform.InverseTransformPoint(worldtarget);
         targetpoint.y = 0;

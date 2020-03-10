@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShortestPath : TrackPath
+public class ShortestPath : DerivedPath
 {
     public override void Step()
     {
         // brute force search of SP
 
-        for (int i = 0; i < waypoints.Length; i++)
+        for (int i = 0; i < waypoints.Count; i++)
         {
             Minimise(i, DistanceFunction);
         }
@@ -16,7 +16,10 @@ public class ShortestPath : TrackPath
 
     private float DistanceFunction(float d)
     {
-        return (Evaluate(d + Resolution) - Evaluate(d)).magnitude + (Evaluate(d) - Evaluate(d - Resolution)).magnitude;
+        var d1 = Query(d).Midpoint;
+        var d2 = Query(d + Resolution).Midpoint;
+        var d0 = Query(d - Resolution).Midpoint;
+        return (d2 - d1).magnitude + (d1 - d0).magnitude;
     }
 
     public void Minimise(int i, Function func)
@@ -31,7 +34,7 @@ public class ShortestPath : TrackPath
 
         // limit how close to the edges we can get
 
-        var limit = 1f - (Barrier / track.Query(waypoints[i].position).Width);
+        var limit = 1f - (Barrier / track.Query(waypoints[i].x).Width);
 
         waypoints[i].w = Mathf.Clamp(waypoints[i].w, -limit, limit);
     }

@@ -12,7 +12,7 @@ public class PathController : MonoBehaviour
     public float maxDeceleration = 1f;
     public float maxAcceleration = 1f;
 
-    private IPath path;
+    private TrackPath path;
     private Autopilot pilot;
     private Navigator navigator;
     private new Rigidbody rigidbody;

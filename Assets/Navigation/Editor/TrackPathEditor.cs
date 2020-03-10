@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(TrackPath),true)]
+[CustomEditor(typeof(DerivedPath),true)]
 public class TrackPathEditor : Editor
 {
     private int Steps = 100;
@@ -17,7 +17,7 @@ public class TrackPathEditor : Editor
 
         Steps = EditorGUILayout.IntField("Steps", Steps);
 
-        TrackPath path = (target as TrackPath);
+        DerivedPath path = (target as DerivedPath);
 
         if (GUILayout.Button("Generate"))
         {
@@ -35,5 +35,8 @@ public class TrackPathEditor : Editor
         {
             path.Step(1);
         }
+
+        EditorGUILayout.LabelField("Waypoints", path.waypoints.Count.ToString());
+        EditorGUILayout.LabelField("Length", path.totalLength.ToString());
     }
 }
