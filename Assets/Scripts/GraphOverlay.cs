@@ -33,7 +33,7 @@ public class GraphOverlay : MonoBehaviour
         {
             if(instance.isActiveAndEnabled)
             {
-                var s = instance.GetSeries("Profile");
+                var s = instance.GetSeries(series);
                 s.values.Clear();
                 s.values.AddRange(values);
             }

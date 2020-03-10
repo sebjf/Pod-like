@@ -1,6 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(ResetController))]
@@ -9,8 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(PathObservations))]
 public class PathFinder : MonoBehaviour
 {
-    public int profileLength;
-    public int interval;
+    public int profileLength = 40;
+    public int interval = 10;
 
     private Navigator navigator;
     private ResetController resetController;
@@ -29,7 +29,9 @@ public class PathFinder : MonoBehaviour
         public int index;
     }
 
-    private Node[] profile;
+    [HideInInspector]
+    [NonSerialized]
+    public Node[] profile;
 
     private void Awake()
     {
@@ -75,15 +77,6 @@ public class PathFinder : MonoBehaviour
         if (next < profileLength && next >= 0)
         {
             autopilot.speed = profile[Mathf.CeilToInt(profileDistance)].speed; // the speed target of the *next* node
-        }
-
-        var graph = FindObjectOfType<GraphOverlay>();
-        if(graph && graph.isActiveAndEnabled)
-        {
-            graph.GetSeries("Profile", Color.black).values = profile.Select(x => x.speed).ToList();
-            graph.GetSeries("Speed", Color.blue).values = profile.Select(x => x.actual).ToList();
-            graph.GetSeries("Traction", Color.green).values = profile.Select(x => x.traction ? 100f : 0f).ToList();
-            graph.GetSeries("Error", Color.red).values = profile.Select(x => x.error * 50f).ToList();
         }
     }
 

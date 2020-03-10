@@ -21083,6 +21083,18 @@ MonoBehaviour:
     serializedVersion: 2
     rgba: 4278190080
   stepsBack: 0
+--- !u!114 &2038656679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038656675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbddcb97cbf99b640a705216be62243f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2127623925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
