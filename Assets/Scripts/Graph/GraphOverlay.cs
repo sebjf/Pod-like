@@ -12,12 +12,26 @@ public class GraphOverlay : MonoBehaviour
 {
     private static GraphOverlay instance;
 
-    public class Series
+    [Serializable]
+    public class SeriesSettings
     {
         public string name;
-        public Color color = Color.red;
+        public Color colour;
+        public float scale;
+
+        public SeriesSettings()
+        {
+            name = "";
+            colour = Color.red;
+            scale = 1f;
+        }
+    }
+
+    public class Series
+    {
+        public SeriesSettings settings;
+
         public List<float> values;
-        public float scale = 1f;
 
         public Text upperLimitLabel;
         public Text lowerLimitLabel;
@@ -49,21 +63,23 @@ public class GraphOverlay : MonoBehaviour
         return series[name];
     }
 
-    public Series GetSeries(string name, Color color)
+    private SeriesSettings FindSettings(string name)
     {
-        if (!series.ContainsKey(name))
-        {
-            AddSeries(name);
-        }
-        var item = series[name];
-        item.color = color;
-        return item;
+        return seriesProfiles.Where(x => x.name == name).FirstOrDefault();
     }
 
     private Series AddSeries(string name)
     {
         var series = new Series();
-        series.name = name;
+
+        var settings = FindSettings(name);
+        if(settings == null)
+        {
+            settings = new SeriesSettings();
+            settings.name = name;
+        }
+
+        series.settings = settings;
         series.values = new List<float>();
 
         series.upperLimitLabel = new GameObject(name).AddComponent<Text>();
@@ -77,8 +93,6 @@ public class GraphOverlay : MonoBehaviour
         series.labelLabel = new GameObject(name).AddComponent<Text>();
         series.labelLabel.rectTransform.SetParent(labels.transform, false);
         series.labelLabel.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
-
-        series.color = UnityEngine.Random.ColorHSV(0, 1, 0.5f, 1);
 
         this.series.Add(name, series);
         return series;
@@ -99,7 +113,9 @@ public class GraphOverlay : MonoBehaviour
 
     public int stepsBack;
 
-	Color32[] m_PixelsBg;
+    public List<SeriesSettings> seriesProfiles;
+
+    Color32[] m_PixelsBg;
 	Color32[] m_Pixels;
 	Texture2D m_Texture;	
 	int m_WidthPixels;
@@ -150,17 +166,17 @@ public class GraphOverlay : MonoBehaviour
 
             for (int i = sampleStart; i < sampleEnd - 1; i++)
             {
-                DrawLine(PlotSpace(sampleStart, i, series.values[i] * series.scale * y_scale), PlotSpace(sampleStart, i + 1, series.values[i + 1] * series.scale * y_scale), series.color);
+                DrawLine(PlotSpace(sampleStart, i, series.values[i] * series.settings.scale * y_scale), PlotSpace(sampleStart, i + 1, series.values[i + 1] * series.settings.scale * y_scale), series.settings.colour);
             }
 
-            series.upperLimitLabel.color = series.color;
-            series.upperLimitLabel.text = string.Format("{0}", (series.scale * y_scale));
+            series.upperLimitLabel.color = series.settings.colour;
+            series.upperLimitLabel.text = string.Format("{0}", (series.settings.scale * y_scale));
             
-            series.lowerLimitLabel.color = series.color;
-            series.lowerLimitLabel.text = string.Format("-{0}", (series.scale * y_scale));
+            series.lowerLimitLabel.color = series.settings.colour;
+            series.lowerLimitLabel.text = string.Format("-{0}", (series.settings.scale * y_scale));
 
-            series.labelLabel.color = series.color;
-            series.labelLabel.text = series.name;
+            series.labelLabel.color = series.settings.colour;
+            series.labelLabel.text = series.settings.name;
         }
 
         m_Texture.SetPixels32(m_Pixels);
