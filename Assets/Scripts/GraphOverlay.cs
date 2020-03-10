@@ -10,6 +10,8 @@ using System.Linq;
 /// </summary> 
 public class GraphOverlay : MonoBehaviour
 {
+    private static GraphOverlay instance;
+
     public class Series
     {
         public string name;
@@ -24,6 +26,19 @@ public class GraphOverlay : MonoBehaviour
 
     [NonSerialized]
     private Dictionary<string, Series> series = new Dictionary<string, Series>();
+
+    public static void Plot(string series, IEnumerable<float> values)
+    {
+        if(instance)
+        {
+            if(instance.isActiveAndEnabled)
+            {
+                var s = instance.GetSeries("Profile");
+                s.values.Clear();
+                s.values.AddRange(values);
+            }
+        }
+    }
 
     public Series GetSeries(string name)
     {
@@ -98,6 +113,7 @@ public class GraphOverlay : MonoBehaviour
     private void Awake()
     {
         imageComponent = GetComponentInChildren<RawImage>();
+        instance = null;
     }
 
     void Start()
@@ -115,6 +131,8 @@ public class GraphOverlay : MonoBehaviour
 	    {
 	        m_PixelsBg[i] = backgroundColour;
 	    }
+
+        instance = this;
 	}
 
 	void Update()
