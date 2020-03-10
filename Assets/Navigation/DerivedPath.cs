@@ -118,15 +118,15 @@ public class DerivedPath : TrackWaypoints<DerivedWaypoint>
             Gizmos.color = Color.red;
             for (int i = 0; i < waypoints.Count; i++)
             {
-                var wp1 = Waypoint(i);
-                var wp2 = Next(wp1);
+                var wp1 = Position(Waypoint(i));
+                var wp2 = Position(Next(Waypoint(i)));
 
                 Gizmos.DrawLine(
-                    Query(wp1.start).Midpoint,
-                    Query(wp2.start).Midpoint);
+                    wp1,
+                    wp2);
 
                 Gizmos.DrawWireSphere(
-                    Query(wp1.start).Midpoint,
+                    wp1,
                     0.5f);
             }
         }
