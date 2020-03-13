@@ -38,4 +38,9 @@ public class ShortestPath : DerivedPath
 
         waypoints[i].w = Mathf.Clamp(waypoints[i].w, -limit, limit);
     }
+
+    private void Update() // for the enabled flag
+    {
+        
+    }
 }
