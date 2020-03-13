@@ -26,10 +26,7 @@ public class DriftCamera : MonoBehaviour
     private void Start()
     {
         cameraRigs = FindObjectsOfType<CamRig>().Where(x => x.enabled).ToArray();
-        if (Target == null)
-        {
-            Target = cameraRigs[0];
-        }
+        Target = cameraRigs.FirstOrDefault();
     }
     private void FixedUpdate ()
     {
@@ -54,6 +51,12 @@ public class DriftCamera : MonoBehaviour
 
     private void UpdateCamera ()
     {
+        if (!Target)
+        {
+            enabled = false;
+            return;
+        }
+
         if (m_ShowingSideView)
         {
             transform.position = Target.sideView.position;
