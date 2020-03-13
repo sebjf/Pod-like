@@ -170,13 +170,13 @@ GameObject:
   - component: {fileID: 343465207}
   - component: {fileID: 1697420620939968213}
   - component: {fileID: 7185422284977984932}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Gamma
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &474698329
 Transform:
   m_ObjectHideFlags: 0
@@ -247,6 +247,7 @@ MonoBehaviour:
   wheels: []
   rigidbody: {fileID: 0}
   speed: 0
+  wheelsInContact: 0
 --- !u!114 &1230204972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54334,7 +54335,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: {fileID: 0}
+  StartingPosition: 0
   TotalDistanceTravelled: 253.44963
+  PreviousTotalDistanceTravelled: 0
   TrackDistance: 1.4437336
   PreviousTrackDistance: 1.4437336
   distanceTravelledInFrame: 17.303406
@@ -54890,7 +54893,7 @@ GameObject:
   - component: {fileID: 4481424690457646033}
   - component: {fileID: 675991483}
   - component: {fileID: 7369612306446301824}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}

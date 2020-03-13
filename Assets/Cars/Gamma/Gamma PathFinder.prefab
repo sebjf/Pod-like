@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   profileLength: 40
   interval: 10
+  speedStepSize: 5
+  errorThreshold: 1
 --- !u!114 &952043998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26,7 +28,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a6b8e1bea26d4419a22d29ac5cddef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPosition: -1
 --- !u!114 &952043999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39,7 +40,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af7210a1ad406d44380d8e8d9d41f481, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: 0
   speed: 0
 --- !u!1001 &4391575921873910391
 PrefabInstance:
@@ -51,10 +51,6 @@ PrefabInstance:
     - target: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_Name
       value: PathFinder
-      objectReference: {fileID: 0}
-    - target: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x

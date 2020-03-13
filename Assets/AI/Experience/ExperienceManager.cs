@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -21,102 +22,148 @@ public class ExperienceManager : MonoBehaviour
         public float error;
     }
 
-    public class SampleAgent
+    [Serializable]
+    public class AgentManager
     {
-        public TrackObservations trackobservations;
-        public PathObservations pathobservations;
-        public Autopilot autopilot;
-        public Rigidbody body;
-        public ResetController reset;
+        public PathFinder pathfinder;
 
-        public SampleAgent(MonoBehaviour component)
+        public AgentManager(PathFinder pathfinder)
         {
-            trackobservations = component.GetComponent<TrackObservations>();
-            pathobservations = component.GetComponent<PathObservations>();
-            autopilot = component.GetComponent<Autopilot>();
-            reset = component.GetComponent<ResetController>();
-            body = component.GetComponent<Rigidbody>();
-            samples = new List<Sample>();
-        }
-
-        public List<Sample> samples;
-
-        public void Sample(int step)
-        {
-            samples.Add(
-                new Sample()
-                {
-                    time = Time.fixedTime,
-                    step = step,
-                    curvature = trackobservations.Curvature[0],
-                    camber = trackobservations.Camber[0],
-                    inclination = trackobservations.Inclination[0],
-                    speed = body.velocity.magnitude,
-                    height = pathobservations.height,
-                    error = pathobservations.lateralError
-                });
+            this.pathfinder = pathfinder;
         }
     }
 
-    public float SpeedMin;
-    public float SpeedMax;
-    public float SpeedStep;
+    public int profileInterval = 10;        // distance between intervals for pathfinder in m
+    public int profileLength = 40;          // distance to sample using pathfinder in intervals
+    public float profileSpeedStepSize = 5;
+    public float profileErrorThreshold = 1;
 
-    public float StepTime;
+    public int AgentInterval = 20;   // distance between agents along track in m
 
-    private float speed;
-    private int stepcounter;
+    public GameObject AgentPrefab;
 
-    private List<SampleAgent> agents;
+    private List<AgentManager> agents;
+    private List<AgentManager> completed;
 
-    public float TimeRemaining
+    [NonSerialized]
+    public float elapsedRealTime;
+
+    [NonSerialized]
+    public float elapsedVirtualTime;
+
+
+    public int AgentsRemaining
     {
         get
         {
-            return Mathf.FloorToInt((SpeedMax - speed) / SpeedStep) * StepTime;
+            if(agents != null)
+            {
+                return agents.Count;
+            }
+            else
+            {
+                return 0;
+            }
         }
+    }
+
+    private void Awake()
+    {
+        completed = new List<AgentManager>();
+        agents = new List<AgentManager>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        agents = GetComponentsInChildren<PathObservations>().Select(c => new SampleAgent(c)).ToList();
-        speed = SpeedMin;
-        StartCoroutine(ExperienceWorker());
+        CreateAgents();
     }
 
     private void FixedUpdate()
     {
         foreach (var agent in agents)
         {
-            agent.Sample(stepcounter);
-        }
-        stepcounter++;
-    }
-
-    private IEnumerator ExperienceWorker()
-    {
-        do
-        {
-            foreach (var item in agents)
+            if(agent.pathfinder.complete)
             {
-                item.reset.ResetPosition();
-                item.autopilot.speed = speed;
+                completed.Add(agent);
             }
+        }
 
-            speed += SpeedStep;
-            stepcounter = 0;
+        foreach (var agent in completed)
+        {
+            agents.Remove(agent);
+            GameObject.Destroy(agent.pathfinder.gameObject);
+        }
 
-            yield return new WaitForSeconds(StepTime);
-        } while (speed <= SpeedMax);
+        completed.Clear();
 
-        #if UNITY_EDITOR
+        elapsedRealTime += Time.unscaledDeltaTime;
+        elapsedVirtualTime += Time.deltaTime;
+
+        if (agents.Count <= 0)
+        {
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;     //https://answers.unity.com/questions/161858/
 #elif UNITY_WEBPLAYER
             Application.OpenURL(webplayerQuitURL);
 #else
             Application.Quit();
 #endif
+        }
     }
 
+    public AgentManager CreateAgent(TrackPath path, float position)
+    {
+        var container = path.transform.Find("Agents");
+        if (!container)
+        {
+            container = new GameObject("Agents").transform;
+            container.SetParent(path.transform);
+        }
+
+        var agent = GameObject.Instantiate(AgentPrefab, container);
+
+        var navigator = agent.GetComponent<Navigator>();
+        navigator.waypoints = path;
+
+        var pathfinder = agent.GetComponent<PathFinder>();
+        pathfinder.profileLength = profileLength;
+        pathfinder.interval = profileInterval;
+        pathfinder.speedStepSize = profileSpeedStepSize;
+        pathfinder.errorThreshold = profileErrorThreshold;
+
+        var reset = agent.GetComponent<ResetController>();
+        reset.ResetPosition(position);
+
+        agent.SetActive(true); // prefab may be disabled depending on when it was last updated
+
+        SetLayer(agent, "Car"); // for now car but we may add a training car layer in the future
+
+        return new AgentManager(pathfinder);
+    }
+
+    public void CreateAgents()
+    {
+        foreach (var path in GetComponentsInChildren<TrackPath>())
+        {
+            // ignore geometries - a derived trackwith with a more regular sampling should represent this
+            if(path is TrackGeometry)
+            {
+                continue;
+            }
+
+            for (float position = 0; position < path.totalLength; position += AgentInterval)
+            {
+                agents.Add(CreateAgent(path, position));
+            }
+        }
+    }
+
+    static void SetLayer(GameObject obj, string layer)
+    {
+        foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))
+        {
+            trans.gameObject.layer = LayerMask.NameToLayer(layer);
+        }
+    }
 }

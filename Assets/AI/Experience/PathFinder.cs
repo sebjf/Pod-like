@@ -20,6 +20,10 @@ public class PathFinder : MonoBehaviour
     public float speedStepSize = 5f;
     public float errorThreshold = 1f; // tolerance must be high enough to allow slight corner cutting, since the rabbit is a little ahead of the car
 
+    [HideInInspector]
+    [NonSerialized]
+    public bool complete;
+
     public class Node
     {
         public float speed;
@@ -141,6 +145,7 @@ public class PathFinder : MonoBehaviour
         if(i == (profileLength - 1))
         {
             Debug.Log("Complete!");
+            complete = true;
             Reset();
         }
     }
