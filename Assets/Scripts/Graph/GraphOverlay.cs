@@ -98,6 +98,7 @@ public class GraphOverlay : MonoBehaviour
         return series;
     }
 
+    public new Camera camera;
     private RawImage imageComponent;
     public HorizontalOrVerticalLayoutGroup scaleLabelsUpper;
     public HorizontalOrVerticalLayoutGroup scaleLabelsLower;
@@ -129,6 +130,7 @@ public class GraphOverlay : MonoBehaviour
     private void Awake()
     {
         imageComponent = GetComponentInChildren<RawImage>();
+        camera = GetComponentInChildren<Camera>();
         instance = null;
     }
 
