@@ -26,11 +26,14 @@ public class PathObservations : MonoBehaviour
     [HideInInspector]
     public bool traction;
 
+    private int layerMask;
+
     private void Awake()
     {
         navigator = GetComponent<Navigator>();
         body = GetComponent<Rigidbody>();
         vehicle = GetComponent<Vehicle>();
+        layerMask = LayerMask.GetMask("Track");
     }
 
     void FixedUpdate()
@@ -66,7 +69,7 @@ public class PathObservations : MonoBehaviour
         if (vehicle.wheelsInContact < 2)
         {
             RaycastHit raycast;
-            if (Physics.Raycast(new Ray(body.position, Vector3.down), out raycast, float.PositiveInfinity, LayerMask.GetMask("Track")))
+            if (Physics.Raycast(new Ray(body.position, Vector3.down), out raycast, float.PositiveInfinity, layerMask))
             {
                 height = raycast.distance;
             }
