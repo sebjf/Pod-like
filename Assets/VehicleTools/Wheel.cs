@@ -86,25 +86,16 @@ public class Wheel : MonoBehaviour
         localAttachmentPosition = transform.localPosition + new Vector3(0, 0.5f, 0);
     }
 
-    private void Awake()
+    private void Awake()    // all initialisation should be performed in awake because FixedUpdate may be called before start when this is instantiated at runtime
     {
         rigidBody = GetComponentInParent<Rigidbody>();
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
         UpdateTransforms();
-
-        position = attachmentPoint;
         prevPosition = attachmentPoint;
 
         inertia = mass * (radius * radius) / 2;
 
         slipForce.postWrapMode = WrapMode.ClampForever;
-
-        //annotation = FindObjectOfType<GraphOverlay>().CreateAnnotation();
-        //annotation.world = transform;
     }
 
     public void UpdateTransforms()
@@ -112,7 +103,6 @@ public class Wheel : MonoBehaviour
         attachmentPoint = transform.parent.TransformPoint(localAttachmentPosition);
 
         position = attachmentPoint;
-
         rotation = transform.parent.rotation * Quaternion.Euler(0, steerAngle, 0);
 
         up = rotation * Vector3.up;
