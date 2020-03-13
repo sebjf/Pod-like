@@ -18,7 +18,13 @@ public class ResetController : MonoBehaviour
 
     public void ResetPosition(float startPosition)
     {
+        if (navigator == null)
+        {
+            navigator = GetComponent<Navigator>();
+        }
+
         navigator.StartingPosition = startPosition;
+
         ResetPosition();
     }
 
@@ -27,7 +33,6 @@ public class ResetController : MonoBehaviour
         if (navigator == null)
         {
             navigator = GetComponent<Navigator>();
-            navigator.Reset();
         }
 
         var trackposition = navigator.StartingPosition + UnityEngine.Random.Range(-forwardvariation, forwardvariation);
