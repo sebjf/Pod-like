@@ -146,6 +146,8 @@ public abstract class TrackWaypoints<T> : TrackPath where T : Waypoint
 
     public WaypointQueryResult WaypointQuery(float distance)
     {
+        Profiler.BeginSample("Waypoint Query");
+
         distance = Mathf.Clamp(mod(distance, totalLength), 0, totalLength);
 
         InitialiseBroadphase();
@@ -180,6 +182,8 @@ public abstract class TrackWaypoints<T> : TrackPath where T : Waypoint
         {
             throw new Exception("Invalid Distance " + distance);
         }
+
+        Profiler.EndSample();
 
         return new WaypointQueryResult()
         {
