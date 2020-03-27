@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -10,26 +11,28 @@ using UnityEngine;
 /// </summary>
 public class ExperienceManager : MonoBehaviour
 {
-    public struct Sample
+    public class Experience
     {
-        public float time;
-        public int step;
-        public float curvature;
-        public float camber;
-        public float inclination;
-        public float speed;
-        public float height;
-        public float error;
+        public TrackPath path;
+        public List<List<PathFinder.Node>> profiles;
+
+        public Experience(TrackPath path)
+        {
+            this.path = path;
+            this.profiles = new List<List<PathFinder.Node>>();
+        }
     }
 
     [Serializable]
     public class AgentManager
     {
         public PathFinder pathfinder;
+        public Experience collector;
 
-        public AgentManager(PathFinder pathfinder)
+        public AgentManager(PathFinder pathfinder, Experience collector)
         {
             this.pathfinder = pathfinder;
+            this.collector = collector;
         }
     }
 
@@ -44,6 +47,7 @@ public class ExperienceManager : MonoBehaviour
 
     private List<AgentManager> agents;
     private List<AgentManager> completed;
+    private List<Experience> experiences;
 
     [NonSerialized]
     public float elapsedRealTime;
@@ -71,12 +75,18 @@ public class ExperienceManager : MonoBehaviour
     {
         completed = new List<AgentManager>();
         agents = new List<AgentManager>();
+        experiences = new List<Experience>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         CreateAgents();
+        var timeController = GetComponent<TimeController>();
+        if (timeController)
+        {
+            timeController.enableCapture = true;
+        }
     }
 
     private void FixedUpdate()
@@ -92,6 +102,7 @@ public class ExperienceManager : MonoBehaviour
         foreach (var agent in completed)
         {
             agents.Remove(agent);
+            agent.collector.profiles.Add(agent.pathfinder.profile);
             GameObject.Destroy(agent.pathfinder.gameObject);
         }
 
@@ -102,6 +113,8 @@ public class ExperienceManager : MonoBehaviour
 
         if (agents.Count <= 0)
         {
+            OnComplete();
+
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;     //https://answers.unity.com/questions/161858/
 #elif UNITY_WEBPLAYER
@@ -112,7 +125,7 @@ public class ExperienceManager : MonoBehaviour
         }
     }
 
-    public AgentManager CreateAgent(TrackPath path, float position)
+    public PathFinder CreateAgent(TrackPath path, float position)
     {
         var container = path.transform.Find("Agents");
         if (!container)
@@ -139,7 +152,7 @@ public class ExperienceManager : MonoBehaviour
 
         SetLayer(agent, "Car"); // for now car but we may add a training car layer in the future
 
-        return new AgentManager(pathfinder);
+        return pathfinder;
     }
 
     public void CreateAgents()
@@ -152,9 +165,12 @@ public class ExperienceManager : MonoBehaviour
                 continue;
             }
 
+            var experienceCollector = new Experience(path);
+            experiences.Add(experienceCollector);
+
             for (float position = 0; position < path.totalLength; position += AgentInterval)
             {
-                agents.Add(CreateAgent(path, position));
+                agents.Add(new AgentManager(CreateAgent(path, position), experienceCollector));
             }
         }
     }
@@ -166,4 +182,106 @@ public class ExperienceManager : MonoBehaviour
             trans.gameObject.layer = LayerMask.NameToLayer(layer);
         }
     }
+
+    public void OnComplete()
+    {
+        Export(@"D:\temp11\profile.json");
+    }
+
+    public void Export(string filename)
+    {
+        using(FileStream stream = new FileStream(filename, FileMode.Create))
+        {
+            ExportJson(stream);
+        }
+    }
+
+    public void ExportCSV(Stream output)
+    {
+        using (StreamWriter writer = new StreamWriter(output))
+        {
+            writer.WriteLine(string.Format("Agent, Index, Distance, Speed, Traction, ActualSpeed"));
+
+            foreach (var collection in experiences)
+            {
+                foreach (var profile in collection.profiles)
+                {
+                    int agentIndex = collection.profiles.IndexOf(profile);
+
+                    foreach (var node in profile)
+                    {
+                        writer.WriteLine("{0},{1},{2},{3},{4},{5}",
+                            agentIndex,
+                            profile.IndexOf(node),
+                            node.distance,
+                            node.speed,
+                            node.traction,
+                            node.actual
+                            );
+                    }
+                }
+            }
+        }
+    }
+
+    public void ExportJson(Stream output)
+    {
+        var experienceDataset = new ExperienceDataset();
+        foreach (var item in experiences)
+        {
+            experienceDataset.Add(item);
+        }
+        using (StreamWriter writer = new StreamWriter(output))
+        {
+            writer.Write(JsonUtility.ToJson(experienceDataset, true));
+        }
+    }
+
+    /// <summary>
+    /// Collection of experience expressed as a training set
+    /// </summary>
+    [Serializable]
+    public class ExperienceDataset
+    {
+        [Serializable]
+        public class Profile
+        {
+            public float[] Curvature;
+            public float[] Camber;
+            public float[] Inclination;
+
+            public float[] Speed;
+            public float[] Actual;
+        }
+
+        public List<Profile> Profiles = new List<Profile>();
+
+        public void Add(Experience experienceset)
+        {
+            foreach (var profile in experienceset.profiles)
+            {
+                var example = new Profile();
+                var length = profile.Count;
+
+                example.Curvature = new float[length];
+                example.Camber = new float[length];
+                example.Inclination = new float[length];
+                example.Speed = new float[length];
+                example.Actual = new float[length];
+
+                for (int i = 0; i < length; i++)
+                {
+                    var node = profile[i];
+                    example.Curvature[i] = experienceset.path.Curvature(node.distance);
+                    example.Camber[i] = experienceset.path.Query(node.distance).Camber;
+                    example.Inclination[i] = experienceset.path.Inclination(node.distance);
+                    example.Speed[i] = node.speed;
+                    example.Actual[i] = node.actual;
+                }
+
+                Profiles.Add(example);
+            }
+        }
+    }
+
 }
