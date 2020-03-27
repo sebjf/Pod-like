@@ -10,11 +10,19 @@ public class ResetController : MonoBehaviour
     [NonSerialized]
     public Navigator navigator;
 
-    protected Rigidbody body;
+    [HideInInspector]
+    [NonSerialized]
+    public Rigidbody body;
 
     [HideInInspector]
     [NonSerialized]
     public float forwardvariation = 0; // in m
+
+    private void Awake()
+    {
+        navigator = GetComponent<Navigator>();
+        body = GetComponent<Rigidbody>();
+    }
 
     public void ResetPosition(float startPosition)
     {
