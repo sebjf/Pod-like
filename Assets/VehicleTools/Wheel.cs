@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Wheel : MonoBehaviour
 {
     public float k;
@@ -50,6 +49,8 @@ public class Wheel : MonoBehaviour
     [HideInInspector]
     public float wheelsInContact;
 
+    private int raycastBitmask;
+
     public float Vt
     {
         get
@@ -94,8 +95,8 @@ public class Wheel : MonoBehaviour
         prevPosition = attachmentPoint;
 
         inertia = mass * (radius * radius) / 2;
-
         slipForce.postWrapMode = WrapMode.ClampForever;
+        raycastBitmask = CollisionMatrixLayerMasks.ForLayer(gameObject.layer);
     }
 
     public void UpdateTransforms()
@@ -147,7 +148,7 @@ public class Wheel : MonoBehaviour
         var restDistance = offset + travel;
 
         RaycastHit m_raycastHit;
-        bool result = Physics.Raycast(new Ray(attachmentPoint, -up), out m_raycastHit, offset + travel + radius);
+        bool result = Physics.Raycast(new Ray(attachmentPoint, -up), out m_raycastHit, offset + travel + radius, raycastBitmask);
         if (result)
         {
             displacement = restDistance - (m_raycastHit.distance - radius);
