@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(ResetController))]
@@ -30,12 +31,20 @@ public class PathFinder : MonoBehaviour
         public float actual;
         public bool traction;
         public float error;
-        public int index;
+        public float distance; // track position
+        public bool mark; // we've intentionally reduced the speed, rather than say the car hitting a bump
+
+        public Node()
+        {
+            speed = 100f;
+            traction = true;
+            mark = false;
+        }
     }
 
     [HideInInspector]
     [NonSerialized]
-    public Node[] profile;
+    public List<Node> profile;
 
     private void Awake()
     {
@@ -43,19 +52,17 @@ public class PathFinder : MonoBehaviour
         navigator = GetComponent<Navigator>();
         pathObservations = GetComponent<PathObservations>();
         resetController = GetComponent<ResetController>();
-        resetController.ResetPosition();
         CreateProfile();
+        navigator.Reset();
+        resetController.ResetPosition();
     }
 
     void CreateProfile()
     {
-        profile = new Node[profileLength];
-        for (int i = 0; i < profile.Length; i++)
+        profile = new List<Node>();
+        for (int i = 0; i < profileLength; i++)
         {
-            profile[i] = new Node();
-            profile[i].speed = 100f;
-            profile[i].traction = true;
-            profile[i].index = i;
+            profile.Add(new Node());
         }
     }
 
@@ -78,19 +85,23 @@ public class PathFinder : MonoBehaviour
         }
 
         // actuate profile
-        if (next < profileLength && next >= 0)
+        if (next < profile.Count && next >= 0)
         {
-            autopilot.speed = profile[Mathf.CeilToInt(profileDistance)].speed; // the speed target of the *next* node
+            autopilot.speed = profile[next].speed; // the speed target of the *next* node
         }
     }
 
     private Node Previous(Node node)
     {
-        return profile[node.index - 1];
+        return profile[profile.IndexOf(node) - 1];
     }
 
     private void UpdateNode(int i)
     {
+        var trueSpeed = pathObservations.speed;
+        var traction = pathObservations.traction;
+        var error = pathObservations.understeer;
+
         var node = profile[i];
         var prev = profile[i - 1];
 
@@ -99,13 +110,11 @@ public class PathFinder : MonoBehaviour
             prev = Previous(prev);
         }
 
-        var trueSpeed = pathObservations.speed;
-        var traction = pathObservations.traction;
-        var error = pathObservations.understeer;
-
         node.traction = traction;
         node.actual = trueSpeed;
         node.error = error;
+
+        node.distance = navigator.TrackDistance;
 
         if (traction)
         {
@@ -113,36 +122,23 @@ public class PathFinder : MonoBehaviour
             {
                 node.speed = trueSpeed;
             }
-            if (trueSpeed > (node.speed + 1)) // the autopilot will not be perfect, so we must tolerate a tiny offset to avoid pulling prev speed down too much, or for that matter getting stuck where we can't (e.g. at the start)
-            {
-                ReduceSpeed(prev);
-                Reset();
-                return;
-            }
-            if (error > errorThreshold)
-            {
-                ReduceSpeed(prev);
-                Reset();
-                return;
-            }
-        }
-        else
-        {
-            if (trueSpeed > (node.speed + 1))
-            {
-                ReduceSpeed(prev);
-                Reset();
-                return;
-            }
-            if (error > errorThreshold)
-            {
-                ReduceSpeed(prev);
-                Reset();
-                return;
-            }
         }
 
-        if(i == (profileLength - 1))
+        if (trueSpeed > (node.speed + 1)) // the autopilot will not be perfect, so we must tolerate a tiny offset to avoid pulling prev speed down too much, or for that matter getting stuck where we can't (e.g. at the start)
+        {
+            ReduceSpeed(prev);
+            Reset();
+            return;
+        }
+
+        if (error > errorThreshold)
+        {
+            ReduceSpeed(prev);
+            Reset();
+            return;
+        }
+
+        if (i == (profileLength - 1))
         {
             Debug.Log("Complete!");
             complete = true;
@@ -153,6 +149,21 @@ public class PathFinder : MonoBehaviour
     public void ReduceSpeed(Node node)
     {
         node.speed -= Mathf.Min(speedStepSize, node.speed / 2);
+        node.mark = true;
+    }
+
+    public void UpdateProfileLength()
+    {
+        // find the first node with a braking instruction. the derivative will likely be very reliable, but the mark is completely unambiguous.
+        int i = profile.IndexOf(profile.First(n => { return n.mark; } ));
+        while(profile.Count < (i + profileLength))
+        {
+            profile.Add(new Node());
+        }
+        while(profile.Count > (i + profileLength))
+        {
+            profile.RemoveAt(profile.Count - 1);
+        }
     }
 
     public void Reset()
