@@ -45,6 +45,8 @@ public class ExperienceManager : MonoBehaviour
 
     public GameObject AgentPrefab;
 
+    public string file;
+
     private List<AgentManager> agents;
     private List<AgentManager> completed;
     private List<Experience> experiences;
@@ -185,7 +187,7 @@ public class ExperienceManager : MonoBehaviour
 
     public void OnComplete()
     {
-        Export(@"D:\temp11\profile.json");
+        Export(file);
     }
 
     public void Export(string filename)
@@ -193,34 +195,6 @@ public class ExperienceManager : MonoBehaviour
         using(FileStream stream = new FileStream(filename, FileMode.Create))
         {
             ExportJson(stream);
-        }
-    }
-
-    public void ExportCSV(Stream output)
-    {
-        using (StreamWriter writer = new StreamWriter(output))
-        {
-            writer.WriteLine(string.Format("Agent, Index, Distance, Speed, Traction, ActualSpeed"));
-
-            foreach (var collection in experiences)
-            {
-                foreach (var profile in collection.profiles)
-                {
-                    int agentIndex = collection.profiles.IndexOf(profile);
-
-                    foreach (var node in profile)
-                    {
-                        writer.WriteLine("{0},{1},{2},{3},{4},{5}",
-                            agentIndex,
-                            profile.IndexOf(node),
-                            node.distance,
-                            node.speed,
-                            node.traction,
-                            node.actual
-                            );
-                    }
-                }
-            }
         }
     }
 
@@ -250,6 +224,8 @@ public class ExperienceManager : MonoBehaviour
             public float[] Camber;
             public float[] Inclination;
 
+            public float[] Distance;
+
             public float[] Speed;
             public float[] Actual;
         }
@@ -268,6 +244,7 @@ public class ExperienceManager : MonoBehaviour
                 example.Inclination = new float[length];
                 example.Speed = new float[length];
                 example.Actual = new float[length];
+                example.Distance = new float[length];
 
                 for (int i = 0; i < length; i++)
                 {
@@ -277,6 +254,7 @@ public class ExperienceManager : MonoBehaviour
                     example.Inclination[i] = experienceset.path.Inclination(node.distance);
                     example.Speed[i] = node.speed;
                     example.Actual[i] = node.actual;
+                    example.Distance[i] = node.distance;
                 }
 
                 Profiles.Add(example);

@@ -18,6 +18,7 @@ public class ExperienceManagerEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AgentInterval"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AgentPrefab"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("file"));
 
         serializedObject.ApplyModifiedProperties();
 
