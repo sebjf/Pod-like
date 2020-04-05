@@ -57,7 +57,6 @@ public class TrainingAgentsManager : MonoBehaviour
         DestroyImmediate(car.GetComponentInChildren<DeformationModel>());
         DestroyImmediate(car.GetComponentInChildren<DynamicMesh>());
         car.GetComponent<VehicleControllerInput>().enabled = false;
-        car.GetComponent<VehicleAgent>().enabled = true;
         car.SetActive(true);
     }
 }
