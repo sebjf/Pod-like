@@ -89,6 +89,11 @@ public class PathFinder : MonoBehaviour
         {
             autopilot.speed = profile[next].speed; // the speed target of the *next* node
         }
+
+        if(node == 1)
+        {
+            profile[0].distance = profile[1].distance - interval; // initialise distance of node 0. yes this can be negative, and that is ok because this value is a relative distance not position.
+        }
     }
 
     private Node Previous(Node node)
@@ -116,14 +121,6 @@ public class PathFinder : MonoBehaviour
 
         node.distance = navigator.TrackDistance;
 
-        if (traction)
-        {
-            if (trueSpeed < node.speed - 2)
-            {
-                node.speed = trueSpeed;
-            }
-        }
-
         if (trueSpeed > (node.speed + 1)) // the autopilot will not be perfect, so we must tolerate a tiny offset to avoid pulling prev speed down too much, or for that matter getting stuck where we can't (e.g. at the start)
         {
             ReduceSpeed(prev);
@@ -138,7 +135,9 @@ public class PathFinder : MonoBehaviour
             return;
         }
 
-        if (i == (profileLength - 1))
+        //UpdateProfileLength();
+
+        if (i == (profile.Count - 1))
         {
             Debug.Log("Complete!");
             complete = true;
@@ -148,14 +147,22 @@ public class PathFinder : MonoBehaviour
 
     public void ReduceSpeed(Node node)
     {
-        node.speed -= Mathf.Min(speedStepSize, node.speed / 2);
+        node.speed = Math.Min(node.actual + 2, node.speed); // only decrease actual if significantly smaller than target speed
+        node.speed -= Mathf.Min(speedStepSize, node.speed / 2); // if target speed approaches zero, decrease the step size
         node.mark = true;
     }
 
     public void UpdateProfileLength()
     {
         // find the first node with a braking instruction. the derivative will likely be very reliable, but the mark is completely unambiguous.
-        int i = profile.IndexOf(profile.First(n => { return n.mark; } ));
+        int i = 0;
+        for (; i < profile.Count; i++)
+        {
+            if(profile[i].mark)
+            {
+                break;
+            }
+        }
         while(profile.Count < (i + profileLength))
         {
             profile.Add(new Node());
