@@ -170,7 +170,6 @@ GameObject:
   - component: {fileID: 343465207}
   - component: {fileID: 1697420620939968213}
   - component: {fileID: 7185422284977984932}
-  - component: {fileID: 96636609}
   m_Layer: 8
   m_Name: Gamma
   m_TagString: Untagged
@@ -54357,25 +54356,6 @@ MonoBehaviour:
   lookAtTarget: {fileID: 48921566}
   positionTarget: {fileID: 1780430346}
   sideView: {fileID: 159124328}
---- !u!114 &96636609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474698328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e2f8e19bab742c4aba3137f7d3e4377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  numObservations: 40
-  pathInterval: 5
-  graph: {fileID: 0}
-  Curvature: []
-  Camber: []
-  Inclination: []
-  Midpoints: []
 --- !u!1 &681467350
 GameObject:
   m_ObjectHideFlags: 0
@@ -55160,15 +55140,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
---- !u!4 &1359666120 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805,
-    type: 3}
-  m_PrefabInstance: {fileID: 1359790410}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1359824872 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: 7dc562365ffe3dc449318d98e3a99805,
+    type: 3}
+  m_PrefabInstance: {fileID: 1359790410}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1359666120 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400002, guid: 7dc562365ffe3dc449318d98e3a99805,
     type: 3}
   m_PrefabInstance: {fileID: 1359790410}
   m_PrefabAsset: {fileID: 0}

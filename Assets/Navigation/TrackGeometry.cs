@@ -37,32 +37,39 @@ public class Waypoint : IWaypoint1D // we can keep waypoint as a class and use r
     public float Distance => start;
 }
 
+public struct PointQuery
+{
+    public Vector3 Position;
+    public Vector3 Tanget;
+    public Vector3 Forward;
+}
+
 // This single query approach won't make much difference when driving one or two cars, 
 // but when collecting experience for 100's (with concomitant cache invalidations) it will.
 public struct PathQuery
 {
     public Vector3 Midpoint;
     public Vector3 Tangent;
-    public float Width; // can be zero
     public Vector3 Forward;
+    public float Curvature;
+    public float Inclination;
     public float Camber;
+    public float Width; // can be zero
 }
 
 public abstract class TrackPath : MonoBehaviour
 {
     public float totalLength;
-    public float curvatureSampleDistance;
 
     public abstract float Distance(Vector3 position, float lastDistance);
 
     public abstract PathQuery Query(float distance);
 
-    public float Curvature(float v)
+    /// <summary>
+    /// Computes the curvature of Y. (Where X is ahead by h and Z is behind by h.)
+    /// </summary>
+    public static float Curvature(Vector3 X, Vector3 Y, Vector3 Z)
     {
-        var X = Query(v + curvatureSampleDistance).Midpoint;
-        var Y = Query(v).Midpoint;
-        var Z = Query(v - curvatureSampleDistance).Midpoint;
-
         var YX = X - Y;
         var YZ = Z - Y;
         var ZY = Y - Z;
@@ -83,9 +90,9 @@ public abstract class TrackPath : MonoBehaviour
         return C;
     }
 
-    public float Inclination(float v)
+    public static float Inclination(Vector3 forward)
     {
-        return Vector3.Dot(Query(v).Forward, Vector3.up);
+        return Vector3.Dot(forward, Vector3.up);
     }
 
     //https://stackoverflow.com/questions/1082917/
@@ -100,7 +107,7 @@ public abstract class TrackPath : MonoBehaviour
     }
 }
 
-public abstract class TrackWaypoints<T> : TrackPath where T : Waypoint
+public abstract class Waypoints<T> : TrackPath where T : Waypoint
 {
     public List<T> waypoints = new List<T>();
 
@@ -333,7 +340,7 @@ public class TrackWaypoint : Waypoint
     public Vector3 right;
 }
 
-public class TrackGeometry : TrackWaypoints<TrackWaypoint>
+public class TrackGeometry : Waypoints<TrackWaypoint>
 {
     [NonSerialized]
     public List<TrackWaypoint> selected = new List<TrackWaypoint>();
@@ -343,6 +350,8 @@ public class TrackGeometry : TrackWaypoints<TrackWaypoint>
 
     [NonSerialized]
     public Vector3? highlightedPoint;
+
+    public float curvatureSampleDistance;
 
     public TrackWaypoint lastSelected
     {
@@ -372,22 +381,62 @@ public class TrackGeometry : TrackWaypoints<TrackWaypoint>
         Recompute();
     }
 
+    public struct SectionProfile
+    {
+        public Vector3 Position;
+        public Vector3 Tangent;
+        public float Width;
+    }
+
+    public SectionProfile Section(float distance)
+    {
+        var wq = WaypointQuery(distance);
+        SectionProfile section;
+        section.Position = Position(wq);
+        section.Tangent = Tangent(wq);
+        section.Width = Width(wq);
+        return section;
+    }
+
     public override PathQuery Query(float distance)
     {
-        var wp = WaypointQuery(distance);
-        PathQuery query = new PathQuery();
+        var wq = WaypointQuery(distance);
+        PathQuery query;
 
-        var A = wp.waypoint;
-        var B = wp.next;
-        var t = wp.t;
+        var A = wq.waypoint;
+        var B = wq.next;
+        var t = wq.t;
 
-        query.Midpoint = Vector3.Lerp(A.position, B.position, t);
+        query.Midpoint = Position(wq);
         query.Width = Mathf.Lerp(A.width,B.width,t);
         query.Forward = Vector3.Lerp(A.normal, B.normal, t);
         query.Tangent = Vector3.Lerp(A.tangent, B.tangent, t);
+
         query.Camber = query.Tangent.y / query.Width;
+        query.Inclination = Inclination(query.Forward);
+
+        var x = Position(WaypointQuery(distance + curvatureSampleDistance));
+        var y = query.Midpoint;
+        var z = Position(WaypointQuery(distance - curvatureSampleDistance));
+
+        query.Curvature = Curvature(x, y, z);
 
         return query;
+    }
+
+    public Vector3 Position(WaypointQueryResult q)
+    {
+        return Vector3.Lerp(q.waypoint.position, q.next.position, q.t);
+    }
+
+    public Vector3 Tangent(WaypointQueryResult q)
+    {
+        return Vector3.Lerp(q.waypoint.tangent, q.next.tangent, q.t);
+    }
+
+    public float Width(WaypointQueryResult q)
+    {
+        return Mathf.Lerp(q.waypoint.width, q.next.width, q.t);
     }
 
     public override Vector3 Position(TrackWaypoint wp)

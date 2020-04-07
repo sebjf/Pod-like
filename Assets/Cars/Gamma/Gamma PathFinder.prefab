@@ -50,7 +50,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_Name
-      value: PathFinder
+      value: Gamma PathFinder
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x
@@ -104,17 +104,17 @@ PrefabInstance:
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: TrackDistance
-      value: 4317.5693
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: PreviousTrackDistance
-      value: 4317.5693
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: TotalDistanceTravelled
-      value: 4569.575
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
@@ -125,6 +125,25 @@ PrefabInstance:
         type: 3}
       propertyPath: distanceTravelledInFrame
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: StartingPosition
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3819372694604359179, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3377283260564951050, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 343465207, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8687983544768177585, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
@@ -147,23 +166,10 @@ PrefabInstance:
       propertyPath: brain
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 3377283260564951050, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3819372694604359179, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 343465207, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1677533840991851040, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
     - {fileID: 3377283260564951050, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+    - {fileID: 96636609, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
 --- !u!1 &4391575922071349295 stripped
 GameObject:

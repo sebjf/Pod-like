@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Profiling;
 public class PathObservations : MonoBehaviour
 {
     private Navigator navigator;
@@ -38,12 +38,17 @@ public class PathObservations : MonoBehaviour
 
     void FixedUpdate()
     {
+        Profiler.BeginSample("Query");
+
         var q = navigator.waypoints.Query(navigator.TrackDistance);
 
         var trackCenter = q.Midpoint;
         var trackForward = q.Forward;
-        var curvature = navigator.waypoints.Curvature(navigator.TrackDistance);
+        var curvature = q.Curvature;
         var bodyPosition = body.position;
+
+        Profiler.EndSample();
+        Profiler.BeginSample("Understeer");
 
         // poor mans projection
         var A = new Vector2(trackCenter.x, trackCenter.z);
@@ -65,6 +70,9 @@ public class PathObservations : MonoBehaviour
             understeer = lateralError;
         }
 
+        Profiler.EndSample();
+        Profiler.BeginSample("Height");
+
         height = 0;
         if (vehicle.wheelsInContact < 2)
         {
@@ -74,6 +82,8 @@ public class PathObservations : MonoBehaviour
                 height = raycast.distance;
             }
         }
+
+        Profiler.EndSample();
 
         traction = vehicle.wheelsInContact > 2;
         speed = body.velocity.magnitude;

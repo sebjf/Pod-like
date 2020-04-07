@@ -1,17 +1,51 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class ShortestPath : DerivedPath
+
+/// <summary>
+/// Centerline path follows the center of the track, except that it smooths corners so no curvature is greater then 10
+/// </summary>
+public class CenterlinePath : DerivedPath
 {
+    public float curvature = 1f;
+
+    private float[] curvatures;
+
     public override void Step()
     {
         // brute force search of SP
 
+        if(curvatures == null)
+        {
+            curvatures = new float[waypoints.Count];
+        }
+        if(curvatures.Length != waypoints.Count)
+        {
+            curvatures = new float[waypoints.Count];
+        }
+
         for (int i = 0; i < waypoints.Count; i++)
         {
-            Minimise(i, DistanceFunction);
+            curvatures[i] = CurvatureFunction(waypoints[i].Distance);
         }
+
+        for (int i = 0; i < curvatures.Length; i++)
+        {
+            if(curvatures[i] > curvature)
+            {
+                Debug.Log(curvatures[i]);
+                Minimise(i, DistanceFunction);
+            }
+        }
+
+        Debug.Log("Curvature Range " + curvatures.Max());
+    }
+
+    private float CurvatureFunction(float d)
+    {
+        return Mathf.Abs(Query(d).Curvature);
     }
 
     private float DistanceFunction(float d)

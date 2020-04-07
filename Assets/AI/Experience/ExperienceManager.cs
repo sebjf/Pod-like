@@ -249,9 +249,10 @@ public class ExperienceManager : MonoBehaviour
                 for (int i = 0; i < length; i++)
                 {
                     var node = profile[i];
-                    example.Curvature[i] = experienceset.path.Curvature(node.distance);
-                    example.Camber[i] = experienceset.path.Query(node.distance).Camber;
-                    example.Inclination[i] = experienceset.path.Inclination(node.distance);
+                    var Q = experienceset.path.Query(node.distance);
+                    example.Curvature[i] = Q.Curvature;
+                    example.Camber[i] = Q.Camber;
+                    example.Inclination[i] = Q.Inclination;
                     example.Speed[i] = node.speed;
                     example.Actual[i] = node.actual;
                     example.Distance[i] = node.distance;

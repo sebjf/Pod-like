@@ -1,24 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &1348619060428656757
+--- !u!114 &170273913
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4001992816435297627}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e2f8e19bab742c4aba3137f7d3e4377, type: 3}
+  m_Script: {fileID: 11500000, guid: 4700d5c7478427f48a900fa1bb966c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numObservations: 40
-  pathInterval: 10
-  graph: {fileID: 0}
-  Curvature: []
-  Camber: []
-  Inclination: []
-  Midpoints: []
+  modelName: model
+  profile: []
+  curvature: []
+  camber: []
+  inclination: []
 --- !u!114 &5106066053930418821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44,23 +42,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a6b8e1bea26d4419a22d29ac5cddef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &170273913
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4001992816435297627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4700d5c7478427f48a900fa1bb966c16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  modelName: model
-  profile: []
-  curvature: []
-  camber: []
-  inclination: []
 --- !u!1001 &4001992816094949123
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -123,7 +104,7 @@ PrefabInstance:
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: StartingPosition
-      value: 4049.1267
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
@@ -133,12 +114,12 @@ PrefabInstance:
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: TrackDistance
-      value: 4049.1267
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}
       propertyPath: PreviousTrackDistance
-      value: 4049.1267
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
         type: 3}

@@ -42,8 +42,8 @@ public class TrackObservations : MonoBehaviour
             var q = navigator.waypoints.Query(d);
             Midpoints[i] = q.Midpoint;
             Camber[i] = q.Camber;
-            Curvature[i] = navigator.waypoints.Curvature(d);
-            Inclination[i] = navigator.waypoints.Inclination(d);
+            Curvature[i] = q.Curvature;
+            Inclination[i] = q.Inclination;
            
         }
 

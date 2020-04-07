@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MonoBehaviour
@@ -46,6 +47,8 @@ public class Vehicle : MonoBehaviour
 
     public void FixedUpdate()
     {
+        Profiler.BeginSample("Update Wheel Transforms");
+
         foreach (var wheel in wheels)
         {
             if(wheel.steers)
@@ -56,10 +59,15 @@ public class Vehicle : MonoBehaviour
             wheel.UpdateTransforms();
         }
 
+        Profiler.EndSample();
+        Profiler.BeginSample("Update Suspension Force");
+
         foreach (var wheel in wheels)
         {
             wheel.UpdateSuspensionForce();
         }
+
+        Profiler.EndSample();
 
         wheelsInContact = 0;
         foreach (var wheel in wheels)
@@ -74,6 +82,8 @@ public class Vehicle : MonoBehaviour
         {
             wheel.wheelsInContact = wheelsInContact;
         }
+
+        Profiler.BeginSample("Update Torque");
 
         var angularVelocity = 0f;
         var angularVelocityCount = 0f;
@@ -110,6 +120,9 @@ public class Vehicle : MonoBehaviour
             }
         }
 
+        Profiler.EndSample();
+        Profiler.BeginSample("Update Grip Forces");
+
         foreach (var wheel in wheels)
         {
             wheel.UpdateVelocity();
@@ -124,10 +137,15 @@ public class Vehicle : MonoBehaviour
             }
         }
 
+        Profiler.EndSample();
+        Profiler.BeginSample("Update Transforms");
+
         foreach (var wheel in wheels)
         {
             wheel.UpdateLocalTransform();
         }
+
+        Profiler.EndSample();
 
         speed = Vector3.Dot(transform.forward, rigidbody.velocity);
     }

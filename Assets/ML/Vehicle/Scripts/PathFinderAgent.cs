@@ -87,10 +87,10 @@ public class PathFinderAgent : MonoBehaviour
         for (int i = 0; i < numObservations; i++)
         {
             var distance = navigator.TrackDistance + i * 10f;
-
-            curvature[i] = navigator.waypoints.Curvature(distance);
-            camber[i] = navigator.waypoints.Query(distance).Camber;
-            inclination[i] = navigator.waypoints.Inclination(distance);
+            var Q = navigator.waypoints.Query(distance);
+            curvature[i] = Q.Curvature;
+            camber[i] = Q.Camber;
+            inclination[i] = Q.Inclination;
         }
 
         // pack the inputs F

@@ -4,16 +4,20 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(DerivedPath),true)]
-public class TrackPathEditor : Editor
+public class DerivedPathEditor : Editor
 {
     private int Steps = 100;
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("curvatureSampleDistance"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Resolution"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Barrier"));
+
+        if(target is CenterlinePath)
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("curvature"));
+        }
 
         serializedObject.ApplyModifiedProperties();
 

@@ -18,7 +18,7 @@ public class DerivedWaypoint : Waypoint
     public float w;
 }
 
-public class DerivedPath : TrackWaypoints<DerivedWaypoint>
+public class DerivedPath : Waypoints<DerivedWaypoint>
 {
     public float Resolution = 5;
     public float Barrier = 3f;
@@ -63,8 +63,8 @@ public class DerivedPath : TrackWaypoints<DerivedWaypoint>
 
     public override Vector3 Position(DerivedWaypoint wp)
     {
-        var T = track.Query(wp.x);
-        return T.Midpoint + T.Tangent * wp.w * T.Width * 0.5f;
+        var T = track.Section(wp.x);
+        return T.Position + T.Tangent * wp.w * T.Width * 0.5f;
     }
 
     public override PathQuery Query(float distance)
@@ -74,11 +74,12 @@ public class DerivedPath : TrackWaypoints<DerivedWaypoint>
         var trackdistance = Mathf.Lerp(wp.waypoint.x, wp.next.x, wp.t);        
         var T = track.Query(trackdistance);
 
+        var Y = Position(Previous(wp.waypoint));
         var A = Position(wp.waypoint);
         var B = Position(wp.next);
         var C = Position(Next(wp.next));
 
-        PathQuery query = new PathQuery();
+        PathQuery query;
         query.Midpoint = Vector3.Lerp(A, B, wp.t);
 
         var a = B - A;
@@ -87,6 +88,10 @@ public class DerivedPath : TrackWaypoints<DerivedWaypoint>
         query.Forward = Vector3.Lerp(a.normalized, b.normalized, wp.t);
         query.Tangent = T.Tangent;
         query.Camber = T.Camber;
+
+        query.Curvature = Curvature(B, A, Y);
+        query.Inclination = Inclination(query.Forward);
+
         query.Width = 0;
         
         return query;
