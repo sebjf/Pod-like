@@ -131,7 +131,12 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
 
     public T Previous(T current)
     {
-        return waypoints[mod(current.index - 1, waypoints.Count)];
+        return waypoints[Previous(current.index)];
+    }
+
+    public int Previous(int current)
+    {
+        return mod(current - 1, waypoints.Count);
     }
 
     public void InitialiseBroadphase()
