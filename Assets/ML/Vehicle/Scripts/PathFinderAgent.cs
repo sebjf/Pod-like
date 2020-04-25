@@ -11,10 +11,10 @@ public class PathFinderAgent : MonoBehaviour
 {
     public string modelName;
     
-    private IWorker worker;
-    private Model model;
+    private List<IWorker> workers;
     private Tensor inputs;
     private int numObservations;
+    private float observationsInterval;
 
     private Rigidbody body;
     private Navigator navigator;
@@ -36,22 +36,30 @@ public class PathFinderAgent : MonoBehaviour
         body = GetComponent<Rigidbody>();
         navigator = GetComponent<Navigator>();
         autopilot = GetComponent<Autopilot>();
-        model = ModelLoader.LoadFromStreamingAssets(modelName + ".nn");
-        worker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, model);
-        inputs = new Tensor(new TensorShape(model.inputs[0].shape));
-        numObservations = (model.inputs[0].shape.Last() - 1) / 3;
+        workers = new List<IWorker>();
+ //       for (int i = 0; i < 10; i++)
+        {
+            var model = ModelLoader.LoadFromStreamingAssets(modelName + ".nn");
+            workers.Add(WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, model));
+            inputs = new Tensor(new TensorShape(model.inputs[0].shape));
+            numObservations = (model.inputs[0].shape.Last() - 1) / 3;
+        }
         profile = new float[numObservations];
         curvature = new float[numObservations];
         camber = new float[numObservations];
         inclination = new float[numObservations];
+        observationsInterval = 10f;
     }
 
     private void OnDestroy()
     {
-        if (worker != null)
+        if (workers != null)
         {
-            worker.Dispose();
-            worker = null;
+            foreach (var item in workers)
+            {
+                item.Dispose();
+            }
+            workers = null;
         }
         if(inputs != null)
         {
@@ -60,33 +68,17 @@ public class PathFinderAgent : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
-    {
-        UpdateObservations();
-        worker.Execute(inputs);
-        var output = worker.PeekOutput();
-        for (int i = 0; i < output.length; i++)
-        {
-            profile[i] = output[i];
-        }
-        autopilot.speed = profile[1];
-    }
-
-    void UpdateObservations()
     {
         // the following magic numbers are built into the network
 
         inputs[0] = body.velocity.magnitude;
 
+        List<float> targetspeeds = new List<float>();
+
         for (int i = 0; i < numObservations; i++)
         {
-            var distance = navigator.TrackDistance + i * 10f;
+            var distance = navigator.TrackDistance + i * observationsInterval;
             var Q = navigator.waypoints.Query(distance);
             curvature[i] = Q.Curvature;
             camber[i] = Q.Camber;
@@ -94,16 +86,14 @@ public class PathFinderAgent : MonoBehaviour
         }
 
         // pack the inputs F
-
         for (int i = 0; i < numObservations; i++)
         {
             inputs[(i * 3) + 0 + 1] = curvature[i] * 20f;
             inputs[(i * 3) + 1 + 1] = camber[i] * 200f;
             inputs[(i * 3) + 2 + 1] = inclination[i] * 3f;
-        }        
+        }
 
         // pack inputs C
-
         /*
         for (int i = 0; i < numObservations; i++)
         {
@@ -113,5 +103,20 @@ public class PathFinderAgent : MonoBehaviour
         }
         */
 
+        foreach (var worker in workers)
+        {
+            worker.Execute(inputs);
+
+            var output = worker.PeekOutput();
+            for (int i = 0; i < output.length; i++)
+            {
+                profile[i] = output[i];
+            }
+
+            targetspeeds.Add(profile[1]);
+        }
+
+        //autopilot.speed = profile[1];
+        autopilot.speed = targetspeeds.Max();
     }
 }

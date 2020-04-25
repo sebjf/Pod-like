@@ -5,6 +5,20 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+public static class Util
+{
+    //https://stackoverflow.com/questions/1082917/
+    public static int repeat(int k, int n)
+    {
+        return ((k %= n) < 0) ? k + n : k;
+    }
+
+    public static float repeat(float k, float n)
+    {
+        return ((k %= n) < 0) ? k + n : k;
+    }
+}
+
 [Serializable]
 public class Waypoint : IWaypoint1D // we can keep waypoint as a class and use references, so long as we are careful not to expect them to remain between serialisation. using class also means we can compare to null.
 {
@@ -66,7 +80,7 @@ public abstract class TrackPath : MonoBehaviour
     public abstract PathQuery Query(float distance);
 
     /// <summary>
-    /// Computes the curvature of Y. (Where X is ahead by h and Z is behind by h.)
+    /// Computes the curvature of Y. (Where X is *ahead* by h and Z is behind by h.)
     /// </summary>
     public static float Curvature(Vector3 X, Vector3 Y, Vector3 Z)
     {
@@ -95,15 +109,11 @@ public abstract class TrackPath : MonoBehaviour
         return Vector3.Dot(forward, Vector3.up);
     }
 
-    //https://stackoverflow.com/questions/1082917/
-    protected static int mod(int k, int n)
-    {
-        return ((k %= n) < 0) ? k + n : k;
-    }
 
-    protected static float mod(float k, float n)
+
+    public virtual string UniqueName()
     {
-        return ((k %= n) < 0) ? k + n : k;
+        return name + " " + GetType().Name;
     }
 }
 
@@ -116,7 +126,7 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
 
     public T Waypoint(int index)
     {
-        return waypoints[mod(index, waypoints.Count)];
+        return waypoints[Util.repeat(index, waypoints.Count)];
     }
 
     public T Next(T current)
@@ -126,7 +136,7 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
 
     public int Next(int current)
     {
-        return mod(current + 1, waypoints.Count);
+        return Util.repeat(current + 1, waypoints.Count);
     }
 
     public T Previous(T current)
@@ -136,7 +146,7 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
 
     public int Previous(int current)
     {
-        return mod(current - 1, waypoints.Count);
+        return Util.repeat(current - 1, waypoints.Count);
     }
 
     public void InitialiseBroadphase()
@@ -160,7 +170,7 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
     {
         Profiler.BeginSample("Waypoint Query");
 
-        distance = Mathf.Clamp(mod(distance, totalLength), 0, totalLength);
+        distance = Mathf.Clamp(Util.repeat(distance, totalLength), 0, totalLength);
 
         InitialiseBroadphase();
 
@@ -345,6 +355,13 @@ public class TrackWaypoint : Waypoint
     public Vector3 right;
 }
 
+[Serializable]
+public struct TrackSection
+{
+    public Vector3 lower;
+    public Vector3 upper;
+}
+
 public class TrackGeometry : Waypoints<TrackWaypoint>
 {
     [NonSerialized]
@@ -386,20 +403,16 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         Recompute();
     }
 
-    public struct SectionProfile
-    {
-        public Vector3 Position;
-        public Vector3 Tangent;
-        public float Width;
-    }
-
-    public SectionProfile Section(float distance)
+    public TrackSection Section(float distance)
     {
         var wq = WaypointQuery(distance);
-        SectionProfile section;
-        section.Position = Position(wq);
-        section.Tangent = Tangent(wq);
-        section.Width = Width(wq);
+        
+        var position = Position(wq);
+        var tangent = Tangent(wq);
+        var width = Width(wq);
+        TrackSection section;
+        section.lower = position - tangent * width * 0.5f;
+        section.upper = position + tangent * width * 0.5f;
         return section;
     }
 

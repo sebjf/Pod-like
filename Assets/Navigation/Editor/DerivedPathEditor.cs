@@ -11,17 +11,25 @@ public class DerivedPathEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Resolution"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Barrier"));
 
-        if(target is CenterlinePath)
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Resolution"));
+
+        if (target is CenterlinePath)
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("curvature"));
         }
 
-        serializedObject.ApplyModifiedProperties();
+        if(target is InterpolatedPath)
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("coefficient"));
+        }
 
-        Steps = EditorGUILayout.IntField("Steps", Steps);
+        if(target is NamedPath)
+        {
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("Name"));
+        }
+
+        serializedObject.ApplyModifiedProperties();
 
         DerivedPath path = (target as DerivedPath);
 
@@ -31,18 +39,109 @@ public class DerivedPathEditor : Editor
             path.Initialise();
         }
 
-        if (GUILayout.Button("Fit"))
+        if (GUILayout.Button("Export Sections"))
         {
-            Undo.RecordObject(path, "Optimise Path");
-            path.Step(Steps);
+            ExportSections(path.GetSections());
         }
 
-        if (GUILayout.Button("Step"))
+        if (GUILayout.Button("Export Observations"))
         {
-            path.Step(1);
+            ExportObservations(path);
+        }
+
+        if (GUILayout.Button("Load"))
+        {
+            Undo.RecordObject(path, "Load Path");
+            path.Load(ImportWeights());
+        }
+
+        if (target is CenterlinePath || target is ShortestPath)
+        {
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("Barrier"));
+            serializedObject.ApplyModifiedProperties();
+
+            Steps = EditorGUILayout.IntField("Steps", Steps);
+
+            if (GUILayout.Button("Fit"))
+            {
+                Undo.RecordObject(path, "Optimise Path");
+                path.Step(Steps);
+            }
+
+            if (GUILayout.Button("Step"))
+            {
+                path.Step(1);
+            }
         }
 
         EditorGUILayout.LabelField("Waypoints", path.waypoints.Count.ToString());
         EditorGUILayout.LabelField("Length", path.totalLength.ToString());
+
+        if(target is InterpolatedPath)
+        {
+            var ip = (target as InterpolatedPath);
+            if (ip.crossoverPoints != null)
+            {
+                EditorGUILayout.LabelField("Crossovers", ip.crossoverPoints.Count.ToString());
+            }
+        }
+    }
+
+    private void ExportSections(IEnumerable<TrackSection> sections)
+    {
+        var filename = EditorUtility.SaveFilePanel("Save Path", "", "", "txt");
+        if(filename.Length != 0)
+        {
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filename))
+            {
+                foreach (var item in sections)
+                {
+                    writer.WriteLine(item.lower.x);
+                    writer.WriteLine(item.lower.y);
+                    writer.WriteLine(item.lower.z);
+                    writer.WriteLine(item.upper.x);
+                    writer.WriteLine(item.upper.y);
+                    writer.WriteLine(item.upper.z);
+                }
+            }
+        }
+    }
+
+    private void ExportObservations(DerivedPath path)
+    {
+        var filename = EditorUtility.SaveFilePanel("Save Observations", "", "", "txt");
+        if (filename.Length != 0)
+        {
+            using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filename))
+            {
+                for (float d = 0; d < path.totalLength; d++)
+                {
+                    var q = path.Query(d);
+                    writer.WriteLine(d);
+                    writer.WriteLine(q.Curvature);
+                    writer.WriteLine(q.Camber);
+                    writer.WriteLine(q.Inclination);
+                }
+            }
+        }
+
+    }
+
+    private float[] ImportWeights()
+    {
+        var weights = new List<float>();
+        var filename = EditorUtility.OpenFilePanel("Save Path", "", "txt");
+        if (filename.Length != 0)
+        {
+            using (System.IO.StreamReader reader = new System.IO.StreamReader(filename))
+            {
+                while(!reader.EndOfStream)
+                {
+                    weights.Add(System.Single.Parse(reader.ReadLine()));
+                }
+            }
+        }
+        return weights.ToArray();
     }
 }

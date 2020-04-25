@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(ExperienceManager))]
-public class ExperienceManagerEditor : Editor
+[CustomEditor(typeof(PathFinderManager))]
+public class PathFinderManagerEditor : Editor
 {
     public override void OnInspectorGUI()
     {
@@ -22,7 +22,7 @@ public class ExperienceManagerEditor : Editor
 
         serializedObject.ApplyModifiedProperties();
 
-        var component = target as ExperienceManager;
+        var component = target as PathFinderManager;
 
         EditorGUILayout.LabelField("Agents Remaining",
             string.Format("{0} Agents",

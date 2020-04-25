@@ -29,9 +29,13 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
     [SerializeField]
     protected TrackGeometry track;
 
+    [SerializeField]
+    protected TrackSection[] sections;
+
     public virtual void Initialise()
     {
-        var track = GetComponentInParent<TrackGeometry>();
+        track = GetComponentInParent<TrackGeometry>();
+
         var numWaypoints = Mathf.CeilToInt(track.totalLength / Resolution);
         var trueResolution = track.totalLength / numWaypoints;
 
@@ -48,6 +52,20 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         Recompute();
     }
 
+    public IList<TrackSection> GetSections()
+    {
+        return waypoints.Select(wp => track.Section(wp.x)).ToList();
+    }
+
+    public void Load(float[] weights)
+    {
+        for (int i = 0; i < weights.Length; i++)
+        {
+            waypoints[i].w = (weights[i] - 0.5f) * 2;
+        }
+        Recompute();
+    }
+
     public void Step(int count)
     {
         for (int i = 0; i < count; i++)
@@ -61,10 +79,15 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
     {
     }
 
+    private void Update()
+    {
+        // for the enable checkbox in editor
+    }
+
     public Vector3 Position(float x, float w)
     {
         var T = track.Section(x);
-        return T.Position + T.Tangent * w * T.Width * 0.5f;
+        return  (1 - ((w * 0.5f) + 0.5f)) * T.lower + ((w * 0.5f) + 0.5f) * T.upper; // convert w to the range 0..1 then interpolate
     }
 
     public override Vector3 Position(DerivedWaypoint wp)
@@ -86,27 +109,27 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
     {
         var wq = WaypointQuery(distance);
 
-        var trackdistance = Mathf.Lerp(wq.waypoint.x, wq.next.x, wq.t);        
-        var T = track.Query(trackdistance);
+        PathQuery query;
+        query.Midpoint = Position(wq);
 
         var A = Position(wq.waypoint);
         var B = Position(wq.next);
         var C = Position(Next(wq.next));
-
-        PathQuery query;
-        query.Midpoint = Position(wq);
-
         var a = B - A;
         var b = C - B;
-
         query.Forward = Vector3.Lerp(a.normalized, b.normalized, wq.t);
+
+        var trackdistance = Mathf.Lerp(wq.waypoint.x, wq.next.x, wq.t);
+        var T = track.Query(trackdistance);
         query.Tangent = T.Tangent;
         query.Camber = T.Camber;
 
-        var X = Position(distance + Resolution); // always use the true sample distance, rather than rely on the next/prev waypoints, because they could end up quite close together
-        var Z = Position(distance - Resolution);
+        var samplingDistance = Resolution * 1.5f;
 
-        query.Curvature = Curvature(X, A, Z);
+        var X = Position(distance + samplingDistance);    // always use the true sample distance, rather than rely on the next/prev waypoints, because they could end up quite close together
+        var Y = query.Midpoint;                     // (position(wp) and position(wpq) are not the same!)
+        var Z = Position(distance - samplingDistance);
+        query.Curvature = Curvature(X, Y, Z);
 
         query.Inclination = Inclination(query.Forward);
 

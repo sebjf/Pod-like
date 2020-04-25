@@ -32,6 +32,9 @@ public class Navigator : MonoBehaviour
     [HideInInspector]
     public float distanceTravelledInFrame;
 
+    [HideInInspector]
+    public int Lap;
+
     private void Start()
     {
         Reset();
@@ -39,11 +42,17 @@ public class Navigator : MonoBehaviour
 
     public void Reset()
     {
-        TrackDistance = -1;
-        FixedUpdate();
+        if (waypoints == null)
+        {
+            return;
+        }
+
+        Lap = -1;
+        TrackDistance = waypoints.Distance(transform.position, -1);
         StartingPosition = TrackDistance;
         PreviousTrackDistance = TrackDistance;
         TotalDistanceTravelled = 0f;
+        PreviousTotalDistanceTravelled = 0f;
         distanceTravelledInFrame = 0f;
     }
 
@@ -61,9 +70,20 @@ public class Navigator : MonoBehaviour
 
         distanceTravelledInFrame = TrackDistance - PreviousTrackDistance;
 
-        if (distanceTravelledInFrame < 0 && Mathf.Abs(distanceTravelledInFrame) > (waypoints.totalLength / 2)) // we have crossed over the finish line
+        if(Mathf.Abs(distanceTravelledInFrame) > (waypoints.totalLength / 2))
         {
-            distanceTravelledInFrame = (waypoints.totalLength - PreviousTrackDistance) + TrackDistance;
+            // we have crossed over the finish line. figure out which direction so we know if we going forwards or backwards in this frame.
+
+            if(TrackDistance < PreviousTrackDistance) // forwards
+            {
+                distanceTravelledInFrame = (waypoints.totalLength - PreviousTrackDistance) + TrackDistance;
+                Lap++;
+            }
+            if(TrackDistance > PreviousTrackDistance) // backwards
+            {
+                distanceTravelledInFrame = -(PreviousTrackDistance + (waypoints.totalLength - TrackDistance));
+                Lap--;
+            }
         }
 
         PreviousTotalDistanceTravelled = TotalDistanceTravelled;

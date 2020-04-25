@@ -6,8 +6,10 @@ using UnityEngine;
 public class Autopilot : MonoBehaviour
 {
     public float speed;
+    public float offset;
 
     private Vehicle vehicle;
+    private Rigidbody body;
     private Navigator navigator;
 
     private Vector3 worldtarget;
@@ -16,6 +18,7 @@ public class Autopilot : MonoBehaviour
     {
         vehicle = GetComponent<Vehicle>();
         navigator = GetComponent<Navigator>();
+        body = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -32,7 +35,7 @@ public class Autopilot : MonoBehaviour
 
         vehicle.steeringAngle = Mathf.Clamp(angle, -extrema, extrema) / extrema;
 
-        var u = (speed - vehicle.speed);
+        var u = (speed - vehicle.speed) + offset;
 
         if (u >= 0)
         {

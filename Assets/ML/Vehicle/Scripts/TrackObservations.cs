@@ -22,6 +22,9 @@ public class TrackObservations : MonoBehaviour
     public float[] Inclination;
 
     [HideInInspector]
+    public float[] Distance;
+
+    [HideInInspector]
     public Vector3[] Midpoints;
 
     private void Awake()
@@ -32,10 +35,16 @@ public class TrackObservations : MonoBehaviour
         Camber = new float[numObservations];
         Inclination = new float[numObservations];
         Midpoints = new Vector3[numObservations];
+        Distance = new float[numObservations];
     }
 
     private void FixedUpdate()
     {
+        if(Midpoints.Length != numObservations)
+        {
+            Awake();
+        }
+
         for (int i = 0; i < numObservations; i++)
         {
             var d = navigator.TrackDistance + i * pathInterval;
@@ -44,9 +53,9 @@ public class TrackObservations : MonoBehaviour
             Camber[i] = q.Camber;
             Curvature[i] = q.Curvature;
             Inclination[i] = q.Inclination;
-           
+            Distance[i] = d;
         }
-
+        if (graph) graph.samplesOnScreen = numObservations;
         if (graph) graph.GetSeries("Curvature").values = Curvature.ToList();
         if (graph) graph.GetSeries("Camber").values = Camber.ToList();
         if (graph) graph.GetSeries("Inclination").values = Inclination.ToList();

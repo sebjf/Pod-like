@@ -27,18 +27,16 @@ public class PathFinder : MonoBehaviour
 
     public class Node
     {
-        public float speed;
-        public float actual;
-        public bool traction;
-        public float error;
+        public float speed; // target speed
+        public float actual; // measured speed
+        public bool traction; // we currently have traction
+        public float error; // understeer
         public float distance; // track position
-        public bool mark; // we've intentionally reduced the speed, rather than say the car hitting a bump
 
         public Node()
         {
             speed = 100f;
             traction = true;
-            mark = false;
         }
     }
 
@@ -70,17 +68,21 @@ public class PathFinder : MonoBehaviour
     {
         // The node update is triggered on the frame the vehicle passes the node distance
 
-        var profileDistance = navigator.TotalDistanceTravelled / interval;
-        var previousProfileDistance = navigator.PreviousTotalDistanceTravelled / interval;
+        var profileIndex = navigator.TotalDistanceTravelled / interval;
+        var previousProfileIndex = navigator.PreviousTotalDistanceTravelled / interval;
 
-        int node = Mathf.FloorToInt(profileDistance);
-        var next = Mathf.CeilToInt(profileDistance);
+        int node = Mathf.FloorToInt(profileIndex);
+        var next = Mathf.CeilToInt(profileIndex);
 
-        if (node > 0)
+        if (node > 0) // the car can roll back momentarily in certain cirumstances, such as it starts on a hill
         {
-            if (Mathf.FloorToInt(profileDistance) != Mathf.FloorToInt(previousProfileDistance))   // does the frame straddle an interval?
+            if (Mathf.FloorToInt(profileIndex) != Mathf.FloorToInt(previousProfileIndex))   // does the frame straddle an interval?
             {
                 UpdateNode(node);
+            }
+            if (pathObservations.understeer > errorThreshold)
+            {
+                UpdateNode(node); // if the car spins out it might not reach the next node so trigger the path error handling code here
             }
         }
 
@@ -96,9 +98,14 @@ public class PathFinder : MonoBehaviour
         }
     }
 
+    protected static int mod(int k, int n)
+    {
+        return ((k %= n) < 0) ? k + n : k;
+    }
+
     private Node Previous(Node node)
     {
-        return profile[profile.IndexOf(node) - 1];
+        return profile[mod(profile.IndexOf(node) - 1, profile.Count)];
     }
 
     private void UpdateNode(int i)
@@ -108,18 +115,17 @@ public class PathFinder : MonoBehaviour
         var error = pathObservations.understeer;
 
         var node = profile[i];
-        var prev = profile[i - 1];
-
-        while(!prev.traction)
-        {
-            prev = Previous(prev);
-        }
 
         node.traction = traction;
         node.actual = trueSpeed;
         node.error = error;
-
         node.distance = navigator.TrackDistance;
+
+        var prev = Previous(node);
+        while (!prev.traction)
+        {
+            prev = Previous(prev);
+        }
 
         if (trueSpeed > (node.speed + 1)) // the autopilot will not be perfect, so we must tolerate a tiny offset to avoid pulling prev speed down too much, or for that matter getting stuck where we can't (e.g. at the start)
         {
@@ -135,8 +141,6 @@ public class PathFinder : MonoBehaviour
             return;
         }
 
-        //UpdateProfileLength();
-
         if (i == (profile.Count - 1))
         {
             Debug.Log("Complete!");
@@ -149,28 +153,6 @@ public class PathFinder : MonoBehaviour
     {
         node.speed = Math.Min(node.actual + 2, node.speed); // only decrease actual if significantly smaller than target speed
         node.speed -= Mathf.Min(speedStepSize, node.speed / 2); // if target speed approaches zero, decrease the step size
-        node.mark = true;
-    }
-
-    public void UpdateProfileLength()
-    {
-        // find the first node with a braking instruction. the derivative will likely be very reliable, but the mark is completely unambiguous.
-        int i = 0;
-        for (; i < profile.Count; i++)
-        {
-            if(profile[i].mark)
-            {
-                break;
-            }
-        }
-        while(profile.Count < (i + profileLength))
-        {
-            profile.Add(new Node());
-        }
-        while(profile.Count > (i + profileLength))
-        {
-            profile.RemoveAt(profile.Count - 1);
-        }
     }
 
     public void Reset()

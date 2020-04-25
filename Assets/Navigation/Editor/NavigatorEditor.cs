@@ -14,16 +14,15 @@ public class NavigatorEditor : Editor
         var paths = new Dictionary<string, TrackPath>();
         foreach (var item in (target as Navigator).GetComponentsInParent<TrackPath>())
         {
-            paths.Add(TrackPathName(item), item);
+            paths.Add(item.UniqueName(), item);
         }
         var pathNames = paths.Keys.ToList();
         var selected = serializedObject.FindProperty("waypoints").objectReferenceValue as TrackPath;
-        var selectedIndex = pathNames.IndexOf(TrackPathName(selected));
+        var selectedIndex = (selected == null) ? -1 : pathNames.IndexOf(selected.UniqueName());
         var newSelectedIndex = EditorGUILayout.Popup(selectedIndex, pathNames.ToArray());
         if(selectedIndex != newSelectedIndex)
         {
             serializedObject.FindProperty("waypoints").objectReferenceValue = paths[pathNames[newSelectedIndex]];
-
         }
 
         serializedObject.ApplyModifiedProperties();
@@ -31,16 +30,6 @@ public class NavigatorEditor : Editor
         var navigator = target as Navigator;
 
         EditorGUILayout.LabelField("Distance", navigator.TrackDistance.ToString());
-
+        EditorGUILayout.LabelField("Lap", navigator.Lap.ToString());
     }
-
-    private static string TrackPathName(TrackPath item)
-    {
-        if(item == null)
-        {
-            return null;
-        }
-        return item.name + " " + item.GetType().Name;
-    }
-
 }

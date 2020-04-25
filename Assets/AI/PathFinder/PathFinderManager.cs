@@ -9,7 +9,7 @@ using UnityEngine;
 /// Controls the child agents to collect experiences based on sample distributions of speed and paths. 
 /// This version assumes cars have already been distributed across tracks and starting locations.
 /// </summary>
-public class ExperienceManager : MonoBehaviour
+public class PathFinderManager : MonoBehaviour
 {
     public class Experience
     {
@@ -37,11 +37,11 @@ public class ExperienceManager : MonoBehaviour
     }
 
     public int profileInterval = 10;        // distance between intervals for pathfinder in m
-    public int profileLength = 40;          // distance to sample using pathfinder in intervals
+    public int profileLength = 50;          // distance to sample using pathfinder in intervals
     public float profileSpeedStepSize = 5;
     public float profileErrorThreshold = 1;
 
-    public int AgentInterval = 20;   // distance between agents along track in m
+    public int AgentInterval = 25;   // distance between agents along track in m
 
     public GameObject AgentPrefab;
 
@@ -166,6 +166,10 @@ public class ExperienceManager : MonoBehaviour
             {
                 continue;
             }
+            if(!path.enabled)
+            {
+                continue;
+            }
 
             var experienceCollector = new Experience(path);
             experiences.Add(experienceCollector);
@@ -220,14 +224,17 @@ public class ExperienceManager : MonoBehaviour
         [Serializable]
         public class Profile
         {
+            public string Path;
+
+            public float[] Distance;
             public float[] Curvature;
             public float[] Camber;
             public float[] Inclination;
 
-            public float[] Distance;
-
             public float[] Speed;
             public float[] Actual;
+
+            public float[] Error;
         }
 
         public List<Profile> Profiles = new List<Profile>();
@@ -237,25 +244,34 @@ public class ExperienceManager : MonoBehaviour
             foreach (var profile in experienceset.profiles)
             {
                 var example = new Profile();
-                var length = profile.Count;
+                
+                example.Path = experienceset.path.UniqueName();
 
+                example.Speed = profile.Select(n => n.speed).ToArray();
+                example.Actual = profile.Select(n => n.actual).ToArray();
+                example.Error = profile.Select(n => n.error).ToArray();
+
+                var observationsPerNode = 1;
+
+                var length = profile.Count * observationsPerNode;
+                example.Distance = new float[length];
                 example.Curvature = new float[length];
                 example.Camber = new float[length];
                 example.Inclination = new float[length];
-                example.Speed = new float[length];
-                example.Actual = new float[length];
-                example.Distance = new float[length];
 
-                for (int i = 0; i < length; i++)
+                for (int i = 0; i < profile.Count; i++)
                 {
                     var node = profile[i];
-                    var Q = experienceset.path.Query(node.distance);
-                    example.Curvature[i] = Q.Curvature;
-                    example.Camber[i] = Q.Camber;
-                    example.Inclination[i] = Q.Inclination;
-                    example.Speed[i] = node.speed;
-                    example.Actual[i] = node.actual;
-                    example.Distance[i] = node.distance;
+                    for (int d = 0; d < observationsPerNode; d++)
+                    {
+                        var distance = node.distance + d;
+                        var Q = experienceset.path.Query(distance);
+                        var index = (i * observationsPerNode) + d;
+                        example.Distance[index] = node.distance;
+                        example.Curvature[index] = Q.Curvature;
+                        example.Camber[index] = Q.Camber;
+                        example.Inclination[index] = Q.Inclination;
+                    }
                 }
 
                 Profiles.Add(example);
