@@ -94,4 +94,9 @@ public class InterpolatedPath : DerivedPath
             }
         }
     }
+
+    public override string UniqueName()
+    {
+        return name + " " + "Interpolated " + coefficient.ToString();
+    }
 }

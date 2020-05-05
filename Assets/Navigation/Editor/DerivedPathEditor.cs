@@ -14,11 +14,6 @@ public class DerivedPathEditor : Editor
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Resolution"));
 
-        if (target is CenterlinePath)
-        {
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("curvature"));
-        }
-
         if(target is InterpolatedPath)
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("coefficient"));
@@ -55,7 +50,7 @@ public class DerivedPathEditor : Editor
             path.Load(ImportWeights());
         }
 
-        if (target is CenterlinePath || target is ShortestPath)
+        if (target is ShortestPath)
         {
             serializedObject.Update();
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Barrier"));
@@ -66,12 +61,12 @@ public class DerivedPathEditor : Editor
             if (GUILayout.Button("Fit"))
             {
                 Undo.RecordObject(path, "Optimise Path");
-                path.Step(Steps);
+                (path as ShortestPath).Step(Steps);
             }
 
             if (GUILayout.Button("Step"))
             {
-                path.Step(1);
+                (path as ShortestPath).Step(1);
             }
         }
 

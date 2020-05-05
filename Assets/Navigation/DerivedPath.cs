@@ -66,19 +66,6 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         Recompute();
     }
 
-    public void Step(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            Step();
-        }
-        Recompute();
-    }
-
-    public virtual void Step()
-    {
-    }
-
     private void Update()
     {
         // for the enable checkbox in editor
@@ -126,8 +113,8 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
         var samplingDistance = Resolution * 1.5f;
 
-        var X = Position(distance + samplingDistance);    // always use the true sample distance, rather than rely on the next/prev waypoints, because they could end up quite close together
-        var Y = query.Midpoint;                     // (position(wp) and position(wpq) are not the same!)
+        var X = Position(distance + samplingDistance);  // always use the true sample distance, rather than rely on the next/prev waypoints, because they could end up quite close together
+        var Y = query.Midpoint;                         // (position(wp) and position(wpq) are not the same!)
         var Z = Position(distance - samplingDistance);
         query.Curvature = Curvature(X, Y, Z);
 
@@ -136,28 +123,6 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         query.Width = 0;
         
         return query;
-    }
-
-    public delegate float Function(float distance);
-
-    /// <summary>
-    /// Computes the partial derivative of f(i) with respect to w (the weight or lateral position) using the central difference
-    /// </summary>
-    public float FiniteDifference(int i, Function f, float h = 0.01f) // of f with respect to w
-    {
-        var waypoint = waypoints[i];
-        float position = waypoint.start;
-        float weight = waypoint.w;
-
-        waypoint.w = weight + h * 0.5f;
-        var fah1 = f(position);
-
-        waypoint.w = weight - h * 0.5f;
-        var fah2 = f(position);
-
-        waypoint.w = weight; // put w back
-
-        return (fah1 - fah2) / h;
     }
 
     private void OnDrawGizmos()
@@ -189,7 +154,4 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
             }
         }
     }
-
-
-
 }

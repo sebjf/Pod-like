@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ShortestPath : DerivedPath
 {
-    public override void Step()
+    public void Step()
     {
         // brute force search of SP
         for (int i = 0; i < waypoints.Count; i++)
@@ -13,11 +13,22 @@ public class ShortestPath : DerivedPath
         }
     }
 
+    public void Step(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            Step();
+        }
+        Recompute();
+    }
+
     private float DistanceFunction(float d)
     {
-        var d1 = Query(d).Midpoint;
-        var d2 = Query(d + Resolution).Midpoint;
-        var d0 = Query(d - Resolution).Midpoint;
+
+
+        var d1 = Position(d);
+        var d2 = Position(d + Resolution);
+        var d0 = Position(d - Resolution);
         return (d2 - d1).magnitude + (d1 - d0).magnitude;
     }
 
@@ -38,9 +49,26 @@ public class ShortestPath : DerivedPath
         waypoints[i].w = Mathf.Clamp(waypoints[i].w, -limit, limit);
     }
 
-    // Update is called once per frame
-    void Update()
+    public delegate float Function(float distance);
+
+    /// <summary>
+    /// Computes the partial derivative of f(i) with respect to w (the weight or lateral position) using the central difference
+    /// </summary>
+    public float FiniteDifference(int i, Function f, float h = 0.01f) // of f with respect to w
     {
-        
+        var waypoint = waypoints[i];
+        float position = waypoint.start;
+        float weight = waypoint.w;
+
+        waypoint.w = weight + h * 0.5f;
+        var fah1 = f(position);
+
+        waypoint.w = weight - h * 0.5f;
+        var fah2 = f(position);
+
+        waypoint.w = weight; // put w back
+
+        return (fah1 - fah2) / h;
     }
+
 }
