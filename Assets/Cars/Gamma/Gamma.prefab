@@ -54335,12 +54335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: {fileID: 0}
-  StartingPosition: 4051.865
-  TotalDistanceTravelled: 0
-  PreviousTotalDistanceTravelled: 0
-  TrackDistance: 4051.865
-  PreviousTrackDistance: 4051.865
-  distanceTravelledInFrame: 0
+  StartingPosition: -1
 --- !u!114 &7185422284977984932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54353,6 +54348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719d5f75822053d43af2afebe2cc1369, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  priority: -1
   lookAtTarget: {fileID: 48921566}
   positionTarget: {fileID: 1780430346}
   sideView: {fileID: 159124328}
