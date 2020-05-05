@@ -14,10 +14,6 @@ public class ResetController : MonoBehaviour
     [NonSerialized]
     public Rigidbody body;
 
-    [HideInInspector]
-    [NonSerialized]
-    public float forwardvariation = 0; // in m
-
     private void Awake()
     {
         navigator = GetComponent<Navigator>();
@@ -43,8 +39,7 @@ public class ResetController : MonoBehaviour
             navigator = GetComponent<Navigator>();
         }
 
-        var trackposition = navigator.StartingPosition + UnityEngine.Random.Range(-forwardvariation, forwardvariation);
-        var Q = navigator.waypoints.Query(trackposition);
+        var Q = navigator.waypoints.Query(navigator.StartingPosition);
 
         transform.position = Q.Midpoint + (Vector3.up * 2);
         transform.forward = Q.Forward;
