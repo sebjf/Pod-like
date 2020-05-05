@@ -25,7 +25,10 @@ public class DriftCamera : MonoBehaviour
 
     private void Start()
     {
-        cameraRigs = FindObjectsOfType<CamRig>().Where(x => x.enabled).ToArray();
+        cameraRigs =
+            FindObjectsOfType<CamRig>().
+            Where(x => x.enabled).ToList().
+            OrderBy(c => c.priority).ToArray(); // https://stackoverflow.com/questions/15486/
         Target = cameraRigs.FirstOrDefault();
     }
     private void FixedUpdate ()

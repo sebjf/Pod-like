@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CamRig : MonoBehaviour
 {
+    public int priority = 0;
     public Transform lookAtTarget;
     public Transform positionTarget;
     public Transform sideView;
