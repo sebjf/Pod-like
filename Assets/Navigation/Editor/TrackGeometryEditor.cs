@@ -8,6 +8,8 @@ using UnityEditor;
 [CustomEditor(typeof(TrackGeometry))]
 public class TrackGeometryEditor : Editor
 {
+    public static bool createWaypoints;
+
     public override void OnInspectorGUI()
     {
         var component = target as TrackGeometry;
@@ -20,6 +22,8 @@ public class TrackGeometryEditor : Editor
 
         EditorGUILayout.LabelField("Waypoints: " + component.waypoints.Count);
         EditorGUILayout.LabelField("Length: " + component.totalLength);
+
+        EditorGUILayout.HelpBox("Press Shift to enter Waypoint Create Mode", MessageType.Info); // https://answers.unity.com/questions/1019430
 
         if (GUILayout.Button("Recompute"))
         {
@@ -104,7 +108,16 @@ public class TrackGeometryEditor : Editor
             return; // in navigation mode
         }
 
-        Undo.RecordObject(component, "Changed waypoints");
+        if((Event.current.modifiers & EventModifiers.Shift) != 0)
+        {
+            createWaypoints = true;
+        }
+        else
+        {
+            createWaypoints = false;
+        }
+
+        Undo.RecordObject(component, "Changed Track Geometry");
 
         // do the handles first so they will use the mouse events
 
@@ -112,12 +125,8 @@ public class TrackGeometryEditor : Editor
         {
             foreach (var waypoint in component.selected)
             {
-                var rotation = Quaternion.LookRotation(waypoint.normal, waypoint.up);
-                rotation = Handles.RotationHandle(rotation, waypoint.position);
-                waypoint.up = (rotation * Vector3.up).normalized;
-                waypoint.position = Handles.PositionHandle(waypoint.position, rotation);
-                waypoint.width = Handles.ScaleSlider(waypoint.width, waypoint.left, waypoint.normal, rotation, HandleUtility.GetHandleSize(waypoint.left), 0.01f);
-                waypoint.width = Handles.ScaleSlider(waypoint.width, waypoint.right, waypoint.normal, rotation, HandleUtility.GetHandleSize(waypoint.right), 0.01f);
+                waypoint.left = Handles.PositionHandle(waypoint.left, Quaternion.identity);
+                waypoint.right = Handles.PositionHandle(waypoint.right, Quaternion.identity);
             }
         }
 
@@ -192,30 +201,35 @@ public class TrackGeometryEditor : Editor
             }
             else
             {
-                if (selectedPoint)
+                if (createWaypoints)
                 {
-                    if (component.lastSelected != null || component.waypoints.Count <= 0)
+                    if (selectedPoint)
                     {
-                        var wp = new TrackWaypoint()
+                        if (component.lastSelected != null || component.waypoints.Count <= 0)
                         {
-                            up = raycast.normal,
-                            left = raycast.point + Vector3.left,
-                            right = raycast.point + Vector3.right
-                        };
+                            var wp = new TrackWaypoint()
+                            {
+                                up = raycast.normal,
+                                left = raycast.point + Vector3.left,
+                                right = raycast.point + Vector3.right
+                            };
 
-                        if (component.lastSelected != null)
-                        {
-                            wp.normal = (wp.position - component.lastSelected.position).normalized;
-                            wp.width = 10;
+                            if (component.lastSelected != null)
+                            {
+                                wp.forward = (wp.position - component.lastSelected.position).normalized;
+                                wp.width = 10;
+                            }
+
+                            component.Add(component.lastSelected, wp);
+
+                            component.selected.Clear();
+                            component.selected.Add(wp);
                         }
-
-                        component.Add(component.lastSelected, wp);
-
-                        component.selected.Clear();
-                        component.selected.Add(wp);
                     }
                 }
             }
+
+            Event.current.Use();
         }
 
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Delete)
@@ -229,6 +243,7 @@ public class TrackGeometryEditor : Editor
             Event.current.Use();
         }
 
+        // update width
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.W)
         {
             foreach (var item in component.selected)
@@ -238,8 +253,21 @@ public class TrackGeometryEditor : Editor
             Event.current.Use();
         }
 
-
+        // reset view
         if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.R)
+        {
+            var average = Vector3.zero;
+            foreach (var item in component.selected)
+            {
+                average += item.position;
+            }
+            average /= component.selected.Count;
+
+            SceneView.lastActiveSceneView.LookAt(average);
+            Event.current.Use();
+        }
+
+        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.T)
         {
             foreach (var item in component.selected)
             {
@@ -330,11 +358,14 @@ public class TrackGeometryEditor : Editor
             Gizmos.DrawLine(waypoint.right, next.right);
         }
 
-        Gizmos.color = Color.yellow;
-        if (component.highlightedPoint != null && component.lastSelected != null)
+        if (createWaypoints)
         {
-            Gizmos.DrawLine(component.lastSelected.position, component.highlightedPoint.Value);
-            Gizmos.DrawLine(component.lastSelected.position, component.Next(component.lastSelected).position);
+            Gizmos.color = Color.yellow;
+            if (component.highlightedPoint != null && component.lastSelected != null)
+            {
+                Gizmos.DrawLine(component.lastSelected.position, component.highlightedPoint.Value);
+                Gizmos.DrawLine(component.lastSelected.position, component.Next(component.lastSelected).position);
+            }
         }
 
         Profiler.EndSample();

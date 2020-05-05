@@ -84,32 +84,35 @@ public abstract class TrackPath : MonoBehaviour
     /// </summary>
     public static float Curvature(Vector3 X, Vector3 Y, Vector3 Z)
     {
+        // Project onto ground, so we don't include curvature due to inclination, which is a separate property.
+        X.y = 0;
+        Y.y = 0;
+        Z.y = 0;
+
         var YX = X - Y;
         var YZ = Z - Y;
         var ZY = Y - Z;
 
         // Compute the direction of the curve
-        var c = Mathf.Sign(Vector3.Dot(Vector3.Cross(ZY.normalized, YX.normalized), Vector3.up));
+        var direction = Mathf.Sign(Vector3.Dot(Vector3.Cross(ZY.normalized, YX.normalized), Vector3.up));
 
         // https://en.wikipedia.org/wiki/Menger_curvature
-        var C = (2f * Mathf.Sin(Mathf.Acos(Vector3.Dot(YX.normalized, YZ.normalized)))) / (X - Z).magnitude;
+        var curvature = (2f * Mathf.Sin(Mathf.Acos(Vector3.Dot(YX.normalized, YZ.normalized)))) / (X - Z).magnitude;
 
-        C *= c;
+        curvature *= direction;
 
-        if (float.IsNaN(C))
+        if (float.IsNaN(curvature))
         {
-            C = 0f;
+            curvature = 0f;
         }
 
-        return C;
+        return curvature;
     }
 
     public static float Inclination(Vector3 forward)
     {
         return Vector3.Dot(forward, Vector3.up);
     }
-
-
 
     public virtual string UniqueName()
     {
@@ -338,7 +341,7 @@ public class TrackWaypoint : Waypoint
         }
     }
 
-    public Vector3 normal
+    public Vector3 forward
     {
         get
         {
@@ -425,9 +428,9 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         var B = wq.next;
         var t = wq.t;
 
+        query.Forward = Vector3.Lerp((B.position - A.position).normalized, (A.position - Previous(A).position).normalized, 0.5f);
         query.Midpoint = Position(wq);
         query.Width = Mathf.Lerp(A.width,B.width,t);
-        query.Forward = Vector3.Lerp(A.normal, B.normal, t);
         query.Tangent = Vector3.Lerp(A.tangent, B.tangent, t);
 
         query.Camber = query.Tangent.y / query.Width;
@@ -457,19 +460,19 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         return Mathf.Lerp(q.waypoint.width, q.next.width, q.t);
     }
 
+    public Vector3 Forward(TrackWaypoint wp)
+    {
+        return (Next(wp).position - wp.position).normalized;
+    }
+
+    public Vector3 Up(TrackWaypoint wp)
+    {
+        return Vector3.Cross(Forward(wp), wp.tangent).normalized;
+    }
+
     public override Vector3 Position(TrackWaypoint wp)
     {
         return wp.position;
-    }
-
-    public override void Recompute()
-    {
-        base.Recompute();
-
-        for (int i = 0; i < waypoints.Count; i++)
-        {
-            waypoints[i].normal = Vector3.Lerp((Next(waypoints[i]).position - waypoints[i].position).normalized, (waypoints[i].position - Previous(waypoints[i]).position).normalized, 0.5f);
-        }
     }
 
     public IEnumerable<TrackWaypoint> Raycast(Ray ray)
