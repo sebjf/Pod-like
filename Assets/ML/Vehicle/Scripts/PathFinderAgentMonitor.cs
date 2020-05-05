@@ -24,7 +24,7 @@ public class PathFinderAgentMonitor : MonoBehaviour
                 if (agent)
                 {
                     GraphOverlay.Plot("Profile", agent.profile);
-                    GraphOverlay.Plot("Curvature", agent.camber);
+                    GraphOverlay.Plot("Curvature", agent.curvature);
                     GraphOverlay.Plot("Camber", agent.camber);
                     GraphOverlay.Plot("Inclination", agent.inclination);
                 }

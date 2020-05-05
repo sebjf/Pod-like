@@ -25,6 +25,8 @@ public class NavigatorEditor : Editor
             serializedObject.FindProperty("waypoints").objectReferenceValue = paths[pathNames[newSelectedIndex]];
         }
 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("StartingPosition"));
+
         serializedObject.ApplyModifiedProperties();
 
         var navigator = target as Navigator;

@@ -8,31 +8,36 @@ public class Navigator : MonoBehaviour
 {
     public TrackPath waypoints;
 
-    [HideInInspector]
-    public float StartingPosition;
+    public float StartingPosition = -1;
 
     /// <summary>
     /// Total Distance in Track Space travelled by the car (distance travelled across all laps)
     /// </summary>
     [HideInInspector]
+    [NonSerialized]
     public float TotalDistanceTravelled;
 
     [HideInInspector]
+    [NonSerialized]
     public float PreviousTotalDistanceTravelled;
 
     /// <summary>
     /// Distance around Track in Track Space (the distance along a single lap)
     /// </summary>
     [HideInInspector]
+    [NonSerialized]
     public float TrackDistance;
 
     [HideInInspector]
+    [NonSerialized]
     public float PreviousTrackDistance;
 
     [HideInInspector]
+    [NonSerialized]
     public float distanceTravelledInFrame;
 
     [HideInInspector]
+    [NonSerialized]
     public int Lap;
 
     private void Start()
@@ -48,7 +53,7 @@ public class Navigator : MonoBehaviour
         }
 
         Lap = -1;
-        TrackDistance = waypoints.Distance(transform.position, -1);
+        TrackDistance = waypoints.Distance(transform.position, StartingPosition);
         StartingPosition = TrackDistance;
         PreviousTrackDistance = TrackDistance;
         TotalDistanceTravelled = 0f;
