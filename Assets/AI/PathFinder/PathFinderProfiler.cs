@@ -38,7 +38,6 @@ public class PathFinderProfiler : MonoBehaviour
         // realistically we will not skip a whole waypoint in a frame, but even if we do, we can interpolate to fix as its easy to detect
         var index = path.WaypointQuery(navigator.TrackDistance).waypoint.index;
         profile[(index * 2) + 0] = navigator.TrackDistance;
-        //profile[(index * 2) + 1] = body.GetComponent<Vehicle>().speed;
         profile[(index * 2) + 1] = body.velocity.magnitude;
     }
 

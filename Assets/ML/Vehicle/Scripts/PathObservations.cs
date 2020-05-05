@@ -12,6 +12,9 @@ public class PathObservations : MonoBehaviour
     public float speed;
 
     [HideInInspector]
+    public float drift;
+
+    [HideInInspector]
     public float lateralError;
 
     [HideInInspector]
@@ -69,6 +72,11 @@ public class PathObservations : MonoBehaviour
             oversteer = 0;
             understeer = lateralError;
         }
+
+        Profiler.EndSample();
+        Profiler.BeginSample("Drift");
+
+        drift = 1 - Vector3.Dot(body.transform.forward, trackForward);
 
         Profiler.EndSample();
         Profiler.BeginSample("Height");

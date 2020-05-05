@@ -9,6 +9,7 @@ using UnityEngine;
 /// Controls the child agents to collect experiences based on sample distributions of speed and paths. 
 /// This version assumes cars have already been distributed across tracks and starting locations.
 /// </summary>
+[RequireComponent(typeof(TimeController))]
 public class PathFinderManager : MonoBehaviour
 {
     public class Experience
@@ -51,6 +52,8 @@ public class PathFinderManager : MonoBehaviour
     private List<AgentManager> completed;
     private List<Experience> experiences;
 
+    private PathFinderVolume[] volumes;
+
     [NonSerialized]
     public float elapsedRealTime;
 
@@ -73,11 +76,24 @@ public class PathFinderManager : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
+    PathFinderManager()
+    {
+        // https://docs.unity3d.com/ScriptReference/EditorApplication-playModeStateChanged.html
+        UnityEditor.EditorApplication.playModeStateChanged +=
+            (UnityEditor.PlayModeStateChange state) =>
+            {
+                //enabled = false;
+            };
+    }
+#endif
+
     private void Awake()
     {
         completed = new List<AgentManager>();
         agents = new List<AgentManager>();
         experiences = new List<Experience>();
+        volumes = FindObjectsOfType<PathFinderVolume>();
     }
 
     // Start is called before the first frame update
@@ -88,6 +104,18 @@ public class PathFinderManager : MonoBehaviour
         if (timeController)
         {
             timeController.enableCapture = true;
+        }
+
+        var graph = GameObject.Find("Graph");
+        if(graph)
+        {
+            graph.SetActive(false);
+        }
+
+        var camera = GameObject.Find("Race Camera");
+        if(camera)
+        {
+            camera.SetActive(false);
         }
     }
 
@@ -127,6 +155,18 @@ public class PathFinderManager : MonoBehaviour
         }
     }
 
+    public bool CheckPosition(TrackPath path, float position)
+    {
+        foreach (var item in volumes)
+        {
+            if (item.Excludes(path.Query(position).Midpoint))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public PathFinder CreateAgent(TrackPath path, float position)
     {
         var container = path.transform.Find("Agents");
@@ -137,6 +177,8 @@ public class PathFinderManager : MonoBehaviour
         }
 
         var agent = GameObject.Instantiate(AgentPrefab, container);
+
+        agent.name = agent.name + " " + agents.Count;
 
         var navigator = agent.GetComponent<Navigator>();
         navigator.waypoints = path;
@@ -176,7 +218,10 @@ public class PathFinderManager : MonoBehaviour
 
             for (float position = 0; position < path.totalLength; position += AgentInterval)
             {
-                agents.Add(new AgentManager(CreateAgent(path, position), experienceCollector));
+                if (CheckPosition(path, position))
+                {
+                    agents.Add(new AgentManager(CreateAgent(path, position), experienceCollector));
+                }
             }
         }
     }
@@ -233,6 +278,7 @@ public class PathFinderManager : MonoBehaviour
 
             public float[] Speed;
             public float[] Actual;
+            public float[] Drift;
 
             public float[] Error;
         }
@@ -250,6 +296,7 @@ public class PathFinderManager : MonoBehaviour
                 example.Speed = profile.Select(n => n.speed).ToArray();
                 example.Actual = profile.Select(n => n.actual).ToArray();
                 example.Error = profile.Select(n => n.error).ToArray();
+                example.Drift = profile.Select(n => n.drift).ToArray();
 
                 var observationsPerNode = 1;
 
@@ -265,9 +312,9 @@ public class PathFinderManager : MonoBehaviour
                     for (int d = 0; d < observationsPerNode; d++)
                     {
                         var distance = node.distance + d;
-                        var Q = experienceset.path.Query(distance);
                         var index = (i * observationsPerNode) + d;
                         example.Distance[index] = node.distance;
+                        var Q = experienceset.path.Query(distance);
                         example.Curvature[index] = Q.Curvature;
                         example.Camber[index] = Q.Camber;
                         example.Inclination[index] = Q.Inclination;
