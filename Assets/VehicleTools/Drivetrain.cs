@@ -16,7 +16,8 @@ public class Drivetrain : MonoBehaviour
     public float EvaluateTorque(float wheelAngularVelocity)
     {
         var rpm = wheelAngularVelocity * Rad2Rpm;
-        return torqueCurve.Evaluate(Mathf.Abs(rpm / rpmScalar)) * torqueCurveScalar * throttle;
+        var torque = torqueCurve.Evaluate(Mathf.Abs(rpm / rpmScalar)) * torqueCurveScalar * throttle;
+        return torque;
     }
 
     // Start is called before the first frame update

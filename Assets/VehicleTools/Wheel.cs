@@ -41,6 +41,11 @@ public class Wheel : MonoBehaviour
     public float angularVelocity { get; private set; }
     public float angle { get; private set; }
 
+    /// <summary>
+    /// The slip angle of the wheel; the angle between the direction of the wheel and the direction of the wheel's motion.
+    /// </summary>
+    public float sideslipAngle { get; private set; }
+
     private Vector3 road;
     private float coefficientOfFriction = 1f;
 
@@ -50,14 +55,6 @@ public class Wheel : MonoBehaviour
     public float wheelsInContact;
 
     private int raycastBitmask;
-
-    public float Vt
-    {
-        get
-        {
-            return Vector3.Dot(velocity, right);
-        }
-    }
 
     public float mass;
 
@@ -217,6 +214,19 @@ public class Wheel : MonoBehaviour
 
     public void UpdateGripForce()
     {
+        // The sideslip angle is the angle between the direction of the wheel and the wheel's velocity. If this is non-zero,
+        // it causes deformation of the contact patch and a corresponding force, up to the point the contact patch can no
+        // longer deform, and the wheel begins to skid.
+
+        var slipAngle = Mathf.Abs(Mathf.Acos(Mathf.Clamp(Vector3.Dot(velocity.normalized, forward), -1f, 1f)));
+        var slipForceScale = (this.slipForceScale * (rigidBody.mass / 4) * Physics.gravity.magnitude);
+        var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale;
+
+        // In theory, the above slip force would be sufficient, but due to numerical issues, we must be more careful with how
+        // it is applied.
+        // The sideslip force works to directly counter the lateral motion of the car. We compute the force necessary to stop
+        // all the lateral motion of the rigidbody, and cancel as much of this as possible with the available slip force.
+
         var r = (attachmentPoint - rigidBody.worldCenterOfMass).magnitude;
         var Vt = Vector3.Dot(velocity, right) * right;
         var at = Vt / Time.fixedDeltaTime;
@@ -228,11 +238,7 @@ public class Wheel : MonoBehaviour
         a = q * Vector3.Scale(rigidBody.inertiaTensor, (Quaternion.Inverse(q) * a));
         var Ft = a / r;
 
-        // The lateral force determined by the slip angle from the direction of travel
-
-        var slipForceScale = (this.slipForceScale * (rigidBody.mass / 4) * Physics.gravity.magnitude);
-        var slipAngle = Mathf.Abs(Mathf.Acos(Mathf.Clamp(Vector3.Dot(velocity.normalized, forward),-1f,1f)));
-        var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale;
+        // Cancel as much of the rotation as possible, or all of it, if we can.
 
         Ft = Ft.normalized * Mathf.Min(Ft.magnitude, Fs);
         rigidBody.AddForceAtPosition(Ft, attachmentPoint, ForceMode.Force);
@@ -245,6 +251,8 @@ public class Wheel : MonoBehaviour
         var g_force_mag = Mathf.Min(g_force.magnitude, Fn);
         rigidBody.AddForce(-g_force.normalized * g_force_mag, ForceMode.Force);
 
+
+        sideslipAngle = slipAngle;
 
         //Debug.Log(Fn.ToString() + " " + g_force.magnitude.ToString());
     }
