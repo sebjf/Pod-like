@@ -1,21 +1,41 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
-public class PathFinderProfiler : MonoBehaviour
+public class PathProfiler : MonoBehaviour
 {
     public string profileFilename;
 
     private Navigator navigator;
     private Rigidbody body;
     private DerivedPath path;
+    private PathObservations observations;
 
-    private float[] profile;
+    [Serializable]
+    public class Profile
+    {
+        public float[] distance;
+        public float[] speed;
+        public float[] direction;
+
+        public Profile(int length)
+        {
+            distance = new float[length];
+            speed = new float[length];
+            direction = new float[length];
+        }
+    }
+
+    private Profile profile;
+
 
     private void Awake()
     {
         navigator = GetComponent<Navigator>();
         body = GetComponent<Rigidbody>();
+        observations = GetComponent<PathObservations>();
     }
 
     // Start is called before the first frame update
@@ -29,7 +49,7 @@ public class PathFinderProfiler : MonoBehaviour
             return;
         }
 
-        profile = new float[path.waypoints.Count * 2];
+        profile = new Profile(path.waypoints.Count);
     }
 
     // Update is called once per frame
@@ -37,13 +57,16 @@ public class PathFinderProfiler : MonoBehaviour
     {
         // realistically we will not skip a whole waypoint in a frame, but even if we do, we can interpolate to fix as its easy to detect
         var index = path.WaypointQuery(navigator.TrackDistance).waypoint.index;
-        profile[(index * 2) + 0] = navigator.TrackDistance;
-        profile[(index * 2) + 1] = body.velocity.magnitude;
-    }
+        profile.distance[index] = navigator.TrackDistance;
 
-    protected static int mod(int k, int n)
-    {
-        return ((k %= n) < 0) ? k + n : k;
+        if (body)
+        {
+            profile.speed[index] = body.velocity.magnitude;
+        }
+        if(observations)
+        {
+            profile.direction[index] = observations.directionError;
+        }
     }
 
     private void OnApplicationQuit()
@@ -60,10 +83,7 @@ public class PathFinderProfiler : MonoBehaviour
         {
             using (StreamWriter writer = new StreamWriter(stream))
             {
-                foreach (var item in profile)
-                {
-                    writer.WriteLine(item);
-                }
+                writer.Write(JsonUtility.ToJson(profile));
             }
         }
     }
