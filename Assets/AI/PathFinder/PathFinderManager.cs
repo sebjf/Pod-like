@@ -25,19 +25,18 @@ public class PathFinderManager : MonoBehaviour
     }
 
     [Serializable]
-    public class AgentManager
+    public class Agent
     {
         public PathFinder pathfinder;
         public Experience collector;
 
-        public AgentManager(PathFinder pathfinder, Experience collector)
+        public Agent(PathFinder pathfinder, Experience collector)
         {
             this.pathfinder = pathfinder;
             this.collector = collector;
         }
     }
 
-    public int profileInterval = 10;        // distance between intervals for pathfinder in m
     public int profileLength = 50;          // distance to sample using pathfinder in intervals
     public float profileSpeedStepSize = 5;
     public float profileErrorThreshold = 1;
@@ -46,10 +45,23 @@ public class PathFinderManager : MonoBehaviour
 
     public GameObject AgentPrefab;
 
-    public string file;
+    public string directory;
 
-    private List<AgentManager> agents;
-    private List<AgentManager> completed;
+    public string filename
+    {
+        get
+        {
+            var t = GetComponentInChildren<Track>().Name.ToLower();
+            var n = AgentPrefab.GetComponentInChildren<PathDriverAgent>().modelName.ToLower();
+            var fn = string.Format("{0}.{1}.trainingprofile.json", n, t);
+            var d = Application.dataPath;
+            return Path.Combine(directory, fn);
+        }
+    }
+
+
+    private List<Agent> agents;
+    private List<Agent> completed;
     private List<Experience> experiences;
 
     private PathFinderVolume[] volumes;
@@ -59,7 +71,6 @@ public class PathFinderManager : MonoBehaviour
 
     [NonSerialized]
     public float elapsedVirtualTime;
-
 
     public int AgentsRemaining
     {
@@ -90,10 +101,15 @@ public class PathFinderManager : MonoBehaviour
 
     private void Awake()
     {
-        completed = new List<AgentManager>();
-        agents = new List<AgentManager>();
+        completed = new List<Agent>();
+        agents = new List<Agent>();
         experiences = new List<Experience>();
         volumes = FindObjectsOfType<PathFinderVolume>();
+    }
+
+    private void Reset()
+    {
+        
     }
 
     // Start is called before the first frame update
@@ -176,25 +192,37 @@ public class PathFinderManager : MonoBehaviour
             container.SetParent(path.transform);
         }
 
+        Util.SetLayer(AgentPrefab, "Car"); // for now car but we may add a training car layer in the future
+
         var agent = GameObject.Instantiate(AgentPrefab, container);
 
         agent.name = agent.name + " " + agents.Count;
 
-        var navigator = agent.GetComponent<Navigator>();
+        var driver = agent.GetComponent<PathDriverAgent>();
+        DestroyImmediate(driver);
+
+        var navigator = agent.GetComponent<Navigator>(); // ensure navigator is initialised first as pathfinder will reset it
         navigator.waypoints = path;
+        navigator.StartingPosition = position;
 
         var pathfinder = agent.GetComponent<PathFinder>();
+
+        if(!pathfinder)
+        {
+            pathfinder = agent.AddComponent<PathFinder>();
+        }
+
         pathfinder.profileLength = profileLength;
-        pathfinder.interval = profileInterval;
         pathfinder.speedStepSize = profileSpeedStepSize;
         pathfinder.errorThreshold = profileErrorThreshold;
+        pathfinder.interval = driver.observationsInterval;
+
+        pathfinder.CreateProfile(); // re-create the profile with the updated parameters as CreateProfile will be called with the prefabs parameters by PathFinder.Awake() on AddComponent
 
         var reset = agent.GetComponent<ResetController>();
         reset.ResetPosition(position);
 
         agent.SetActive(true); // prefab may be disabled depending on when it was last updated
-
-        SetLayer(agent, "Car"); // for now car but we may add a training car layer in the future
 
         return pathfinder;
     }
@@ -220,23 +248,15 @@ public class PathFinderManager : MonoBehaviour
             {
                 if (CheckPosition(path, position))
                 {
-                    agents.Add(new AgentManager(CreateAgent(path, position), experienceCollector));
+                    agents.Add(new Agent(CreateAgent(path, position), experienceCollector));
                 }
             }
         }
     }
 
-    static void SetLayer(GameObject obj, string layer)
-    {
-        foreach (Transform trans in obj.GetComponentsInChildren<Transform>(true))
-        {
-            trans.gameObject.layer = LayerMask.NameToLayer(layer);
-        }
-    }
-
     public void OnComplete()
     {
-        Export(file);
+        Export(filename);
     }
 
     public void Export(string filename)
@@ -278,7 +298,8 @@ public class PathFinderManager : MonoBehaviour
 
             public float[] Speed;
             public float[] Actual;
-            public float[] Drift;
+            public float[] Sideslip;
+            public float[] Braking;
 
             public float[] Error;
         }
@@ -296,29 +317,24 @@ public class PathFinderManager : MonoBehaviour
                 example.Speed = profile.Select(n => n.speed).ToArray();
                 example.Actual = profile.Select(n => n.actual).ToArray();
                 example.Error = profile.Select(n => n.error).ToArray();
-                example.Drift = profile.Select(n => n.drift).ToArray();
+                example.Sideslip = profile.Select(n => n.sideslip).ToArray();
+                example.Braking = profile.Select(n => n.braking ? 1f : 0f).ToArray();
 
-                var observationsPerNode = 1;
-
-                var length = profile.Count * observationsPerNode;
-                example.Distance = new float[length];
-                example.Curvature = new float[length];
-                example.Camber = new float[length];
-                example.Inclination = new float[length];
-
+                example.Distance = new float[profile.Count];
+                example.Curvature = new float[profile.Count];
+                example.Camber = new float[profile.Count];
+                example.Inclination = new float[profile.Count];
                 for (int i = 0; i < profile.Count; i++)
                 {
                     var node = profile[i];
-                    for (int d = 0; d < observationsPerNode; d++)
-                    {
-                        var distance = node.distance + d;
-                        var index = (i * observationsPerNode) + d;
-                        example.Distance[index] = node.distance;
-                        var Q = experienceset.path.Query(distance);
-                        example.Curvature[index] = Q.Curvature;
-                        example.Camber[index] = Q.Camber;
-                        example.Inclination[index] = Q.Inclination;
-                    }
+
+                    var distance = node.distance;
+                    example.Distance[i] = node.distance;
+
+                    var Q = experienceset.path.Query(distance);
+                    example.Curvature[i] = Q.Curvature;
+                    example.Camber[i] = Q.Camber;
+                    example.Inclination[i] = Q.Inclination;
                 }
 
                 Profiles.Add(example);

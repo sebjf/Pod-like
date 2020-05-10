@@ -7,18 +7,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4001992816435297627}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4700d5c7478427f48a900fa1bb966c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelName: model9
-  curvatureThreshold: 0
+  modelName: gamma
+  observationsInterval: 10
+  curvatureThreshold: 0.05
   profile: []
   curvature: []
   camber: []
   inclination: []
-  variance: 0
+  sideslip: 0
+  stabilityFunction:
+    x: 20
 --- !u!114 &5106066053930418821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32,7 +35,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
-  offset: 0
 --- !u!114 &7275323363918684758
 MonoBehaviour:
   m_ObjectHideFlags: 0

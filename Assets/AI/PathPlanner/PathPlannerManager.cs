@@ -16,7 +16,7 @@ public class PathPlannerManager : MonoBehaviour
         public float[] coefficients;
     }
 
-    public class AgentManager
+    public class Agent
     {
         public Interpolation interpolation;
         public Navigator navigator;
@@ -26,9 +26,9 @@ public class PathPlannerManager : MonoBehaviour
 
     public List<Interpolation> interpolations; // interoplations to be tested
 
-    public List<AgentManager> agents;
-    public List<AgentManager> completed;
-    public List<AgentManager> experiences;
+    public List<Agent> agents;
+    public List<Agent> completed;
+    public List<Agent> experiences;
 
     [HideInInspector]
     public InterpolatedPath path;
@@ -102,9 +102,9 @@ public class PathPlannerManager : MonoBehaviour
 
     public void CreateAgents()
     {
-        agents = new List<AgentManager>();
-        completed = new List<AgentManager>();
-        experiences = new List<AgentManager>();
+        agents = new List<Agent>();
+        completed = new List<Agent>();
+        experiences = new List<Agent>();
 
         foreach (var path in GetComponentsInChildren<InterpolatedPath>())
         {
@@ -117,7 +117,7 @@ public class PathPlannerManager : MonoBehaviour
         experiences.AddRange(agents);
     }
 
-    public AgentManager CreateAgent(TrackPath track, Interpolation interpolation)
+    public Agent CreateAgent(TrackPath track, Interpolation interpolation)
     {
         var container = track.transform.Find("Agents");
         if (!container)
@@ -141,7 +141,7 @@ public class PathPlannerManager : MonoBehaviour
         agent.SetActive(true); // prefab may be disabled depending on when it was last updated
         SetLayer(agent, "Car"); // for now car but we may add a training car layer in the future
 
-        return new AgentManager()
+        return new Agent()
         {
             navigator = navigator,
             interpolation = interpolation,

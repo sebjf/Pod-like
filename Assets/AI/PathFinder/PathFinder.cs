@@ -23,8 +23,6 @@ public class PathFinder : MonoBehaviour
     public float speedStepSize = 5f;
     public float errorThreshold = 1f; // tolerance must be high enough to allow slight corner cutting, since the rabbit is a little ahead of the car
 
-    private bool collisionOccurred = false;
-
     [HideInInspector]
     [NonSerialized]
     public bool complete;
@@ -36,13 +34,14 @@ public class PathFinder : MonoBehaviour
         public bool traction; // we currently have traction
         public float error; // understeer
         public float distance; // track position
-
-        public float drift;
+        public float sideslip; // sideslip angle sum of wheels with traction
+        public bool braking; // the car is actively reducing speed through this section. this is not measured from the autopilot but whether we reduced speed during the MTSA
 
         public Node()
         {
             speed = 100f;
             traction = true;
+            braking = false;
         }
     }
 
@@ -57,11 +56,11 @@ public class PathFinder : MonoBehaviour
         pathObservations = GetComponent<PathObservations>();
         resetController = GetComponent<ResetController>();
         volumnes = FindObjectsOfType<PathFinderVolume>();
-        CreateProfile();
         navigator.Reset();
+        CreateProfile();
     }
 
-    void CreateProfile()
+    public void CreateProfile()
     {
         profile = new List<Node>();
         for (int i = 0; i < profileLength; i++)
@@ -85,10 +84,13 @@ public class PathFinder : MonoBehaviour
         {
             if (node != prev)   // does the frame straddle an interval?
             {
-                while((prev + 1) != node) // if we've managed to pass multiple nodes within a frame, update the skipped nodes with this frames' data
+                if (prev < node) // check we will iterate forwards - if the car spins out, it can move backwards, in which case it will start again
                 {
-                    prev++;
-                    UpdateNode(prev); 
+                    while ((prev + 1) != node) // if we've managed to pass multiple nodes within a frame, update the skipped nodes with this frames' data
+                    {
+                        prev++;
+                        UpdateNode(prev);
+                    }
                 }
 
                 UpdateNode(node);
@@ -111,14 +113,9 @@ public class PathFinder : MonoBehaviour
         }
     }
 
-    protected static int mod(int k, int n)
-    {
-        return ((k %= n) < 0) ? k + n : k;
-    }
-
     private Node Previous(Node node)
     {
-        return profile[mod(profile.IndexOf(node) - 1, profile.Count)];
+        return profile[Util.repeat(profile.IndexOf(node) - 1, profile.Count)];
     }
 
     private float ComputeError()
@@ -127,7 +124,7 @@ public class PathFinder : MonoBehaviour
 
         AdjustError(ref error);
 
-        if(collisionOccurred)
+        if(pathObservations.PopCollision())
         {
             error = errorThreshold + 1f;
         }
@@ -148,7 +145,7 @@ public class PathFinder : MonoBehaviour
 
         node.traction = pathObservations.traction;
         node.actual = pathObservations.speed;
-        node.drift = pathObservations.drift;
+        node.sideslip = pathObservations.sideslipAngle;
         node.error = error;
         node.distance = navigator.TrackDistance;
 
@@ -184,6 +181,7 @@ public class PathFinder : MonoBehaviour
     {
         node.speed = Math.Min(node.actual + 2, node.speed); // only decrease actual if significantly smaller than target speed
         node.speed -= Mathf.Min(speedStepSize, node.speed / 2); // if target speed approaches zero, decrease the step size
+        node.braking = true;
     }
 
     private void AdjustError(ref float error)
@@ -199,22 +197,7 @@ public class PathFinder : MonoBehaviour
 
     public void Reset()
     {
-        collisionOccurred = false;
         resetController.ResetPosition();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision.gameObject.layer == LayerMask.NameToLayer("Track"))
-        {
-            for (int i = 0; i < collision.contactCount; i++)
-            {
-                if (Mathf.Abs(Vector3.Dot(collision.GetContact(i).normal, Vector3.up)) < 0.5f)
-                {
-                    collisionOccurred = true;
-                }
-            } 
-        }
     }
 
 #if UNITY_EDITOR

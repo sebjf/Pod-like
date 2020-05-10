@@ -27,7 +27,7 @@ public class PathFinderMonitor : MonoBehaviour
                     GraphOverlay.Plot("Speed", pathFinder.profile.Select(x => x.actual));
                     GraphOverlay.Plot("Traction", pathFinder.profile.Select(x => x.traction ? 1f : 0f));
                     GraphOverlay.Plot("Error", pathFinder.profile.Select(x => x.error));
-                    GraphOverlay.Plot("Drift", pathFinder.profile.Select(x => x.drift));
+                    GraphOverlay.Plot("Drift", pathFinder.profile.Select(x => x.sideslip));
                 }
             }
         }
