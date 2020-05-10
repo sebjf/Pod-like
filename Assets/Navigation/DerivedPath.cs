@@ -29,9 +29,6 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
     [SerializeField]
     protected TrackGeometry track;
 
-    [SerializeField]
-    protected TrackSection[] sections;
-
     public virtual void Initialise()
     {
         track = GetComponentInParent<TrackGeometry>();
@@ -54,6 +51,10 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
     public IList<TrackSection> GetSections()
     {
+        if(waypoints.Count <= 0)
+        {
+            Initialise();
+        }
         return waypoints.Select(wp => track.Section(wp.x)).ToList();
     }
 
