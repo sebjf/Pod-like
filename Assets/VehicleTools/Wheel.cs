@@ -42,7 +42,7 @@ public class Wheel : MonoBehaviour
     public float angle { get; private set; }
 
     /// <summary>
-    /// The slip angle of the wheel; the angle between the direction of the wheel and the direction of the wheel's motion.
+    /// The slip angle of the wheel; the angle between the direction of the wheel and the direction of the wheel's motion, in radians.
     /// </summary>
     public float sideslipAngle { get; private set; }
 
