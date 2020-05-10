@@ -8,9 +8,21 @@ public class PathFinderManagerEditor : Editor
 {
     public override void OnInspectorGUI()
     {
+        var component = target as PathFinderManager;
+
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("profileInterval"));
+        var profileInterval = -1f;
+        try
+        {
+            profileInterval = component.AgentPrefab.GetComponentInChildren<PathDriverAgent>().observationsInterval;
+        }
+        catch
+        {
+            // something isnt set up right.
+        }
+        EditorGUILayout.LabelField("Profile Interval", profileInterval.ToString());
+
         EditorGUILayout.PropertyField(serializedObject.FindProperty("profileLength"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("profileSpeedStepSize"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("profileErrorThreshold"));
@@ -18,11 +30,12 @@ public class PathFinderManagerEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AgentInterval"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AgentPrefab"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("file"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("directory"));
 
         serializedObject.ApplyModifiedProperties();
 
-        var component = target as PathFinderManager;
+        EditorStyles.label.wordWrap = true;
+        EditorGUILayout.LabelField("File", component.filename);
 
         EditorGUILayout.LabelField("Agents Remaining",
             string.Format("{0} Agents",
