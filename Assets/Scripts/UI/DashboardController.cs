@@ -44,10 +44,10 @@ public class DashboardController : MonoBehaviour
                 }
             }
 
-            var pathfinderagent = cameraController.Target.GetComponent<PathFinderAgent>();
+            var pathfinderagent = cameraController.Target.GetComponent<PathDriverAgent>();
             if(pathfinderagent)
             {
-                driftText.text = string.Format("Drift: {0}", Mathf.Rad2Deg * pathfinderagent.drift);
+                driftText.text = string.Format("Drift: {0}", Mathf.Rad2Deg * pathfinderagent.sideslip);
             }
         }
     }
