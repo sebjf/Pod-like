@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 914759944}
   - component: {fileID: 5158299566702106700}
   - component: {fileID: 7262632918985002092}
+  - component: {fileID: 7097604858166644226}
   m_Layer: 0
   m_Name: Alien
   m_TagString: Untagged
@@ -210,10 +211,12 @@ MonoBehaviour:
   throttle: 0
   steeringAngle: 0
   brake: 0
-  handbrake: 1
+  handbrake: 0
   maxSteerAngle: 40
   wheels: []
   rigidbody: {fileID: 0}
+  speed: 0
+  wheelsInContact: 0
 --- !u!114 &914759944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,8 +263,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  torqueCurveScalar: 800
-  rpmScalar: 2000
+  torqueCurveScalar: 1100
+  rpmScalar: 1500
 --- !u!114 &5158299566702106700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -269,7 +272,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914759940}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a153b537e94eebb4cb71f0937cfe5ab8, type: 3}
   m_Name: 
@@ -49596,7 +49599,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      slipForceScale: 10000
+      slipForceScale: 2.5
       forwardSlipForce:
         serializedVersion: 2
         m_Curve:
@@ -49639,13 +49642,29 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      forwardSlipForceScale: 12000
-      brakingTorque: 1000
+      forwardSlipForceScale: 4
+      brakingTorque: 5000
     wheels:
     - {fileID: 233415022}
     - {fileID: 1280059483}
     - {fileID: 1954922859}
     - {fileID: 1112526900}
+--- !u!114 &7097604858166644226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914759940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 719d5f75822053d43af2afebe2cc1369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 0
+  lookAtTarget: {fileID: 993816026}
+  positionTarget: {fileID: 1395924278}
+  sideView: {fileID: 2035527730}
 --- !u!1 &914759941
 GameObject:
   m_ObjectHideFlags: 0
@@ -49791,7 +49810,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1075891262}
-  - component: {fileID: 7262632918672543217}
   m_Layer: 0
   m_Name: CamRig
   m_TagString: Untagged
@@ -49816,21 +49834,6 @@ Transform:
   m_Father: {fileID: 914759939}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7262632918672543217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1075891261}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 719d5f75822053d43af2afebe2cc1369, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lookAtTarget: {fileID: 993816026}
-  positionTarget: {fileID: 1395924278}
-  sideView: {fileID: 2035527730}
 --- !u!1 &1112526898
 GameObject:
   m_ObjectHideFlags: 0
