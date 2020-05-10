@@ -3,24 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Barracuda;
+using System;
+
+[Serializable]
+public struct StabilityFunction
+{
+    public float x;
+
+    public float Evaluate(float sideslip)
+    {
+        if ((Mathf.Rad2Deg * sideslip) > x)
+        {
+            return 0f;
+        }
+        else
+        {
+            return 1f;
+        }
+    }
+}
+
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Navigator))]
 [RequireComponent(typeof(Autopilot))]
-public class PathFinderAgent : MonoBehaviour
+public class PathDriverAgent : MonoBehaviour
 {
     public string modelName;
-    
+    public int observationsInterval = 10;
+
     private List<IWorker> workers;
+    private IWorker classificationWorker;
     private Tensor inputs;
     private int numObservations;
-    private float observationsInterval;
-
-    public float curvatureThreshold;
 
     private Rigidbody body;
     private Navigator navigator;
     private Autopilot autopilot;
+    private Wheel[] wheels;
 
     private List<float> estimations;
 
@@ -35,9 +55,9 @@ public class PathFinderAgent : MonoBehaviour
     public float[] inclination;
 
     [HideInInspector]
-    public float drift;
+    public float sideslip;
 
-    private Wheel[] wheels;
+    public StabilityFunction stabilityFunction;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +76,8 @@ public class PathFinderAgent : MonoBehaviour
             inputShape = model.inputs[0].shape;
         }
 
+        classificationWorker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, ModelLoader.LoadFromStreamingAssets(modelName + "C" + ".nn"));
+
         numObservations = (inputShape.Last() - 1) / 3;
         inputs = new Tensor(new TensorShape(inputShape));
         estimations = new List<float>();
@@ -64,7 +86,6 @@ public class PathFinderAgent : MonoBehaviour
         curvature = new float[numObservations];
         camber = new float[numObservations];
         inclination = new float[numObservations];
-        observationsInterval = 10f;
     }
 
     private void OnDestroy()
@@ -90,9 +111,15 @@ public class PathFinderAgent : MonoBehaviour
 
         inputs[0] = body.velocity.magnitude;
 
-        drift = 1 - Vector3.Dot(body.transform.forward, navigator.waypoints.Query(navigator.TrackDistance).Forward);
-
-        inputs[1] = drift;
+        sideslip = 0f;
+        foreach (var item in wheels)
+        {
+            if (item.inContact)
+            {
+                sideslip += item.sideslipAngle; // can be up to 90, but in practice force will top out around 5 deg.
+            }
+        }
+        inputs[1] = sideslip * 0.01f;
 
         for (int i = 0; i < numObservations; i++)
         {
@@ -120,16 +147,6 @@ public class PathFinderAgent : MonoBehaviour
         }
         */
 
-        bool isstraight = true;
-
-        for (int i = 0; i < numObservations; i++)
-        {
-            if (Mathf.Abs(curvature[i] * 20f) > curvatureThreshold)
-            {
-                isstraight = false;
-            }
-        }
-
         estimations.Clear();
         foreach (var worker in workers)
         {
@@ -142,36 +159,16 @@ public class PathFinderAgent : MonoBehaviour
 
         var min = estimations.Min();
         var max = estimations.Max();
+        var a = stabilityFunction.Evaluate(sideslip);
+
+        autopilot.speed = (max * a) + (min * (1 - a));
 
 
-        //autopilot.speed = min + (max - min) * (1 - (drift + 0.5f));
+        classificationWorker.Execute(inputs);
+        var classification = classificationWorker.PeekOutput()[0];
+        var isstraight = classification < 0.5f;
 
-        var slip = 0f;
-        foreach (var item in wheels)
-        {
-            slip += item.sideslipAngle; // can be up to 90, but in practice force will top out around 5 deg.
-        }
-
-        drift = slip;
-
-        if ((Mathf.Rad2Deg * drift) > 15f)
-        {
-            autopilot.speed = min;
-        }
-        else
-        {
-            autopilot.speed = max;
-        }
-
-        //autopilot.speed = estimations.Average();
-
-        /*
-        var avg = estimations.Average();
-        var sum = estimations.Sum(d => Mathf.Pow(d - avg, 2));
-        variance = Mathf.Sqrt(sum / (float)(estimations.Count - 1));
-        */
-
-        if(isstraight)
+        if (isstraight)
         {
             autopilot.speed = 100f;
         }

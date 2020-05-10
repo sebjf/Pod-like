@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PathFinderAgentMonitor : MonoBehaviour
+public class PathDriverAgentMonitor : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
@@ -20,7 +20,7 @@ public class PathFinderAgentMonitor : MonoBehaviour
         {
             if (activateGameObject.activeInHierarchy)
             {
-                var agent = UnityEditor.Selection.activeGameObject.GetComponentInChildren<PathFinderAgent>();
+                var agent = UnityEditor.Selection.activeGameObject.GetComponentInChildren<PathDriverAgent>();
                 if (agent)
                 {
                     GraphOverlay.Plot("Profile", agent.profile);
