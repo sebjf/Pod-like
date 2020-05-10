@@ -8,11 +8,14 @@ public class PathObservations : MonoBehaviour
     private Rigidbody body;
     private Vehicle vehicle;
 
+    private int trackLayerMask;
+    private bool collisionOccurred;
+
     [HideInInspector]
     public float speed;
 
     [HideInInspector]
-    public float drift;
+    public float sideslipAngle;
 
     [HideInInspector]
     public float lateralError;
@@ -29,14 +32,22 @@ public class PathObservations : MonoBehaviour
     [HideInInspector]
     public bool traction;
 
-    private int layerMask;
+    [HideInInspector]
+    public float directionError;
+
 
     private void Awake()
     {
         navigator = GetComponent<Navigator>();
         body = GetComponent<Rigidbody>();
         vehicle = GetComponent<Vehicle>();
-        layerMask = LayerMask.GetMask("Track");
+        trackLayerMask = LayerMask.GetMask("Track");
+        collisionOccurred = false;
+    }
+
+    private void Reset()
+    {
+        collisionOccurred = false;
     }
 
     void FixedUpdate()
@@ -74,9 +85,16 @@ public class PathObservations : MonoBehaviour
         }
 
         Profiler.EndSample();
-        Profiler.BeginSample("Drift");
+        Profiler.BeginSample("Sideslip Angle");
 
-        drift = 1 - Vector3.Dot(body.transform.forward, trackForward);
+        sideslipAngle = 0;
+        foreach (var item in vehicle.wheels)
+        {
+            if(item.inContact)
+            {
+                sideslipAngle += item.sideslipAngle;
+            }
+        }
 
         Profiler.EndSample();
         Profiler.BeginSample("Height");
@@ -85,7 +103,7 @@ public class PathObservations : MonoBehaviour
         if (vehicle.wheelsInContact < 2)
         {
             RaycastHit raycast;
-            if (Physics.Raycast(new Ray(body.position, Vector3.down), out raycast, float.PositiveInfinity, layerMask))
+            if (Physics.Raycast(new Ray(body.position, Vector3.down), out raycast, float.PositiveInfinity, trackLayerMask))
             {
                 height = raycast.distance;
             }
@@ -93,7 +111,47 @@ public class PathObservations : MonoBehaviour
 
         Profiler.EndSample();
 
-        traction = vehicle.wheelsInContact > 2;
+        traction = vehicle.wheelsInContact > 3;
         speed = body.velocity.magnitude;
+
+        var forward = trackForward;
+        forward.y = 0;
+        forward.Normalize();
+
+        var projectedVehicle = new Vector3(vehicle.transform.forward.x, 0f, vehicle.transform.forward.z).normalized;
+        var projectedTrack = new Vector3(trackForward.x, 0f, trackForward.z).normalized;
+        
+        directionError = (1 - Vector3.Dot(projectedTrack, projectedVehicle)) * Mathf.Sign(Vector3.Dot(Vector3.Cross(projectedTrack, projectedVehicle), Vector3.up)); 
+    }
+
+    /// <summary>
+    /// Returns true if a collision has occured since the last time this was called
+    /// </summary>
+    /// <returns></returns>
+    public bool PopCollision()
+    {
+        if(collisionOccurred)
+        {
+            collisionOccurred = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == trackLayerMask)
+        {
+            for (int i = 0; i < collision.contactCount; i++)
+            {
+                if (Mathf.Abs(Vector3.Dot(collision.GetContact(i).normal, Vector3.up)) < 0.5f)
+                {
+                    collisionOccurred = true;
+                }
+            }
+        }
     }
 }
