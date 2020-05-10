@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 [CustomEditor(typeof(DerivedPath),true)]
 public class DerivedPathEditor : Editor
@@ -14,12 +15,12 @@ public class DerivedPathEditor : Editor
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Resolution"));
 
-        if(target is InterpolatedPath)
+        if (target is InterpolatedPath)
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("coefficient"));
         }
 
-        if(target is NamedPath)
+        if (target is NamedPath)
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("Name"));
         }
@@ -33,6 +34,8 @@ public class DerivedPathEditor : Editor
             Undo.RecordObject(path, "Reinitialise Path");
             path.Initialise();
         }
+
+        EditorGUI.BeginDisabledGroup(path.waypoints.Count <= 0); 
 
         if (GUILayout.Button("Export Sections"))
         {
@@ -70,6 +73,8 @@ public class DerivedPathEditor : Editor
             }
         }
 
+        EditorGUI.EndDisabledGroup();
+
         EditorGUILayout.LabelField("Waypoints", path.waypoints.Count.ToString());
         EditorGUILayout.LabelField("Length", path.totalLength.ToString());
 
@@ -103,9 +108,19 @@ public class DerivedPathEditor : Editor
         }
     }
 
+    private string GuessTrackName(DerivedPath path)
+    {
+        var track = path.GetComponentInParent<Track>();
+        if(track)
+        {
+            return track.Name.ToLower();
+        }
+        return SceneManager.GetActiveScene().name.ToLower();
+    }
+
     private void ExportObservations(DerivedPath path)
     {
-        var filename = EditorUtility.SaveFilePanel("Save Observations", "", "", "txt");
+        var filename = EditorUtility.SaveFilePanel("Save Observations", "", (GuessTrackName(path) + ".observations"), "txt");
         if (filename.Length != 0)
         {
             using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filename))

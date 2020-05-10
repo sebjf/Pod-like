@@ -23,7 +23,8 @@ public class TrackGeometryEditor : Editor
         EditorGUILayout.LabelField("Waypoints: " + component.waypoints.Count);
         EditorGUILayout.LabelField("Length: " + component.totalLength);
 
-        EditorGUILayout.HelpBox("Press Shift to enter Waypoint Create Mode", MessageType.Info); // https://answers.unity.com/questions/1019430
+        EditorGUILayout.HelpBox("Hold Shift to enter Waypoint Create Mode", MessageType.Info); // https://answers.unity.com/questions/1019430
+        EditorGUILayout.HelpBox("Hold Ctrl to enter Waypoint Inspect Mode", MessageType.Info);
 
         if (GUILayout.Button("Recompute"))
         {
@@ -182,6 +183,16 @@ public class TrackGeometryEditor : Editor
             {
                 component.highlighted.Clear();
                 component.highlighted.AddRange(component.Raycast(ray));
+            }
+
+            if((Event.current.modifiers & EventModifiers.Control) > 0)
+            {
+                foreach (var item in component.highlighted)
+                {
+                    GUIStyle style = new GUIStyle();
+                    style.normal.textColor = Color.green;
+                    Handles.Label(item.position + Vector3.up * 4f, item.Distance.ToString(), style);
+                }
             }
         }
 

@@ -5,20 +5,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-public static class Util
-{
-    //https://stackoverflow.com/questions/1082917/
-    public static int repeat(int k, int n)
-    {
-        return ((k %= n) < 0) ? k + n : k;
-    }
-
-    public static float repeat(float k, float n)
-    {
-        return ((k %= n) < 0) ? k + n : k;
-    }
-}
-
 [Serializable]
 public class Waypoint : IWaypoint1D // we can keep waypoint as a class and use references, so long as we are careful not to expect them to remain between serialisation. using class also means we can compare to null.
 {
@@ -229,6 +215,11 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
 
     public virtual void Recompute()
     {
+        if(waypoints.Count < 2)
+        {
+            return;
+        }
+
         for (int i = 0; i < waypoints.Count; i++)
         {
             waypoints[i].index = i;
