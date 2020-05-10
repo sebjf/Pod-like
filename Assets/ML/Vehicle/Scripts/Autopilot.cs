@@ -6,7 +6,6 @@ using UnityEngine;
 public class Autopilot : MonoBehaviour
 {
     public float speed;
-    public float offset;
 
     private Vehicle vehicle;
     private Rigidbody body;
@@ -35,7 +34,7 @@ public class Autopilot : MonoBehaviour
 
         vehicle.steeringAngle = Mathf.Clamp(angle, -extrema, extrema) / extrema;
 
-        var u = (speed - vehicle.speed) + offset;
+        var u = speed - vehicle.speed;
 
         if (u >= 0)
         {
