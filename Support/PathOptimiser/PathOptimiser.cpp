@@ -110,10 +110,7 @@ public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 	MengerCurvatureEdge()
 	{
-		edgeWeight = 1.0;
 	}
-
-	double edgeWeight;
 
 	virtual bool read(std::istream& /*is*/)
 	{
@@ -154,7 +151,7 @@ public:
 		// so if angle is acute add an extra penalty
 		auto modifier = clamp(dp, 0, 1);
 
-		_error(0) = C * edgeWeight + modifier; // curvature would ideally be zero
+		_error(0) = C + modifier; // curvature would ideally be zero
 	}
 
 	/*
@@ -198,34 +195,24 @@ std::vector<double> readfloats(std::string filename)
 	return v;
 }
 
-
 int main(int argc, char** argv)
 {
 	int maxIterations;
 	bool verbose;
-	std::vector<int> gaugeList;
 	std::string pathFilename;
 	std::string weightsFilename;
-	std::string speedsFilename;
 
 	g2o::CommandArgs arg;
 	arg.param("i", maxIterations, 10, "perform n iterations");
 	arg.param("v", verbose, false, "verbose output of the optimization process");
 	arg.param("p", pathFilename, "", "path as sections");
 	arg.param("o", weightsFilename, "", "output weights");
-	arg.param("s", speedsFilename, "", "speed weights");
 
 	arg.parseArgs(argc, argv);
 
 	// read the data
 
 	auto v = readfloats(pathFilename);
-
-	// and the metadata
-	auto s = std::vector<double>();
-	if (speedsFilename.size() > 0) {
-		 s = readfloats(speedsFilename);
-	}
 
 	// and transform
 
@@ -292,13 +279,6 @@ int main(int argc, char** argv)
 		optimizer.addEdge(edge);
 
 		edges.push_back(edge);
-	}
-
-	if (!s.empty()) {
-		for (size_t i = 0; i < s.size(); i++)
-		{
-			edges[i]->edgeWeight = 1.0 + s[repeat(i, numnodes)] * 1.0;
-		}
 	}
 
 	cout << "Original Curvature (Error): " << errorOfSolution(optimizer) << endl;
