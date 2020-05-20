@@ -7,14 +7,14 @@ public class DashboardController : MonoBehaviour
 {
     Text m_SpeedText;
     Text brakingText;
-    Text driftText;
+    Text sideslipText;
     DriftCamera cameraController;
 
     private void Awake()
     {
         m_SpeedText = transform.Find("Speed").GetComponent<Text>();
         brakingText = transform.Find("Braking").GetComponent<Text>();
-        driftText = transform.Find("Drift").GetComponent<Text>();
+        sideslipText = transform.Find("Sideslip").GetComponent<Text>();
         cameraController = GetComponentInParent<DriftCamera>();
     }
 
@@ -42,12 +42,8 @@ public class DashboardController : MonoBehaviour
                 {
                     brakingText.enabled = false;
                 }
-            }
 
-            var pathfinderagent = cameraController.Target.GetComponent<PathDriverAgent>();
-            if(pathfinderagent)
-            {
-                driftText.text = string.Format("Drift: {0}", Mathf.Rad2Deg * pathfinderagent.sideslip);
+                sideslipText.text = string.Format("Sideslip Angle: {0}", Mathf.Rad2Deg * vehicle.sideslipAngle);
             }
         }
     }

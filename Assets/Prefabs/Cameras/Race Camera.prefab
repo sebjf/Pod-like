@@ -606,7 +606,7 @@ GameObject:
   - component: {fileID: 1501759681}
   - component: {fileID: 1501759680}
   m_Layer: 0
-  m_Name: Drift
+  m_Name: Sideslip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -672,9 +672,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Drift
-
-'
+  m_Text: Sideslip
 --- !u!1 &1568726668
 GameObject:
   m_ObjectHideFlags: 0
