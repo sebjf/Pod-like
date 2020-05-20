@@ -214,11 +214,21 @@ public class Wheel : MonoBehaviour
 
     public void UpdateGripForce()
     {
-        // The sideslip angle is the angle between the direction of the wheel and the wheel's velocity. If this is non-zero,
-        // it causes deformation of the contact patch and a corresponding force, up to the point the contact patch can no
-        // longer deform, and the wheel begins to skid.
+        // The sideslip angle is the angle between the direction of the wheel and the wheel's velocity. 
+        // If this is non-zero, it causes deformation of the contact patch and a corresponding force, up 
+        // to the point the contact patch can no longer deform, and the wheel begins to skid.
 
-        var slipAngle = Mathf.Abs(Mathf.Acos(Mathf.Clamp(Vector3.Dot(velocity.normalized, forward), -1f, 1f)));
+        // specifically, this is the angle between the forward component of and sum of the wheel velocity.
+
+        var v_x = Vector3.Dot(velocity, forward);
+        var v_y = Vector3.Dot(velocity, right);
+        var slipAngle = Mathf.Abs(Mathf.Atan(v_y / Mathf.Abs(v_x))) * Mathf.Clamp(velocity.magnitude,0,1); // when the velocity is near zero, v_x will be as well so the ration can appear large even though there is no deformation
+
+        if(float.IsNaN(slipAngle))
+        {
+            slipAngle = 0f;
+        }
+
         var slipForceScale = (this.slipForceScale * (rigidBody.mass / 4) * Physics.gravity.magnitude);
         var Fs = slipForce.Evaluate(slipAngle * Mathf.Rad2Deg) * slipForceScale;
 
