@@ -32,6 +32,9 @@ public class Vehicle : MonoBehaviour
     [HideInInspector]
     public int wheelsInContact;
 
+    [HideInInspector]
+    public float sideslipAngle;
+
     public void Awake()
     {
         wheels = GetComponentsInChildren<Wheel>();
@@ -148,5 +151,14 @@ public class Vehicle : MonoBehaviour
         Profiler.EndSample();
 
         speed = Vector3.Dot(transform.forward, rigidbody.velocity);
+
+        sideslipAngle = 0f;
+        foreach (var wheel in wheels)
+        {
+            if(wheel.inContact)
+            {
+                sideslipAngle += wheel.sideslipAngle;
+            }
+        }
     }
 }
