@@ -18,7 +18,7 @@ public class LapTimer : MonoBehaviour
     void Start()
     {
         startTime = Time.time;
-        previousLap = 0;
+        previousLap = -1;
     }
 
     // Update is called once per frame
