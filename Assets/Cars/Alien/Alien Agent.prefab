@@ -13,15 +13,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   modelName: alien
-  observationsInterval: 10
-  curvatureThreshold: 0.1
+  observationsInterval: 5
+  x: 20
   profile: []
   curvature: []
   camber: []
   inclination: []
-  sideslip: 0
-  stabilityFunction:
-    x: 20
 --- !u!114 &1800088063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35,6 +32,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
+  lookahead: 15
 --- !u!114 &1800088064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +127,15 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 993816025, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 914759941, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395924277, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
@@ -142,6 +148,10 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1112526898, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2035527729, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
@@ -166,18 +176,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7262632920078225672, guid: 3de47bfceb3a8d846945b45cdf30f2af,
         type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 993816025, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1395924277, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 2035527729, guid: 3de47bfceb3a8d846945b45cdf30f2af, type: 3}
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
