@@ -11,7 +11,7 @@ public class Autopilot : MonoBehaviour
     /// The distance ahead to aim for when steering. The smaller this is, the closer to the turn the car will respond, and the tighter it will attempt to corner.
     /// Increase this value to reduce oversteer.
     /// </summary>
-    public float lookahead = 30f;
+    public float maxLookahead = 50f;
 
     private Vehicle vehicle;
     private Navigator navigator;
@@ -28,17 +28,15 @@ public class Autopilot : MonoBehaviour
     void FixedUpdate()
     {
         var maxc = 0f;
-        var targetLookahead = 50f;
-        for (int i = 0; i < targetLookahead; i++)
+        for (int i = 0; i < maxLookahead; i++)
         {
             var c = navigator.waypoints.Query(navigator.TrackDistance + i).Curvature;
             maxc = Mathf.Max(Mathf.Abs(c), maxc);
         }
-
         var h = 1f; // clearance
         var minbase = Mathf.Sqrt(((8f * h) / maxc) - (4f*h*h));
 
-        lookahead = Mathf.Min(minbase, targetLookahead);
+        var lookahead = Mathf.Min(minbase, maxLookahead);
 
         worldtarget = navigator.waypoints.Query(navigator.TrackDistance + lookahead).Midpoint;
 

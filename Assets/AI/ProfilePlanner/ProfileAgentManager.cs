@@ -40,6 +40,7 @@ public class ProfileAgentManager : MonoBehaviour
     public int profileLength = 50;          // distance to sample using pathfinder in intervals
     public float profileSpeedStepSize = 5;
     public float profileErrorThreshold = 1;
+    public int autopilotLookahead = 15;
 
     public int AgentInterval = 25;   // distance between agents along track in m
 
@@ -227,6 +228,9 @@ public class ProfileAgentManager : MonoBehaviour
 
         var reset = agent.GetComponent<ResetController>();
         reset.ResetPosition(position);
+
+        var autopilot = agent.GetComponent<Autopilot>();
+        autopilot.maxLookahead = autopilotLookahead;
 
         agent.SetActive(true); // prefab may be disabled depending on when it was last updated
 

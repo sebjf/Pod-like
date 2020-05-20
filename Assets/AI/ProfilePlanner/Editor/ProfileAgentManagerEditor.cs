@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomEditor(typeof(ProfileAgentManager))]
-public class PathFinderManagerEditor : Editor
+public class ProfileAgentManagerEditor : Editor
 {
     public override void OnInspectorGUI()
     {
@@ -26,6 +26,7 @@ public class PathFinderManagerEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("profileLength"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("profileSpeedStepSize"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("profileErrorThreshold"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("autopilotLookahead"));
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("AgentInterval"));
 
