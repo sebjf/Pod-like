@@ -7,8 +7,13 @@ public class Autopilot : MonoBehaviour
 {
     public float speed;
 
+    /// <summary>
+    /// The distance ahead to aim for when steering. The smaller this is, the closer to the turn the car will respond, and the tighter it will attempt to corner.
+    /// Increase this value to reduce oversteer.
+    /// </summary>
+    public float lookahead = 30f;
+
     private Vehicle vehicle;
-    private Rigidbody body;
     private Navigator navigator;
 
     private Vector3 worldtarget;
@@ -17,13 +22,25 @@ public class Autopilot : MonoBehaviour
     {
         vehicle = GetComponent<Vehicle>();
         navigator = GetComponent<Navigator>();
-        body = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        worldtarget = navigator.waypoints.Query(navigator.TrackDistance + 10).Midpoint;
+        var maxc = 0f;
+        var targetLookahead = 50f;
+        for (int i = 0; i < targetLookahead; i++)
+        {
+            var c = navigator.waypoints.Query(navigator.TrackDistance + i).Curvature;
+            maxc = Mathf.Max(Mathf.Abs(c), maxc);
+        }
+
+        var h = 1f; // clearance
+        var minbase = Mathf.Sqrt(((8f * h) / maxc) - (4f*h*h));
+
+        lookahead = Mathf.Min(minbase, targetLookahead);
+
+        worldtarget = navigator.waypoints.Query(navigator.TrackDistance + lookahead).Midpoint;
 
         var targetpoint = transform.InverseTransformPoint(worldtarget);
         targetpoint.y = 0;
