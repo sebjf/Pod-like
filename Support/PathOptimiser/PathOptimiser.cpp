@@ -40,6 +40,7 @@
 #include "g2o/core/base_vertex.h"
 #include "g2o/core/base_unary_edge.h"
 #include "g2o/core/base_multi_edge.h"
+#include "g2o/core/base_binary_edge.h"
 #include "g2o/solvers/csparse/linear_solver_csparse.h"
 
 using namespace std;
@@ -100,7 +101,32 @@ public:
 		_estimate += update[0];
 
 		// clamp here or make constraint?
-		_estimate = clamp(_estimate, 0.15, 0.85);
+		_estimate = clamp(_estimate, 0.20, 0.80);
+	}
+};
+
+class DistanceEdge : public g2o::BaseBinaryEdge<1, double, Vertex, Vertex>
+{
+public:
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+
+	virtual bool read(std::istream& /*is*/)
+	{
+		cerr << __PRETTY_FUNCTION__ << " not implemented yet" << endl;
+		return false;
+	}
+
+	virtual bool write(std::ostream& /*os*/) const
+	{
+		cerr << __PRETTY_FUNCTION__ << " not implemented yet" << endl;
+		return false;
+	}
+
+	void computeError()
+	{
+		auto X = static_cast<Vertex*>(vertex(1))->position();
+		auto Y = static_cast<Vertex*>(vertex(0))->position();
+		_error(0) = (X - Y).norm();
 	}
 };
 
@@ -110,7 +136,10 @@ public:
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
 	MengerCurvatureEdge()
 	{
+		weight = 1.0;
 	}
+
+	double weight;
 
 	virtual bool read(std::istream& /*is*/)
 	{
@@ -143,15 +172,15 @@ public:
 
 		auto dp = YX.normalized().dot(YZ.normalized());
 		auto len = ZX.norm();
-		double C = (2.0 * sin(acos(clamp(dp, 1.0)))) / len; // dot may give values a teeny bit outside -1..1, and acos throws an exception on these
+		double curvature = (2.0 * sin(acos(clamp(dp, 1.0)))) / len; // dot may give values a teeny bit outside -1..1, and acos throws an exception on these
 
-		assert(!isnan(C));
+		assert(!isnan(curvature));
 
 		// if the three points are asymmetric enough, the len term can begin to undermine the sine term,
 		// so if angle is acute add an extra penalty
 		auto modifier = clamp(dp, 0, 1);
 
-		_error(0) = C + modifier; // curvature would ideally be zero
+		_error(0) = (curvature + modifier) * weight; // curvature would ideally be zero
 	}
 
 	/*
@@ -164,20 +193,26 @@ public:
 
 double errorOfSolution(g2o::OptimizableGraph &graph)
 {
-	auto curvature = 0.0;
+	auto error = 0.0;
 	auto edges = graph.edges();
 	auto it = edges.begin();
 	while (it != edges.end())
 	{
-		auto edge = dynamic_cast<MengerCurvatureEdge*>(*it);
-		if (edge != nullptr)
+		auto curvature = dynamic_cast<MengerCurvatureEdge*>(*it);
+		if (curvature != nullptr)
 		{
-			edge->computeError();
-			curvature += edge->error()(0);
+			curvature->computeError();
+			error += curvature->error()(0);
+		}
+		auto distance = dynamic_cast<DistanceEdge*>(*it);
+		if(distance != nullptr)
+		{ 
+			distance->computeError();
+			error += distance->error()(0);
 		}
 		it++;
 	}
-	return curvature;
+	return error;
 }
 
 std::vector<double> readfloats(std::string filename)
@@ -201,12 +236,14 @@ int main(int argc, char** argv)
 	bool verbose;
 	std::string pathFilename;
 	std::string weightsFilename;
+	int mode;
 
 	g2o::CommandArgs arg;
 	arg.param("i", maxIterations, 10, "perform n iterations");
 	arg.param("v", verbose, false, "verbose output of the optimization process");
 	arg.param("p", pathFilename, "", "path as sections");
 	arg.param("o", weightsFilename, "", "output weights");
+	arg.param("m", mode, 0, "what property to optimise");
 
 	arg.parseArgs(argc, argv);
 
@@ -260,14 +297,12 @@ int main(int argc, char** argv)
 		optimizer.addVertex(vertex);
 	}
 
-	std::vector<MengerCurvatureEdge*> edges;
-
 	for (size_t i = 0; i < numnodes; i++)
 	{
 		int previous = repeat(i - 1, numnodes);
 		int current = i;
 		int next = repeat(i + 1, numnodes);
-	    
+
 		auto edge = new MengerCurvatureEdge();
 		edge->setId(i);
 		edge->setMeasurement(0);
@@ -277,11 +312,37 @@ int main(int argc, char** argv)
 		edge->setVertex(1, optimizer.vertex(current));
 		edge->setVertex(2, optimizer.vertex(next));
 		optimizer.addEdge(edge);
-
-		edges.push_back(edge);
 	}
 
-	cout << "Original Curvature (Error): " << errorOfSolution(optimizer) << endl;
+	if (mode == 1)
+	{
+		auto it = optimizer.edges().begin();
+		while (it != optimizer.edges().end())
+		{
+			// the menger curvature is so small compared to even a trivial distance we must weight the constraint for it to have an effect.
+			// menger curvature is physically based, so once we find an ideal parameter (analogous to a minimum radius) it will be correct regardless
+			// of sampling resolution, etc
+			auto edge = dynamic_cast<MengerCurvatureEdge*>(*it);
+			edge->weight = 20.0;
+			it++;
+		}
+
+		for (size_t i = 0; i < numnodes; i++)
+		{
+			int current = i;
+			int next = repeat(i + 1, numnodes);
+
+			auto edge = new DistanceEdge();
+			edge->setId(i);
+			edge->setMeasurement(0);
+			edge->setInformation(Eigen::Matrix<double, 1, 1>::Identity());
+			edge->setVertex(0, optimizer.vertex(current));
+			edge->setVertex(1, optimizer.vertex(next));
+			optimizer.addEdge(edge);
+		}
+	}
+
+	cout << "Original Measure (Curvature or Distance): " << errorOfSolution(optimizer) << endl;
 
 	// perform the optimization
 	optimizer.initializeOptimization();
@@ -292,7 +353,7 @@ int main(int argc, char** argv)
 		cout << endl;
 
 	// print out the result
-	cout << "Revised Curvature (Error): " << errorOfSolution(optimizer) << endl;
+	cout << "Revised Measure (Curvature or Distance): " << errorOfSolution(optimizer) << endl;
 
 	if (weightsFilename.length() > 0) {
 		ofstream output;
