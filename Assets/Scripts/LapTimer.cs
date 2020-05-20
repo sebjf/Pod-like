@@ -27,6 +27,7 @@ public class LapTimer : MonoBehaviour
         if(navigator.Lap > 0 && navigator.Lap != previousLap)
         {
             Debug.Log(name + " Lap Time: " + (Time.time - startTime));
+            startTime = Time.time;
             previousLap = navigator.Lap;
         }
     }
