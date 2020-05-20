@@ -14,14 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modelName: gamma
   observationsInterval: 10
-  curvatureThreshold: 0.05
+  x: 20
   profile: []
   curvature: []
   camber: []
   inclination: []
   sideslip: 0
-  stabilityFunction:
-    x: 20
 --- !u!114 &5106066053930418821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35,6 +33,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
+  lookahead: 10
 --- !u!114 &7275323363918684758
 MonoBehaviour:
   m_ObjectHideFlags: 0
