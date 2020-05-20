@@ -53,26 +53,6 @@ public class DerivedPathEditor : Editor
             path.Load(ImportWeights());
         }
 
-        if (target is ShortestPath)
-        {
-            serializedObject.Update();
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("Barrier"));
-            serializedObject.ApplyModifiedProperties();
-
-            Steps = EditorGUILayout.IntField("Steps", Steps);
-
-            if (GUILayout.Button("Fit"))
-            {
-                Undo.RecordObject(path, "Optimise Path");
-                (path as ShortestPath).Step(Steps);
-            }
-
-            if (GUILayout.Button("Step"))
-            {
-                (path as ShortestPath).Step(1);
-            }
-        }
-
         EditorGUI.EndDisabledGroup();
 
         EditorGUILayout.LabelField("Waypoints", path.waypoints.Count.ToString());
@@ -90,7 +70,7 @@ public class DerivedPathEditor : Editor
 
     private void ExportSections(IEnumerable<TrackSection> sections)
     {
-        var filename = EditorUtility.SaveFilePanel("Save Path", "", "", "txt");
+        var filename = EditorUtility.SaveFilePanel("Save Path", System.IO.Path.GetDirectoryName(SceneManager.GetActiveScene().path), "sections", "txt");
         if(filename.Length != 0)
         {
             using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filename))
@@ -141,7 +121,7 @@ public class DerivedPathEditor : Editor
     private float[] ImportWeights()
     {
         var weights = new List<float>();
-        var filename = EditorUtility.OpenFilePanel("Save Path", "", "txt");
+        var filename = EditorUtility.OpenFilePanel("Load Path", System.IO.Path.GetDirectoryName(SceneManager.GetActiveScene().path), "txt");
         if (filename.Length != 0)
         {
             using (System.IO.StreamReader reader = new System.IO.StreamReader(filename))
