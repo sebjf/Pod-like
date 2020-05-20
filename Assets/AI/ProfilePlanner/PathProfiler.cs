@@ -12,6 +12,7 @@ public class PathProfiler : MonoBehaviour
     private Rigidbody body;
     private DerivedPath path;
     private PathObservations observations;
+    private Vehicle vehicle;
 
     [Serializable]
     public class Profile
@@ -19,12 +20,14 @@ public class PathProfiler : MonoBehaviour
         public float[] distance;
         public float[] speed;
         public float[] direction;
+        public float[] steeringangle;
 
         public Profile(int length)
         {
             distance = new float[length];
             speed = new float[length];
             direction = new float[length];
+            steeringangle = new float[length];
         }
     }
 
@@ -36,6 +39,13 @@ public class PathProfiler : MonoBehaviour
         navigator = GetComponent<Navigator>();
         body = GetComponent<Rigidbody>();
         observations = GetComponent<PathObservations>();
+
+        if(!observations)
+        {
+            observations = gameObject.AddComponent<PathObservations>();
+        }
+
+        vehicle = GetComponent<Vehicle>();
     }
 
     // Start is called before the first frame update
@@ -67,6 +77,7 @@ public class PathProfiler : MonoBehaviour
         {
             profile.direction[index] = observations.directionError;
         }
+        profile.steeringangle[index] = vehicle.steeringAngle * vehicle.maxSteerAngle;
     }
 
     private void OnApplicationQuit()

@@ -20,7 +20,7 @@ public class PathDriverAgentMonitor : MonoBehaviour
         {
             if (activateGameObject.activeInHierarchy)
             {
-                var agent = UnityEditor.Selection.activeGameObject.GetComponentInChildren<PathDriverAgent>();
+                var agent = UnityEditor.Selection.activeGameObject.GetComponentInChildren<ProfileController>();
                 if (agent)
                 {
                     GraphOverlay.Plot("Profile", agent.profile);

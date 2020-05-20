@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(PathFinderManager))]
+[CustomEditor(typeof(ProfileAgentManager))]
 public class PathFinderManagerEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        var component = target as PathFinderManager;
+        var component = target as ProfileAgentManager;
 
         serializedObject.Update();
 
         var profileInterval = -1f;
         try
         {
-            profileInterval = component.AgentPrefab.GetComponentInChildren<PathDriverAgent>().observationsInterval;
+            profileInterval = component.AgentPrefab.GetComponentInChildren<ProfileController>().observationsInterval;
         }
         catch
         {

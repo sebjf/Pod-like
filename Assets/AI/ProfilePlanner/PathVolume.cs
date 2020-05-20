@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathFinderVolume : MonoBehaviour
+public class PathVolume : MonoBehaviour
 {
     private new BoxCollider collider;
 
@@ -11,7 +11,7 @@ public class PathFinderVolume : MonoBehaviour
         collider = GetComponent<BoxCollider>();
     }
 
-    public void AdjustError(PathFinder agent, ref float error)
+    public void AdjustError(ProfileAgent agent, ref float error)
     {
         if(collider.bounds.Contains(agent.transform.position))
         {

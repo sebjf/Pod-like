@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(ResetController))]
 [RequireComponent(typeof(Navigator))]
 [RequireComponent(typeof(Autopilot))]
 [RequireComponent(typeof(PathObservations))]
-public class PathFinder : MonoBehaviour
+public class ProfileAgent : MonoBehaviour
 {
     public int profileLength = 40;
     public int interval = 10;
@@ -18,7 +16,7 @@ public class PathFinder : MonoBehaviour
     private Autopilot autopilot;
     private PathObservations pathObservations;
 
-    public PathFinderVolume[] volumnes;
+    public PathVolume[] volumnes;
 
     public float speedStepSize = 5f;
     public float errorThreshold = 1f; // tolerance must be high enough to allow slight corner cutting, since the rabbit is a little ahead of the car
@@ -55,7 +53,7 @@ public class PathFinder : MonoBehaviour
         navigator = GetComponent<Navigator>();
         pathObservations = GetComponent<PathObservations>();
         resetController = GetComponent<ResetController>();
-        volumnes = FindObjectsOfType<PathFinderVolume>();
+        volumnes = FindObjectsOfType<PathVolume>();
         navigator.Reset();
         CreateProfile();
     }

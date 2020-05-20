@@ -5,32 +5,16 @@ using UnityEngine;
 using Barracuda;
 using System;
 
-[Serializable]
-public struct StabilityFunction
-{
-    public float x;
-
-    public float Evaluate(float sideslip)
-    {
-        if ((Mathf.Rad2Deg * sideslip) > x)
-        {
-            return 0f;
-        }
-        else
-        {
-            return 1f;
-        }
-    }
-}
-
-
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Navigator))]
 [RequireComponent(typeof(Autopilot))]
-public class PathDriverAgent : MonoBehaviour
+[RequireComponent(typeof(Vehicle))]
+public class ProfileController : MonoBehaviour
 {
     public string modelName;
     public int observationsInterval = 10;
+
+    public float x = 20f;
 
     private List<IWorker> workers;
     private IWorker classificationWorker;
@@ -40,7 +24,7 @@ public class PathDriverAgent : MonoBehaviour
     private Rigidbody body;
     private Navigator navigator;
     private Autopilot autopilot;
-    private Wheel[] wheels;
+    private Vehicle vehicle;
 
     private List<float> estimations;
 
@@ -54,18 +38,13 @@ public class PathDriverAgent : MonoBehaviour
     [HideInInspector]
     public float[] inclination;
 
-    [HideInInspector]
-    public float sideslip;
-
-    public StabilityFunction stabilityFunction;
-
     // Start is called before the first frame update
     void Start()
     {
         body = GetComponent<Rigidbody>();
         navigator = GetComponent<Navigator>();
         autopilot = GetComponent<Autopilot>();
-        wheels = GetComponentsInChildren<Wheel>();
+        vehicle = GetComponent<Vehicle>();
         workers = new List<IWorker>();
 
         int[] inputShape = null;
@@ -111,15 +90,9 @@ public class PathDriverAgent : MonoBehaviour
 
         inputs[0] = body.velocity.magnitude;
 
-        sideslip = 0f;
-        foreach (var item in wheels)
-        {
-            if (item.inContact)
-            {
-                sideslip += item.sideslipAngle; // can be up to 90, but in practice force will top out around 5 deg.
-            }
-        }
-        inputs[1] = sideslip * 0.01f;
+        var sideslip = vehicle.sideslipAngle; // can be up to 90 (per wheel), but in practice force will top out around 5 deg.
+
+        inputs[1] = sideslip * 0.01f;  
 
         for (int i = 0; i < numObservations; i++)
         {
@@ -159,18 +132,29 @@ public class PathDriverAgent : MonoBehaviour
 
         var min = estimations.Min();
         var max = estimations.Max();
-        var a = stabilityFunction.Evaluate(sideslip);
 
-        autopilot.speed = (max * a) + (min * (1 - a));
+        bool slipping = false;
 
-
-        classificationWorker.Execute(inputs);
-        var classification = classificationWorker.PeekOutput()[0];
-        var isstraight = classification < 0.5f;
-
-        if (isstraight)
+        if ((Mathf.Rad2Deg * sideslip) > x)
         {
-            autopilot.speed = 100f;
+            autopilot.speed = min;
+            slipping = true;
+        }
+        else
+        {
+            autopilot.speed = max;
+        }
+
+        if (!slipping)
+        {
+            classificationWorker.Execute(inputs);
+            var classification = classificationWorker.PeekOutput()[0];
+            var isstraight = classification < 0.5f;
+
+            if (isstraight)
+            {
+                autopilot.speed = 100f;
+            }
         }
     }
 }

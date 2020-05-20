@@ -10,29 +10,29 @@ using UnityEngine;
 /// This version assumes cars have already been distributed across tracks and starting locations.
 /// </summary>
 [RequireComponent(typeof(TimeController))]
-public class PathFinderManager : MonoBehaviour
+public class ProfileAgentManager : MonoBehaviour
 {
     public class Experience
     {
         public TrackPath path;
-        public List<List<PathFinder.Node>> profiles;
+        public List<List<ProfileAgent.Node>> profiles;
 
         public Experience(TrackPath path)
         {
             this.path = path;
-            this.profiles = new List<List<PathFinder.Node>>();
+            this.profiles = new List<List<ProfileAgent.Node>>();
         }
     }
 
     [Serializable]
     public class Agent
     {
-        public PathFinder pathfinder;
+        public ProfileAgent profilefinder;
         public Experience collector;
 
-        public Agent(PathFinder pathfinder, Experience collector)
+        public Agent(ProfileAgent pathfinder, Experience collector)
         {
-            this.pathfinder = pathfinder;
+            this.profilefinder = pathfinder;
             this.collector = collector;
         }
     }
@@ -51,11 +51,17 @@ public class PathFinderManager : MonoBehaviour
     {
         get
         {
-            var t = GetComponentInChildren<Track>().Name.ToLower();
-            var n = AgentPrefab.GetComponentInChildren<PathDriverAgent>().modelName.ToLower();
-            var fn = string.Format("{0}.{1}.trainingprofile.json", n, t);
-            var d = Application.dataPath;
-            return Path.Combine(directory, fn);
+            try
+            {
+                var t = GetComponentInChildren<Track>().Name.ToLower();
+                var n = AgentPrefab.GetComponentInChildren<ProfileController>().modelName.ToLower();
+                var fn = string.Format("{0}.{1}.trainingprofile.json", n, t);
+                var d = Application.dataPath;
+                return Path.Combine(directory, fn);
+            }catch
+            {
+                return null;
+            }
         }
     }
 
@@ -64,7 +70,7 @@ public class PathFinderManager : MonoBehaviour
     private List<Agent> completed;
     private List<Experience> experiences;
 
-    private PathFinderVolume[] volumes;
+    private PathVolume[] volumes;
 
     [NonSerialized]
     public float elapsedRealTime;
@@ -88,7 +94,7 @@ public class PathFinderManager : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    PathFinderManager()
+    ProfileAgentManager()
     {
         // https://docs.unity3d.com/ScriptReference/EditorApplication-playModeStateChanged.html
         UnityEditor.EditorApplication.playModeStateChanged +=
@@ -104,7 +110,7 @@ public class PathFinderManager : MonoBehaviour
         completed = new List<Agent>();
         agents = new List<Agent>();
         experiences = new List<Experience>();
-        volumes = FindObjectsOfType<PathFinderVolume>();
+        volumes = FindObjectsOfType<PathVolume>();
     }
 
     private void Reset()
@@ -139,7 +145,7 @@ public class PathFinderManager : MonoBehaviour
     {
         foreach (var agent in agents)
         {
-            if(agent.pathfinder.complete)
+            if(agent.profilefinder.complete)
             {
                 completed.Add(agent);
             }
@@ -148,8 +154,8 @@ public class PathFinderManager : MonoBehaviour
         foreach (var agent in completed)
         {
             agents.Remove(agent);
-            agent.collector.profiles.Add(agent.pathfinder.profile);
-            GameObject.Destroy(agent.pathfinder.gameObject);
+            agent.collector.profiles.Add(agent.profilefinder.profile);
+            GameObject.Destroy(agent.profilefinder.gameObject);
         }
 
         completed.Clear();
@@ -183,7 +189,7 @@ public class PathFinderManager : MonoBehaviour
         return true;
     }
 
-    public PathFinder CreateAgent(TrackPath path, float position)
+    public ProfileAgent CreateAgent(TrackPath path, float position)
     {
         var container = path.transform.Find("Agents");
         if (!container)
@@ -198,18 +204,18 @@ public class PathFinderManager : MonoBehaviour
 
         agent.name = agent.name + " " + agents.Count;
 
-        var driver = agent.GetComponent<PathDriverAgent>();
+        var driver = agent.GetComponent<ProfileController>();
         DestroyImmediate(driver);
 
         var navigator = agent.GetComponent<Navigator>(); // ensure navigator is initialised first as pathfinder will reset it
         navigator.waypoints = path;
         navigator.StartingPosition = position;
 
-        var pathfinder = agent.GetComponent<PathFinder>();
+        var pathfinder = agent.GetComponent<ProfileAgent>();
 
         if(!pathfinder)
         {
-            pathfinder = agent.AddComponent<PathFinder>();
+            pathfinder = agent.AddComponent<ProfileAgent>();
         }
 
         pathfinder.profileLength = profileLength;
