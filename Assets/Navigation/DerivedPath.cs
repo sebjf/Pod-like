@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 [Serializable]
 public class DerivedWaypoint : Waypoint
@@ -28,6 +29,13 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
     [SerializeField]
     protected TrackGeometry track;
+
+    protected PathCache cache;
+
+    private void Awake()
+    {
+        cache = new PathCache(this, 0.5f);
+    }
 
     public virtual void Initialise()
     {
@@ -95,6 +103,13 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
     public override PathQuery Query(float distance)
     {
+        if(cache != null)
+        {
+            return cache.Query(distance);
+        }
+
+        Profiler.BeginSample("DerivedPath Query");
+
         var wq = WaypointQuery(distance);
 
         PathQuery query;
@@ -122,7 +137,9 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         query.Inclination = Inclination(query.Forward);
 
         query.Width = 0;
-        
+
+        Profiler.EndSample();
+
         return query;
     }
 

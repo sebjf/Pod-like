@@ -412,6 +412,8 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
 
     public override PathQuery Query(float distance)
     {
+        Profiler.BeginSample("TrackGeometry Query");
+
         var wq = WaypointQuery(distance);
         PathQuery query;
 
@@ -432,6 +434,8 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         var z = Position(WaypointQuery(distance - curvatureSampleDistance));
 
         query.Curvature = Curvature(x, y, z);
+
+        Profiler.EndSample();
 
         return query;
     }
