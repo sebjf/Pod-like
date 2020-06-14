@@ -97,7 +97,7 @@ public abstract class TrackPath : MonoBehaviour
 
     public static float Inclination(Vector3 forward)
     {
-        return Vector3.Dot(forward, Vector3.up);
+        return Vector3.Dot(forward, Vector3.up); // grade is the ratio of height to distance. dot will return the proportion of forward to up/height.
     }
 
     public virtual string UniqueName()
