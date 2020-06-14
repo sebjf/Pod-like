@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 
-public class PathProfiler : MonoBehaviour
+public class DrivingProfiler : MonoBehaviour
 {
     public string profileFilename;
 
@@ -67,7 +67,6 @@ public class PathProfiler : MonoBehaviour
     {
         // realistically we will not skip a whole waypoint in a frame, but even if we do, we can interpolate to fix as its easy to detect
         var index = path.WaypointQuery(navigator.TrackDistance).waypoint.index;
-        profile.distance[index] = navigator.TrackDistance;
 
         if (body)
         {
@@ -84,6 +83,11 @@ public class PathProfiler : MonoBehaviour
     {
         if (profile != null)
         {
+            for (int i = 0; i < profile.distance.Length; i++)
+            {
+                profile.distance[i] = path.waypoints[i].Distance;
+            }
+
             Export(profileFilename);
         }
     }
