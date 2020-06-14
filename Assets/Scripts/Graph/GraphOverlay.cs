@@ -54,6 +54,17 @@ public class GraphOverlay : MonoBehaviour
         }
     }
 
+    public static void Cursor(int cursor)
+    {
+        if (instance)
+        {
+            if (instance.isActiveAndEnabled)
+            {
+                instance.SampleCursor = cursor;
+            }
+        }
+    }
+
     public Series GetSeries(string name)
     {
         if(!series.ContainsKey(name))
@@ -105,6 +116,8 @@ public class GraphOverlay : MonoBehaviour
     public HorizontalOrVerticalLayoutGroup labels;
 
     public float y_scale = 1f;
+
+    public int SampleCursor;
 
     public int samplesOnScreen = 20; 
 
@@ -161,6 +174,8 @@ public class GraphOverlay : MonoBehaviour
 		// Draw guides.
         DrawLine(new Vector2(0f, m_HeightPixels * 0.5f), new Vector2(m_WidthPixels, m_HeightPixels * 0.5f), zeroColour);
 
+        DrawLine(PlotSpace(0, SampleCursor, -0.5f), PlotSpace(0, SampleCursor, 0.5f), Color.black);
+
         foreach (var series in this.series.Values)
         {
             int sampleStart = Mathf.Max(series.values.Count - samplesOnScreen - stepsBack, 0);
@@ -186,9 +201,9 @@ public class GraphOverlay : MonoBehaviour
 	}
 
 	// Convert time-value to the pixel plot space.
-	Vector2 PlotSpace(int cursor, int sample, float value)
+	Vector2 PlotSpace(int sampleStart, int sample, float value)
 	{
-		float x = ((sample - cursor) / (float)(samplesOnScreen - 1)) * m_WidthPixels;
+		float x = ((sample - sampleStart) / (float)(samplesOnScreen - 1)) * m_WidthPixels;
 		float y = (value + 0.5f) * m_HeightPixels;
 
 		if (y < 0)
