@@ -22,6 +22,9 @@ public class ProfileAgent : MonoBehaviour
     public float errorThreshold = 1f; // tolerance must be high enough to allow slight corner cutting, since the rabbit is a little ahead of the car
 
     [HideInInspector]
+    public int currentNode;
+
+    [HideInInspector]
     [NonSerialized]
     public bool complete;
 
@@ -109,6 +112,8 @@ public class ProfileAgent : MonoBehaviour
         {
             profile[0].distance = profile[1].distance - interval; // initialise distance of node 0. yes this can be negative, and that is ok because this value is a relative distance not position.
         }
+
+        currentNode = node;
     }
 
     private Node Previous(Node node)

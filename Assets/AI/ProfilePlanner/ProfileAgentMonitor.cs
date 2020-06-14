@@ -21,6 +21,7 @@ public class ProfileAgentMonitor : MonoBehaviour
                     GraphOverlay.Plot("Traction", pathFinder.profile.Select(x => x.traction ? 1f : 0f));
                     GraphOverlay.Plot("Error", pathFinder.profile.Select(x => x.error));
                     GraphOverlay.Plot("Drift", pathFinder.profile.Select(x => x.sideslip));
+                    GraphOverlay.Cursor(pathFinder.currentNode);
                 }
             }
         }
