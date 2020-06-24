@@ -137,9 +137,11 @@ public:
 	MengerCurvatureEdge()
 	{
 		weight = 1.0;
+		section = -1;
 	}
 
 	double weight;
+	int section;
 
 	virtual bool read(std::istream& /*is*/)
 	{
@@ -258,6 +260,7 @@ int main(int argc, char** argv)
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		Eigen::Vector3d lower;
 		Eigen::Vector3d upper;
+		double jump;
 	};
 	
 	std::vector<section> sections;
@@ -270,6 +273,7 @@ int main(int argc, char** argv)
 		s.upper(0) = v[i++];
 		s.upper(1) = v[i++];
 		s.upper(2) = v[i++];
+		s.jump = v[i++];
 		sections.push_back(s);
 	}
 
@@ -311,6 +315,8 @@ int main(int argc, char** argv)
 		edge->setVertex(0, optimizer.vertex(previous));
 		edge->setVertex(1, optimizer.vertex(current));
 		edge->setVertex(2, optimizer.vertex(next));
+		edge->section = current;
+		edge->weight += sections[current].jump * 2.0; // weight the jump sections high
 		optimizer.addEdge(edge);
 	}
 
@@ -323,7 +329,7 @@ int main(int argc, char** argv)
 			// menger curvature is physically based, so once we find an ideal parameter (analogous to a minimum radius) it will be correct regardless
 			// of sampling resolution, etc
 			auto edge = dynamic_cast<MengerCurvatureEdge*>(*it);
-			edge->weight = 20.0;
+			edge->weight += 50.0 + sections[edge->section].jump * 500.0;
 			it++;
 		}
 

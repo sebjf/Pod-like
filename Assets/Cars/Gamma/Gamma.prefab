@@ -239,6 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954310a35c68e6946b40b942f0e5406a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bodyCollider: {fileID: 675991483}
   throttle: 0
   steeringAngle: 0
   brake: 0
@@ -248,6 +249,7 @@ MonoBehaviour:
   rigidbody: {fileID: 0}
   speed: 0
   wheelsInContact: 0
+  sideslipAngle: 0
 --- !u!114 &1230204972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54391,8 +54393,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 681467350}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 0
+  m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 3.77
   m_Range: 7.58
@@ -54824,8 +54827,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3975550122954535092}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 0
+  m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 3.77
   m_Range: 7.58
@@ -54932,6 +54936,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -54944,6 +54949,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -54966,9 +54972,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 1
-  m_CookingOptions: 14
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 8727989245208e5478229c0611dbdaba, type: 3}
 --- !u!114 &7369612306446301824
 MonoBehaviour:
@@ -54989,6 +54995,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474698329}
     m_Modifications:
+    - target: {fileID: 100000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_Name
       value: WheelRearL
@@ -54997,9 +55007,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
-      propertyPath: m_Layer
-      value: 8
+    - target: {fileID: 400000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -55045,18 +55063,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2080119219c0b643bb178000b83c5cf, type: 3}
 --- !u!4 &450615769 stripped
@@ -55078,15 +55084,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474698329}
     m_Modifications:
+    - target: {fileID: 100000, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_Name
       value: WheelFrontR
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 7dc562365ffe3dc449318d98e3a99805, type: 3}
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
@@ -55155,15 +55161,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474698329}
     m_Modifications:
+    - target: {fileID: 100000, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_Name
       value: WheelFrontL
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
-      propertyPath: m_Layer
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 2bd2d12fb5271244c9b95b2841470f1f, type: 3}
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
@@ -55232,6 +55238,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 474698329}
     m_Modifications:
+    - target: {fileID: 100000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_Name
       value: WheelRearR
@@ -55240,9 +55250,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
-      propertyPath: m_Layer
-      value: 8
+    - target: {fileID: 400000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -55286,18 +55304,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 400000, guid: 39f485bdd322f674586d9fcea5b0eb2b, type: 3}
-      propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

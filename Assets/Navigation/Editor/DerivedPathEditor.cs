@@ -7,8 +7,6 @@ using UnityEngine.SceneManagement;
 [CustomEditor(typeof(DerivedPath),true)]
 public class DerivedPathEditor : Editor
 {
-    private int Steps = 100;
-
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
@@ -77,12 +75,13 @@ public class DerivedPathEditor : Editor
             {
                 foreach (var item in sections)
                 {
-                    writer.WriteLine(item.lower.x);
-                    writer.WriteLine(item.lower.y);
-                    writer.WriteLine(item.lower.z);
-                    writer.WriteLine(item.upper.x);
-                    writer.WriteLine(item.upper.y);
-                    writer.WriteLine(item.upper.z);
+                    writer.WriteLine(item.left.x);
+                    writer.WriteLine(item.left.y);
+                    writer.WriteLine(item.left.z);
+                    writer.WriteLine(item.right.x);
+                    writer.WriteLine(item.right.y);
+                    writer.WriteLine(item.right.z);
+                    writer.WriteLine(item.jump ? 1f : 0f);
                 }
             }
         }

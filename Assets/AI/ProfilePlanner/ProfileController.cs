@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Barracuda;
-using System;
+using Unity.Barracuda;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Navigator))]
@@ -96,7 +94,7 @@ public class ProfileController : MonoBehaviour
 
         for (int i = 0; i < numObservations; i++)
         {
-            var Q = navigator.waypoints.Query(navigator.TrackDistance + i * observationsInterval);
+            var Q = navigator.waypoints.Query(navigator.PathDistance + i * observationsInterval);
             curvature[i] = Q.Curvature;
             camber[i] = Q.Camber;
             inclination[i] = Q.Inclination;

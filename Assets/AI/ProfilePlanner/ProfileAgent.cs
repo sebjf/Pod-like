@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(Navigator))]
 [RequireComponent(typeof(Autopilot))]
 [RequireComponent(typeof(PathObservations))]
+[RequireComponent(typeof(Vehicle))]
+
 public class ProfileAgent : MonoBehaviour
 {
     public int profileLength = 40;
@@ -15,8 +17,7 @@ public class ProfileAgent : MonoBehaviour
     private ResetController resetController;
     private Autopilot autopilot;
     private PathObservations pathObservations;
-
-    public PathVolume[] volumnes;
+    private Vehicle vehicle;
 
     public float speedStepSize = 5f;
     public float errorThreshold = 1f; // tolerance must be high enough to allow slight corner cutting, since the rabbit is a little ahead of the car
@@ -56,7 +57,7 @@ public class ProfileAgent : MonoBehaviour
         navigator = GetComponent<Navigator>();
         pathObservations = GetComponent<PathObservations>();
         resetController = GetComponent<ResetController>();
-        volumnes = FindObjectsOfType<PathVolume>();
+        vehicle = GetComponent<Vehicle>();
         navigator.Reset();
         CreateProfile();
     }
@@ -125,7 +126,26 @@ public class ProfileAgent : MonoBehaviour
     {
         var error = pathObservations.understeer;
 
-        AdjustError(ref error);
+        if(pathObservations.jumprulesflag)
+        {
+            error = 0; // ignore basic lateral error in favour of path geometry bounds
+
+            if (pathObservations.traction)
+            {
+                if(pathObservations.sideslipAngle >= 20f)
+                {
+                    error = errorThreshold + 1f;
+                }
+            }
+            else 
+            { 
+                var position = navigator.GetTrackPosition();
+                if (Mathf.Abs(position.offset) > 1.0f)
+                {
+                    error = errorThreshold + 1f;
+                }
+            }
+        }
 
         if(pathObservations.PopCollision())
         {
@@ -150,7 +170,7 @@ public class ProfileAgent : MonoBehaviour
         node.actual = pathObservations.speed;
         node.sideslip = pathObservations.sideslipAngle;
         node.error = error;
-        node.distance = navigator.TrackDistance;
+        node.distance = navigator.PathDistance;
 
         var prev = Previous(node);
         while (!prev.traction)
@@ -185,17 +205,6 @@ public class ProfileAgent : MonoBehaviour
         node.speed = Math.Min(node.actual + 2, node.speed); // only decrease actual if significantly smaller than target speed
         node.speed -= Mathf.Min(speedStepSize, node.speed / 2); // if target speed approaches zero, decrease the step size
         node.braking = true;
-    }
-
-    private void AdjustError(ref float error)
-    {
-        if(error > errorThreshold)
-        {
-            foreach (var item in volumnes)
-            {
-                item.AdjustError(this, ref error);
-            }
-        }
     }
 
     public void Reset()

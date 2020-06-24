@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// Controls the child agents to collect experiences based on sample distributions of speed and paths. 
@@ -38,15 +38,15 @@ public class ProfileAgentManager : MonoBehaviour
     }
 
     public int profileLength = 50;          // distance to sample using pathfinder in intervals
-    public float profileSpeedStepSize = 5;
+    public float profileSpeedStepSize = 2.5f;
     public float profileErrorThreshold = 1;
     public int autopilotLookahead = 15;
-
-    public int AgentInterval = 25;   // distance between agents along track in m
-
+    public int AgentInterval = 50;   // distance between agents along track in m
     public GameObject AgentPrefab;
+    public string directory = @"Support\Data";
 
-    public string directory;
+    public class ProfileAgentManagerComplete : UnityEvent<ProfileAgentManager> { }
+    public ProfileAgentManagerComplete OnComplete;
 
     public string filename
     {
@@ -58,7 +58,7 @@ public class ProfileAgentManager : MonoBehaviour
                 var n = AgentPrefab.GetComponentInChildren<ProfileController>().modelName.ToLower();
                 var fn = string.Format("{0}.{1}.trainingprofile.json", n, t);
                 var d = Application.dataPath;
-                return Path.Combine(directory, fn);
+                return Path.GetFullPath(Path.Combine(directory, fn));
             }catch
             {
                 return null;
@@ -66,12 +66,9 @@ public class ProfileAgentManager : MonoBehaviour
         }
     }
 
-
     private List<Agent> agents;
     private List<Agent> completed;
     private List<Experience> experiences;
-
-    private PathVolume[] volumes;
 
     [NonSerialized]
     public float elapsedRealTime;
@@ -94,29 +91,16 @@ public class ProfileAgentManager : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
-    ProfileAgentManager()
-    {
-        // https://docs.unity3d.com/ScriptReference/EditorApplication-playModeStateChanged.html
-        UnityEditor.EditorApplication.playModeStateChanged +=
-            (UnityEditor.PlayModeStateChange state) =>
-            {
-                //enabled = false;
-            };
-    }
-#endif
-
     private void Awake()
     {
         completed = new List<Agent>();
         agents = new List<Agent>();
         experiences = new List<Experience>();
-        volumes = FindObjectsOfType<PathVolume>();
-    }
-
-    private void Reset()
-    {
-        
+        if(OnComplete == null)
+        {
+            OnComplete = new ProfileAgentManagerComplete();
+        }
+        OnComplete.AddListener(InternalComplete);
     }
 
     // Start is called before the first frame update
@@ -166,27 +150,17 @@ public class ProfileAgentManager : MonoBehaviour
 
         if (agents.Count <= 0)
         {
-            OnComplete();
-
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;     //https://answers.unity.com/questions/161858/
-#elif UNITY_WEBPLAYER
-            Application.OpenURL(webplayerQuitURL);
-#else
-            Application.Quit();
-#endif
+            OnComplete.Invoke(this);
         }
     }
 
     public bool CheckPosition(TrackPath path, float position)
     {
-        foreach (var item in volumes)
+        if(path.Flags(position).nospawn)
         {
-            if (item.Excludes(path.Query(position).Midpoint))
-            {
-                return false;
-            }
+            return false;
         }
+
         return true;
     }
 
@@ -208,33 +182,33 @@ public class ProfileAgentManager : MonoBehaviour
         var driver = agent.GetComponent<ProfileController>();
         DestroyImmediate(driver);
 
-        var navigator = agent.GetComponent<Navigator>(); // ensure navigator is initialised first as pathfinder will reset it
+        var navigator = agent.GetComponent<Navigator>(); // ensure navigator is initialised first as profile agent will reset it
         navigator.waypoints = path;
         navigator.StartingPosition = position;
 
-        var pathfinder = agent.GetComponent<ProfileAgent>();
+        var profileAgent = agent.GetComponent<ProfileAgent>();
 
-        if(!pathfinder)
+        if(!profileAgent)
         {
-            pathfinder = agent.AddComponent<ProfileAgent>();
+            profileAgent = agent.AddComponent<ProfileAgent>();
         }
 
-        pathfinder.profileLength = profileLength;
-        pathfinder.speedStepSize = profileSpeedStepSize;
-        pathfinder.errorThreshold = profileErrorThreshold;
-        pathfinder.interval = driver.observationsInterval;
+        profileAgent.profileLength = profileLength;
+        profileAgent.speedStepSize = profileSpeedStepSize;
+        //profileAgent.errorThreshold = profileErrorThreshold;
+        profileAgent.interval = driver.observationsInterval;
 
-        pathfinder.CreateProfile(); // re-create the profile with the updated parameters as CreateProfile will be called with the prefabs parameters by PathFinder.Awake() on AddComponent
+        profileAgent.CreateProfile(); // re-create the profile with the updated parameters as CreateProfile will be called with the prefabs parameters by PathFinder.Awake() on AddComponent
 
         var reset = agent.GetComponent<ResetController>();
-        reset.ResetPosition(position);
+        reset.ResetPosition();
 
         var autopilot = agent.GetComponent<Autopilot>();
-        autopilot.maxLookahead = autopilotLookahead;
+        //autopilot.maxLookahead = autopilotLookahead;
 
         agent.SetActive(true); // prefab may be disabled depending on when it was last updated
 
-        return pathfinder;
+        return profileAgent;
     }
 
     public void CreateAgents()
@@ -264,7 +238,20 @@ public class ProfileAgentManager : MonoBehaviour
         }
     }
 
-    public void OnComplete()
+    public static void InternalComplete(ProfileAgentManager manager)
+    {
+        manager.Export();
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;     //https://answers.unity.com/questions/161858/
+#elif UNITY_WEBPLAYER
+            Application.OpenURL(webplayerQuitURL);
+#else
+            Application.Quit();
+#endif
+    }
+
+    public void Export()
     {
         Export(filename);
     }
@@ -351,5 +338,4 @@ public class ProfileAgentManager : MonoBehaviour
             }
         }
     }
-
 }

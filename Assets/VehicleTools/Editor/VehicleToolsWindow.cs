@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.IO;
 using System.Linq;
+using System;
 
 class VehicleTools : EditorWindow
 {
@@ -11,8 +12,20 @@ class VehicleTools : EditorWindow
 
     public static void ShowWindow()
     {
-        EditorWindow.GetWindow(typeof(VehicleTools));
+        var window = EditorWindow.GetWindow(typeof(VehicleTools)) as VehicleTools;
     }
+
+    void OnEnable()
+    {
+        SceneView.duringSceneGui += OnSceneGUI;
+    }
+    void OnDisable()
+    {
+        SceneView.duringSceneGui -= OnSceneGUI;
+    }
+
+    bool setCenterOfMass = false;
+    Tool tool;
 
     void OnGUI()
     {
@@ -36,6 +49,10 @@ class VehicleTools : EditorWindow
             InitialiseWheels(Selection.activeGameObject);
         }
 
+        EditorGUILayout.LabelField("Physics");
+
+        setCenterOfMass = GUILayout.Toggle(setCenterOfMass, "Set Center Of Mass", "Button");
+
         EditorGUILayout.LabelField("Deformation");
 
         if (GUILayout.Button("Create High Res Geometry"))
@@ -49,22 +66,35 @@ class VehicleTools : EditorWindow
         }
     }
 
+    public void OnSceneGUI(SceneView view)
+    {
+        if (setCenterOfMass)
+        {
+            Tools.current = Tool.None;
+            try
+            {
+                var rb = Selection.activeGameObject.GetComponent<Rigidbody>();
 
+                EditorGUI.BeginChangeCheck();
+                var worldCoM = (Handles.PositionHandle(rb.transform.TransformPoint(rb.centerOfMass), Quaternion.identity)); if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(rb, "Change Center of Mass");
+                    rb.centerOfMass = rb.transform.InverseTransformPoint(worldCoM);
+                }
+
+                HandleUtility.Repaint();
+            }
+            catch (NullReferenceException)
+            {
+            }
+        }
+    }
 
     void LoadWheelGeometry(GameObject asset)
     {
         // Use the mesh to find the directory of this car.
 
         var paths = AssetTools.FindAssetPaths(asset);
-
-        // get the xml
-
-        var metadatafile = Path.Combine(Path.Combine(Application.dataPath.Substring(0, Application.dataPath.Length - "Assets\\".Length), paths.directory), paths.filename + ".xml");
-        var metadatabytes = File.ReadAllBytes(metadatafile);
-
-        var metadata = AssetsInfo.CarInfo.Load(metadatabytes);
-
-        asset.transform.localPosition = metadata.Chassis.ToUnity();
 
         // load the wheels
 
@@ -99,13 +129,6 @@ class VehicleTools : EditorWindow
             wheelgameobject.name = "WheelFrontR";
             wheelgameobject.transform.parent = asset.transform;
         }
-
-        var halfWheelHeight = asset.transform.Find("WheelRearL").GetComponentInChildren<MeshFilter>().sharedMesh.bounds.extents.y;
-
-        asset.transform.Find("WheelRearL").localPosition = new Vector3(metadata.WheelRearL.x, -metadata.Chassis.y + halfWheelHeight, metadata.WheelRearL.z);
-        asset.transform.Find("WheelFrontL").localPosition = new Vector3(metadata.WheelFrontL.x, -metadata.Chassis.y + halfWheelHeight, metadata.WheelFrontL.z);
-        asset.transform.Find("WheelRearR").localPosition = new Vector3(metadata.WheelRearR.x, -metadata.Chassis.y + halfWheelHeight, metadata.WheelRearR.z);
-        asset.transform.Find("WheelFrontR").localPosition = new Vector3(metadata.WheelFrontR.x, -metadata.Chassis.y + halfWheelHeight, metadata.WheelFrontR.z);
     }
 
     public static void InitialiseRigidbody(GameObject asset)

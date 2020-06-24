@@ -63,7 +63,7 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         {
             Initialise();
         }
-        return waypoints.Select(wp => track.Section(wp.x)).ToList();
+        return waypoints.Select(wp => track.TrackSection(wp.x)).ToList();
     }
 
     public void Load(float[] weights)
@@ -82,8 +82,8 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
     public Vector3 Position(float x, float w)
     {
-        var T = track.Section(x);
-        return  (1 - ((w * 0.5f) + 0.5f)) * T.lower + ((w * 0.5f) + 0.5f) * T.upper; // convert w to the range 0..1 then interpolate
+        var T = track.TrackSection(x);
+        return  (1 - ((w * 0.5f) + 0.5f)) * T.left + ((w * 0.5f) + 0.5f) * T.right; // convert w from domain -0.5..0.5 to domain 0..1 then interpolate
     }
 
     public override Vector3 Position(DerivedWaypoint wp)
@@ -136,11 +136,25 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
         query.Inclination = Inclination(query.Forward);
 
-        query.Width = 0;
-
         Profiler.EndSample();
 
         return query;
+    }
+
+    public override TrackFlags Flags(float distance)
+    {
+        return track.Flags(TrackDistance(distance));
+    }
+
+    public override float TrackDistance(float distance)
+    {
+        var wq = WaypointQuery(distance);
+        return Mathf.Lerp(wq.waypoint.x, wq.next.x, wq.t);
+    }
+
+    public override TrackSection TrackSection(float distance)
+    {
+        return track.TrackSection(TrackDistance(distance));
     }
 
     private void OnDrawGizmos()

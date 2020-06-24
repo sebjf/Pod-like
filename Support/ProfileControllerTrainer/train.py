@@ -8,9 +8,10 @@ import subprocess
 
 # environment parameters
 
-source = "D:/temp11"
-modelname = "alien"
-destination = "C:/Users/Sebastian/Documents/Unity Projects/PoD/Assets/StreamingAssets"
+modelname = "gamma"
+
+source = os.path.abspath(os.path.join(os.getcwd(), "../TrainingData"))
+destination = os.path.abspath(os.path.join(os.getcwd(), "../../Assets/StreamingAssets"))
 
 train_controller = True
 train_classifier = True

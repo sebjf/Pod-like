@@ -22,15 +22,15 @@ public class Navigator : MonoBehaviour
     public float PreviousTotalDistanceTravelled;
 
     /// <summary>
-    /// Distance around Track in Track Space (the distance along a single lap)
+    /// Distance around Path in Path Space (the distance along a single lap)
     /// </summary>
     [HideInInspector]
     [NonSerialized]
-    public float TrackDistance;
+    public float PathDistance;
 
     [HideInInspector]
     [NonSerialized]
-    public float PreviousTrackDistance;
+    public float PreviousPathDistance;
 
     [HideInInspector]
     [NonSerialized]
@@ -39,6 +39,8 @@ public class Navigator : MonoBehaviour
     [HideInInspector]
     [NonSerialized]
     public int Lap;
+
+
 
     private void Start()
     {
@@ -53,9 +55,8 @@ public class Navigator : MonoBehaviour
         }
 
         Lap = -1;
-        TrackDistance = waypoints.Distance(transform.position, StartingPosition);
-        StartingPosition = TrackDistance;
-        PreviousTrackDistance = TrackDistance;
+        PathDistance = waypoints.Distance(transform.position, StartingPosition);
+        PreviousPathDistance = PathDistance;
         TotalDistanceTravelled = 0f;
         PreviousTotalDistanceTravelled = 0f;
         distanceTravelledInFrame = 0f;
@@ -69,30 +70,54 @@ public class Navigator : MonoBehaviour
             return;
         }
 
-        PreviousTrackDistance = TrackDistance;
+        PreviousPathDistance = PathDistance;
 
-        TrackDistance = waypoints.Distance(transform.position, TrackDistance);
+        PathDistance = waypoints.Distance(transform.position, PathDistance);
 
-        distanceTravelledInFrame = TrackDistance - PreviousTrackDistance;
+        distanceTravelledInFrame = PathDistance - PreviousPathDistance;
 
         if(Mathf.Abs(distanceTravelledInFrame) > (waypoints.totalLength / 2))
         {
             // we have crossed over the finish line. figure out which direction so we know if we going forwards or backwards in this frame.
 
-            if(TrackDistance < PreviousTrackDistance) // forwards
+            if(PathDistance < PreviousPathDistance) // forwards
             {
-                distanceTravelledInFrame = (waypoints.totalLength - PreviousTrackDistance) + TrackDistance;
+                distanceTravelledInFrame = (waypoints.totalLength - PreviousPathDistance) + PathDistance;
                 Lap++;
             }
-            if(TrackDistance > PreviousTrackDistance) // backwards
+            if(PathDistance > PreviousPathDistance) // backwards
             {
-                distanceTravelledInFrame = -(PreviousTrackDistance + (waypoints.totalLength - TrackDistance));
+                distanceTravelledInFrame = -(PreviousPathDistance + (waypoints.totalLength - PathDistance));
                 Lap--;
             }
         }
 
         PreviousTotalDistanceTravelled = TotalDistanceTravelled;
         TotalDistanceTravelled += distanceTravelledInFrame;
+    }
+
+    public struct TrackPosition
+    {
+        public float distance;
+        public float offset;
+        public float width;
+    }
+
+    public TrackPosition GetTrackPosition()
+    {
+        var section = waypoints.TrackSection(PathDistance);
+        var midpoint = (section.left + section.right) * 0.5f;
+        var tangent = (section.right - midpoint).normalized;
+        var width = (section.right - section.left).magnitude;
+
+        var offset = Vector3.Dot(transform.position - midpoint, tangent) / (width * 0.5f);
+
+        TrackPosition p;
+        p.distance = section.trackdistance;
+        p.offset = offset;
+        p.width = width;
+
+        return p;
     }
 
     private void OnDrawGizmos()
@@ -112,7 +137,7 @@ public class Navigator : MonoBehaviour
             return;
         }
 
-        var query = waypoints.Query(TrackDistance);
+        var query = waypoints.Query(PathDistance);
 
         var midline = query.Midpoint;
         var forward = query.Forward;

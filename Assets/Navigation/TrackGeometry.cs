@@ -54,8 +54,30 @@ public struct PathQuery
     public float Curvature;
     public float Inclination;
     public float Camber;
-    public float Width; // can be zero
+
+    public Vector3 Up
+    {
+        get
+        {
+            return Vector3.Cross(Tangent, Forward).normalized;
+        }
+    }
 }
+
+public struct TrackSection
+{
+    public Vector3 left;
+    public Vector3 right;
+    public float trackdistance;
+    public bool jump;
+}
+
+public struct TrackFlags
+{
+    public bool nospawn;
+    public bool jumprules;
+}
+
 
 public abstract class TrackPath : MonoBehaviour
 {
@@ -64,6 +86,9 @@ public abstract class TrackPath : MonoBehaviour
     public abstract float Distance(Vector3 position, float lastDistance);
 
     public abstract PathQuery Query(float distance);
+    public abstract TrackFlags Flags(float distance);
+    public abstract float TrackDistance(float distance);
+    public abstract TrackSection TrackSection(float distance);
 
     /// <summary>
     /// Computes the curvature of Y. (Where X is *ahead* by h and Z is behind by h.)
@@ -347,13 +372,10 @@ public class TrackWaypoint : Waypoint
     public Vector3 up;
     public Vector3 left;
     public Vector3 right;
-}
 
-[Serializable]
-public struct TrackSection
-{
-    public Vector3 lower;
-    public Vector3 upper;
+    public bool nospawn;
+    public bool jump;
+    public bool jumprules;
 }
 
 public class TrackGeometry : Waypoints<TrackWaypoint>
@@ -397,7 +419,7 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         Recompute();
     }
 
-    public TrackSection Section(float distance)
+    public override TrackSection TrackSection(float distance)
     {
         var wq = WaypointQuery(distance);
         
@@ -405,8 +427,10 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         var tangent = Tangent(wq);
         var width = Width(wq);
         TrackSection section;
-        section.lower = position - tangent * width * 0.5f;
-        section.upper = position + tangent * width * 0.5f;
+        section.left = position - tangent * width * 0.5f;
+        section.right = position + tangent * width * 0.5f;
+        section.jump = wq.waypoint.jump;
+        section.trackdistance = distance;
         return section;
     }
 
@@ -423,10 +447,11 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
 
         query.Forward = Vector3.Lerp((B.position - A.position).normalized, (A.position - Previous(A).position).normalized, 0.5f);
         query.Midpoint = Position(wq);
-        query.Width = Mathf.Lerp(A.width,B.width,t);
         query.Tangent = Vector3.Lerp(A.tangent, B.tangent, t);
 
-        query.Camber = query.Tangent.y / query.Width;
+        var width = Mathf.Lerp(A.width, B.width, t);
+
+        query.Camber = query.Tangent.y / width;
         query.Inclination = Inclination(query.Forward);
 
         var x = Position(WaypointQuery(distance + curvatureSampleDistance));
@@ -438,6 +463,20 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         Profiler.EndSample();
 
         return query;
+    }
+
+    public override TrackFlags Flags(float distance)
+    {
+        var wq = WaypointQuery(distance);
+        TrackFlags query;
+        query.nospawn = wq.waypoint.nospawn;
+        query.jumprules = wq.waypoint.jumprules;
+        return query;
+    }
+
+    public override float TrackDistance(float distance)
+    {
+        return distance;
     }
 
     public Vector3 Position(WaypointQueryResult q)

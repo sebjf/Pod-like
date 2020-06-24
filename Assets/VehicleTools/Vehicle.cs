@@ -6,6 +6,8 @@ using UnityEngine.Profiling;
 [RequireComponent(typeof(Rigidbody))]
 public class Vehicle : MonoBehaviour
 {
+    public Collider bodyCollider;
+
     [Range(-1,1)]
     public float throttle;
 

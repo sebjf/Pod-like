@@ -66,7 +66,7 @@ public class DrivingProfiler : MonoBehaviour
     void FixedUpdate()
     {
         // realistically we will not skip a whole waypoint in a frame, but even if we do, we can interpolate to fix as its easy to detect
-        var index = path.WaypointQuery(navigator.TrackDistance).waypoint.index;
+        var index = path.WaypointQuery(navigator.PathDistance).waypoint.index;
 
         if (body)
         {

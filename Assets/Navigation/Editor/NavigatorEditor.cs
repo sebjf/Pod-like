@@ -31,7 +31,7 @@ public class NavigatorEditor : Editor
 
         var navigator = target as Navigator;
 
-        EditorGUILayout.LabelField("Distance", navigator.TrackDistance.ToString());
+        EditorGUILayout.LabelField("Distance", navigator.PathDistance.ToString());
         EditorGUILayout.LabelField("Lap", navigator.Lap.ToString());
     }
 }

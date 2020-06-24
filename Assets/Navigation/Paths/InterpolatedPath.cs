@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class InterpolatedPath : DerivedPath
 {
-    public float coefficient;
+    public float coefficient = 5;
 
     [SerializeField]
     public float[] coefficients;

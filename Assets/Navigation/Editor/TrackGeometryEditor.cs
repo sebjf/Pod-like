@@ -25,11 +25,73 @@ public class TrackGeometryEditor : Editor
 
         EditorGUILayout.HelpBox("Hold Shift to enter Waypoint Create Mode", MessageType.Info); // https://answers.unity.com/questions/1019430
         EditorGUILayout.HelpBox("Hold Ctrl to enter Waypoint Inspect Mode", MessageType.Info);
+        EditorGUILayout.HelpBox("Press W to fit Horizontally", MessageType.Info);
 
         if (GUILayout.Button("Recompute"))
         {
             Undo.RecordObject(component, "Recompute");
             component.Recompute();
+        }
+
+        // flags
+
+        if (component.selected.Count > 0)
+        {
+            {
+                bool allon = component.selected.All(x => x.nospawn);
+                bool someon = component.selected.Any(x => x.nospawn);
+                bool mixed = someon & !allon;
+
+                EditorGUI.BeginChangeCheck();
+                EditorGUI.showMixedValue = mixed;
+                var newvalue = EditorGUILayout.Toggle("No Spawning", allon);
+                EditorGUI.showMixedValue = false;
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(component, "Updated Spawn Flags");
+                    foreach (var item in component.selected)
+                    {
+                        item.nospawn = newvalue;
+                    }
+                }
+
+            }
+            {
+                bool allon = component.selected.All(x => x.jump);
+                bool someon = component.selected.Any(x => x.jump);
+                bool mixed = someon & !allon;
+
+                EditorGUI.BeginChangeCheck();
+                EditorGUI.showMixedValue = mixed;
+                var newvalue = EditorGUILayout.Toggle("Jump", allon);
+                EditorGUI.showMixedValue = false;
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(component, "Updated Jump Flags");
+                    foreach (var item in component.selected)
+                    {
+                        item.jump = newvalue;
+                    }
+                }
+            }
+            {
+                bool allon = component.selected.All(x => x.jumprules);
+                bool someon = component.selected.Any(x => x.jumprules);
+                bool mixed = someon & !allon;
+
+                EditorGUI.BeginChangeCheck();
+                EditorGUI.showMixedValue = mixed;
+                var newvalue = EditorGUILayout.Toggle("Jump Rules", allon);
+                EditorGUI.showMixedValue = false;
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(component, "Updated Jump Rules Flags");
+                    foreach (var item in component.selected)
+                    {
+                        item.jumprules = newvalue;
+                    }
+                }
+            }
         }
     }
 
@@ -176,6 +238,7 @@ public class TrackGeometryEditor : Editor
                     component.highlighted.Add(waypoint);
                 }
             }
+
         }
         else
         {
@@ -209,6 +272,7 @@ public class TrackGeometryEditor : Editor
             {
                 component.selected.Clear();
                 component.selected.AddRange(component.highlighted);
+                Repaint();
             }
             else
             {
@@ -235,6 +299,7 @@ public class TrackGeometryEditor : Editor
 
                             component.selected.Clear();
                             component.selected.Add(wp);
+                            Repaint();
                         }
                     }
                 }
@@ -251,6 +316,7 @@ public class TrackGeometryEditor : Editor
             }
             component.Recompute();
             component.selected.Clear();
+            Repaint();
             Event.current.Use();
         }
 
@@ -260,6 +326,16 @@ public class TrackGeometryEditor : Editor
             foreach (var item in component.selected)
             {
                 FindWidth(component, item);
+            }
+            Event.current.Use();
+        }
+
+        // update height
+        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Q)
+        {
+            foreach (var item in component.selected)
+            {
+                FindHeight(component, item);
             }
             Event.current.Use();
         }
@@ -293,17 +369,36 @@ public class TrackGeometryEditor : Editor
         SceneView.RepaintAll();
     }
 
-    private void FindWidth(TrackGeometry component, TrackWaypoint waypoint)
+    private void FindHeight(TrackGeometry component, TrackWaypoint waypoint)
     {
         RaycastHit raycast;
-        if (Physics.Raycast(new Ray(waypoint.position + waypoint.up * 0.01f, -waypoint.tangent), out raycast))
+        if (Physics.Raycast(new Ray(waypoint.position, Vector3.down), out raycast))
         {
             if (raycast.distance < 100f)
             {
                 waypoint.left = raycast.point;
             }
         }
-        if (Physics.Raycast(new Ray(waypoint.position + waypoint.up * 0.01f, waypoint.tangent), out raycast))
+        if (Physics.Raycast(new Ray(waypoint.position, Vector3.down), out raycast))
+        {
+            if (raycast.distance < 100f)
+            {
+                waypoint.right = raycast.point;
+            }
+        }
+    }
+
+    private void FindWidth(TrackGeometry component, TrackWaypoint waypoint)
+    {
+        RaycastHit raycast;
+        if (Physics.Raycast(new Ray(waypoint.position + waypoint.up * 0.001f, -waypoint.tangent), out raycast))
+        {
+            if (raycast.distance < 100f)
+            {
+                waypoint.left = raycast.point;
+            }
+        }
+        if (Physics.Raycast(new Ray(waypoint.position + waypoint.up * 0.001f, waypoint.tangent), out raycast))
         {
             if (raycast.distance < 100f)
             {
@@ -333,7 +428,6 @@ public class TrackGeometryEditor : Editor
     {
         Profiler.BeginSample("Draw Waypoints Editor");
 
-        Gizmos.color = Color.green;
         foreach (var waypoint in component.waypoints)
         {
             var size = 1f;
@@ -341,6 +435,18 @@ public class TrackGeometryEditor : Editor
             {
                 size = 2f;
             }
+
+            Gizmos.color = Color.green;
+
+            if (waypoint.nospawn)
+            {
+                Gizmos.color = new Color(1f, 0.8f, 1f, 1);
+            }
+            if (waypoint.jump)
+            {
+                Gizmos.color = new Color(0.5f, 0.5f, 1f, 1);
+            }
+
             Gizmos.DrawWireSphere(waypoint.position, size);
         }
 

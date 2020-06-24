@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 233415020}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.3046265, y: -0.00999999, z: -1.95}
+  m_LocalPosition: {x: -1.3046265, y: 0.047, z: -1.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7262632920191070452}
@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 37510
+  k: 41761.902
   B: 10000
-  offset: 0.13996267
-  travel: 0.5598507
+  offset: 0.12571266
+  travel: 0.50285065
   radius: 0.5642015
   slipForce:
     serializedVersion: 2
@@ -123,8 +123,8 @@ MonoBehaviour:
   steerAngle: 0
   wheelsInContact: 0
   mass: 20
-  localAttachmentPosition: {x: -1.3046265, y: 0.5498507, z: -1.95}
-  height: 0.5598507
+  localAttachmentPosition: {x: -1.3046265, y: 0.54985064, z: -1.95}
+  height: 0.50285065
 --- !u!1 &914759940
 GameObject:
   m_ObjectHideFlags: 0
@@ -208,6 +208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954310a35c68e6946b40b942f0e5406a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bodyCollider: {fileID: 914759943}
   throttle: 0
   steeringAngle: 0
   brake: 0
@@ -217,6 +218,7 @@ MonoBehaviour:
   rigidbody: {fileID: 0}
   speed: 0
   wheelsInContact: 0
+  sideslipAngle: 0
 --- !u!114 &914759944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49721,6 +49723,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -49733,6 +49736,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -49755,9 +49759,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 1
-  m_CookingOptions: 14
+  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 7466b24960746f54fa2f2c9ef12addec, type: 3}
 --- !u!114 &4079942251698756219
 MonoBehaviour:
@@ -49859,7 +49863,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1112526898}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.54216, y: -0.038, z: 2.068}
+  m_LocalPosition: {x: 1.54216, y: -0.060000014, z: 2.068}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7262632919422551961}
@@ -49878,10 +49882,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 35723.355
+  k: 48837.207
   B: 10000
-  offset: 0.14696267
-  travel: 0.5878507
+  offset: 0.1075
+  travel: 0.43
   radius: 0.563492
   slipForce:
     serializedVersion: 2
@@ -49957,8 +49961,8 @@ MonoBehaviour:
   steerAngle: 0
   wheelsInContact: 0
   mass: 20
-  localAttachmentPosition: {x: 1.54216, y: 0.5498507, z: 2.068}
-  height: 0.5878507
+  localAttachmentPosition: {x: 1.54216, y: 0.37, z: 2.068}
+  height: 0.43
 --- !u!1 &1280059481
 GameObject:
   m_ObjectHideFlags: 0
@@ -49984,7 +49988,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280059481}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.54216, y: -0.037999988, z: 2.068}
+  m_LocalPosition: {x: -1.54216, y: -0.060000002, z: 2.068}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7262632920089387860}
@@ -50003,10 +50007,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 35723.355
+  k: 48837.207
   B: 10000
-  offset: 0.14696267
-  travel: 0.5878507
+  offset: 0.1075
+  travel: 0.43
   radius: 0.563492
   slipForce:
     serializedVersion: 2
@@ -50082,8 +50086,8 @@ MonoBehaviour:
   steerAngle: 0
   wheelsInContact: 0
   mass: 20
-  localAttachmentPosition: {x: -1.54216, y: 0.5498507, z: 2.068}
-  height: 0.5878507
+  localAttachmentPosition: {x: -1.54216, y: 0.37, z: 2.068}
+  height: 0.43
 --- !u!1 &1395924277
 GameObject:
   m_ObjectHideFlags: 0
@@ -50139,7 +50143,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1954922857}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.3046265, y: -0.01, z: -1.95}
+  m_LocalPosition: {x: 1.3046265, y: 0.046999995, z: -1.95}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7262632920078225673}
@@ -50158,10 +50162,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647202b88a0e8a6448610b499b3cfcc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  k: 37510
+  k: 41761.902
   B: 10000
-  offset: 0.13996267
-  travel: 0.5598507
+  offset: 0.12571266
+  travel: 0.50285065
   radius: 0.5642165
   slipForce:
     serializedVersion: 2
@@ -50237,8 +50241,8 @@ MonoBehaviour:
   steerAngle: 0
   wheelsInContact: 0
   mass: 20
-  localAttachmentPosition: {x: 1.3046265, y: 0.5498507, z: -1.95}
-  height: 0.5598507
+  localAttachmentPosition: {x: 1.3046265, y: 0.54985064, z: -1.95}
+  height: 0.50285065
 --- !u!1 &2035527729
 GameObject:
   m_ObjectHideFlags: 0
@@ -50323,6 +50327,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -50335,6 +50340,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -50401,6 +50407,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -50414,6 +50421,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -50480,6 +50488,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -50492,6 +50501,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -50558,6 +50568,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -50571,6 +50582,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0

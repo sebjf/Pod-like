@@ -13,23 +13,5 @@
             "args": [
             ]
         },
-        {
-            "name": "Python: Train Classifier",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/train_classifier.py",
-            "console": "integratedTerminal",
-            "args": [
-            ]
-        },
-        {
-            "name": "Python: Convert",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/convert.py",
-            "console": "integratedTerminal",
-            "args": [
-            ]
-        },
     ]
 }

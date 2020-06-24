@@ -134,9 +134,10 @@ public class PathPlannerManager : MonoBehaviour
 
         var navigator = agent.GetComponent<Navigator>();
         navigator.waypoints = path;
+        navigator.StartingPosition = 0;
 
         var reset = agent.GetComponent<ResetController>();
-        reset.ResetPosition(0);
+        reset.ResetPosition();
 
         agent.SetActive(true); // prefab may be disabled depending on when it was last updated
         SetLayer(agent, "Car"); // for now car but we may add a training car layer in the future
@@ -162,7 +163,7 @@ public class PathPlannerManager : MonoBehaviour
     {
         foreach (var agent in agents)
         {
-            agent.times[agent.path.WaypointQuery(agent.navigator.TrackDistance).waypoint.index] = Time.time;
+            agent.times[agent.path.WaypointQuery(agent.navigator.PathDistance).waypoint.index] = Time.time;
 
             if(agent.navigator.Lap == 1)
             {
