@@ -70,6 +70,11 @@ public class ProfileAgentManager : MonoBehaviour
     private List<Agent> completed;
     private List<Experience> experiences;
 
+    public IEnumerable<Transform> Agents
+    {
+        get { return agents.Select(a => a.profilefinder.transform); }
+    }
+
     [NonSerialized]
     public float elapsedRealTime;
 

@@ -12,6 +12,7 @@ public class TrainingPanelController : MonoBehaviour
     public LayoutGroup CarsPanel;
     public Text SummaryText;
     public Text ProgressText;
+    public Text InstancsText;
     public Button TrainProfileHereButton;
     public GameObject ToggleButtonPrefab;
     public TrainingManager TrainingManager;
@@ -60,13 +61,14 @@ public class TrainingPanelController : MonoBehaviour
         circuits = CircuitsPanel.GetComponentsInChildren<TrainingEntityListItem>().Where(x => x.selected).Select(x => x.item).ToList();
         cars = CarsPanel.GetComponentsInChildren<TrainingEntityListItem>().Where(x => x.selected).Select(x => x.item).ToList();
         var instances = circuits.Count * cars.Count;
-        SummaryText.text = string.Format("Training Instances {0}", instances);
+        SummaryText.text = string.Format("Selected {0}", instances);
     }
 
 
     private void Update()
     {
         ProgressText.text = string.Format("Remaining {0}", TrainingManager.Remaining);
+        InstancsText.text = string.Format("Instances {0}", TrainingManager.RemoteInstances);
     }
 
 }

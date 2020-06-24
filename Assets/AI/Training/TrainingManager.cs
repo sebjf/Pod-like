@@ -13,36 +13,72 @@ using System.Xml.XPath;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+[Serializable]
+public struct TrainingAgentTransform
+{
+    public Vector3 position;
+    public Quaternion rotation;
+}
+
+[Serializable]
+public class TrainingState
+{
+    public string scenekey;
+    public string carkey;
+    public List<TrainingAgentTransform> agents;
+
+    public TrainingState()
+    {
+        agents = new List<TrainingAgentTransform>();
+    }
+}
+
 public class TrainingManager : MonoBehaviour
 {
     private Dictionary<string, string> circuits;
     private Dictionary<string, GameObject> cars;
 
+    private ConcurrentQueue<TrainingRequest> trainingRequests;
+
+    private TrainingState state;
+    private ProfileAgentManager manager;
+
     public string directory = @"Support\TrainingData";
     private List<float> interpolationCoefficients;
-
-    public bool isRemoteClient;
 
     public IEnumerable<string> Circuits => circuits.Keys;
     public IEnumerable<string> Cars => cars.Keys;
 
-    private ConcurrentQueue<TrainingRequest> trainingRequests;
+    // remote instance management
 
     private List<TrainingInstance> instances;
+    private List<TrainingInstance> available;
+
+    public bool isRemoteClient;
+    private bool runServer;
+    private TrainingInstance client;
 
     public event Action OnTrainingRequestComplete;
-    public event Action OnStateUpdate;
 
     public GameObject GetCarPrefab(string key)
     {
         return cars[key];
     }
     
-    public int Remaining
-    {
+    public int Remaining {
         get
         {
             return trainingRequests.Count;
+        }
+    }
+
+    public string RemoteInstances { 
+        get 
+        { 
+            lock(instances)
+            {
+                return instances.Count.ToString();
+            }
         }
     }
 
@@ -59,6 +95,8 @@ public class TrainingManager : MonoBehaviour
         cars = new Dictionary<string, GameObject>();
         trainingRequests = new ConcurrentQueue<TrainingRequest>();
         instances = new List<TrainingInstance>();
+        available = new List<TrainingInstance>();
+        state = new TrainingState();
 
         for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
         {
@@ -87,11 +125,14 @@ public class TrainingManager : MonoBehaviour
     {
         if (isRemoteClient)
         {
-            new TrainingInstance(new TcpClient("127.0.0.1", 8000), this);
+            client = new TrainingInstance(new TcpClient("127.0.0.1", 8000), this); // this creates a TrainingInstance pointing to this class
+            StartCoroutine(TrainingWorkerCoroutine());
         }
         else
         {
-            StartCoroutine(TrainingWorkerCoroutine());
+            StartCoroutine(RemoteWorkerCoroutine());
+            runServer = true;
+            Task.Run(StartServer);
         }
     }
 
@@ -128,10 +169,12 @@ public class TrainingManager : MonoBehaviour
                 yield return null;
             }
 
+
+
             var scene = SceneManager.GetSceneByPath(path);
             var root = scene.GetRootGameObjects().Select(x => x.GetComponentInChildren<Track>()).Where(x => x != null).First();
 
-            var manager = scene.GetRootGameObjects().Select(x => x.GetComponentInChildren<ProfileAgentManager>()).Where(x => x != null).FirstOrDefault();
+            manager = scene.GetRootGameObjects().Select(x => x.GetComponentInChildren<ProfileAgentManager>()).Where(x => x != null).FirstOrDefault();
             if (manager == null)
             {
                 manager = root.gameObject.AddComponent<ProfileAgentManager>();
@@ -171,6 +214,17 @@ public class TrainingManager : MonoBehaviour
 
             while (training)
             {
+                if(isRemoteClient)
+                {
+                    lock (state)
+                    {
+                        state.scenekey = request.circuit;
+                        state.carkey = request.car;
+                        state.agents.Clear();
+                        state.agents.AddRange(manager.Agents.Select(t => new TrainingAgentTransform() { position = t.position, rotation = t.rotation }));
+                    }
+                }
+
                 yield return null;
             }
 
@@ -181,19 +235,75 @@ public class TrainingManager : MonoBehaviour
         }
     }
 
-
     [Serializable]
     public class Message
     {
         public string type;
+        public string payload;
+    }
+
+    private IEnumerator RemoteWorkerCoroutine()
+    {
+        while(true)
+        {
+            TrainingRequest request;
+            while (!trainingRequests.TryDequeue(out request))
+            {
+                yield return null;
+            }
+
+            while (true)
+            {
+                TrainingInstance instance;
+
+                while (true)
+                {
+                    lock (available)
+                    {
+                        if (available.Count > 0)
+                        {
+                            instance = available.First();
+                            available.Remove(instance);
+                            break;
+                        }
+                        else
+                        {
+                            yield return null;
+                        }
+                    }
+                }
+
+                try
+                {
+                    instance.SendRequest(request);
+                    break; // next request
+                }
+                catch (IOException)
+                {
+                    lock(instances)
+                    {
+                        instances.Remove(instance); // client gone away
+                    }
+                }
+            }
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        runServer = false;
+        if(client != null)
+        {
+            client.Close();
+        }
     }
 
 
-    public async void StartListener()
+    public async void StartServer()
     {
         TcpListener listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8000);
         listener.Start(100);
-        while (true)
+        while (runServer)
         {
             var client = await listener.AcceptTcpClientAsync();
             var instance = new TrainingInstance(client, this);
@@ -202,6 +312,7 @@ public class TrainingManager : MonoBehaviour
                 instances.Add(instance);
             }
         }
+        listener.Stop();
     }
 
     public class TrainingInstance
@@ -213,9 +324,14 @@ public class TrainingManager : MonoBehaviour
         {
             this.manager = manager;
             manager.OnTrainingRequestComplete += PostComplete;
-            manager.OnStateUpdate += SendStateUpdate;
             stream = client.GetStream();
             Task.Run(ReadWorker);
+            PostComplete();
+        }
+
+        public void Close()
+        {
+            stream.Close();
         }
 
         public async void ReadWorker()
@@ -230,21 +346,74 @@ public class TrainingManager : MonoBehaviour
 
                 var message = JsonUtility.FromJson<Message>(Encoding.UTF8.GetString(buffer));
 
-                // message -> push request
-                //manager.trainingRequests.Enqueue()
+                if(message.type == "complete")
+                {
+                    lock(manager.available)
+                    {
+                        manager.available.Add(this);
+                    }
+                }
 
+                if(message.type == "trainingrequest")
+                {
+                    var request = JsonUtility.FromJson<TrainingRequest>(message.payload);
+                    manager.trainingRequests.Enqueue(request);
+                }
 
+                if(message.type == "staterequest")
+                {
+                    lock (manager.state)
+                    {
+                        SendStateUpdate(manager.state);
+                    }
+                }
+
+                if(message.type == "state")
+                {
+                    var state = JsonUtility.FromJson<TrainingState>(message.payload);
+                    var visualiser = manager.GetComponent<TrainingVisualiser>();
+                    visualiser.UpdateTrainingState(state);
+                }
             }
+        }
+
+        private void SendMessage(Message message)
+        {
+            var data = Encoding.UTF8.GetBytes(JsonUtility.ToJson(message));
+            var header = BitConverter.GetBytes(data.Length);
+            stream.Write(header, 0, 4);
+            stream.Write(data, 0, data.Length);
+        }
+
+        public void SendRequest(TrainingRequest request)
+        {
+            Message message = new Message();
+            message.type = "trainingrequest";
+            message.payload = JsonUtility.ToJson(request);
+            SendMessage(message);
         }
 
         public void PostComplete()
         {
-            // send complete
+            Message message = new Message();
+            message.type = "complete";
+            message.payload = "";
+            SendMessage(message);
         }
 
-        public void SendStateUpdate()
+        public void RequestStateUpdate()
         {
+            Message message = new Message();
+            message.type = "staterequest";
+            message.payload = "";
+            SendMessage(message);
+        }
 
+        public void SendStateUpdate(TrainingState state)
+        {
+            Message message = new Message();
+            message.type = "state";
+            message.payload = JsonUtility.ToJson(state);
         }
     }
 
