@@ -53,7 +53,7 @@ public class TrainingPanelController : MonoBehaviour
 
         Refresh(false);
 
-        TrainProfileHereButton.onClick.AddListener(() => TrainingManager.AddTrainingInstances(circuits, cars));
+        TrainProfileHereButton.onClick.AddListener(() => TrainingManager.AddTrainingRequests(circuits, cars));
     }
 
     private void Refresh(bool ignored)

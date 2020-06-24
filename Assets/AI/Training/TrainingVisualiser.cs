@@ -17,17 +17,6 @@ public class TrainingVisualiser : MonoBehaviour
     private string currentAgentPrefabKey;
 
     private TrainingManager manager;
-    private TrainingState state;
-
-    public void UpdateTrainingState(TrainingState state)
-    {
-        lock (this.state)
-        {
-            this.state.agents = state.agents;
-            this.state.carkey = state.carkey;
-            this.state.scenekey = state.scenekey;
-        }
-    }
 
     private void Awake()
     {
@@ -38,7 +27,7 @@ public class TrainingVisualiser : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        lock (this.state)
+        lock (manager.state)
         {
             if (changeSceneOperation != null)
             {
@@ -50,7 +39,7 @@ public class TrainingVisualiser : MonoBehaviour
 
             if (changeSceneOperation == null)
             {
-                if (currentScene != state.scenekey)
+                if (currentScene != manager.state.scenekey)
                 {
                     if (currentScene != null)
                     {
@@ -62,8 +51,8 @@ public class TrainingVisualiser : MonoBehaviour
                     }
                     else
                     {
-                        var scene = state.scenekey;
-                        changeSceneOperation = SceneManager.LoadSceneAsync(scene);
+                        var scene = manager.state.scenekey;
+                        changeSceneOperation = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
                         changeSceneOperation.completed += (operation) =>
                         {
                             currentScene = scene;
@@ -72,7 +61,7 @@ public class TrainingVisualiser : MonoBehaviour
                 }
             }
 
-            if (currentAgentPrefabKey != state.carkey)
+            if (currentAgentPrefabKey != manager.state.carkey)
             {
                 foreach (var item in avatars)
                 {
@@ -80,50 +69,54 @@ public class TrainingVisualiser : MonoBehaviour
                 }
 
                 avatars.Clear();
-                currentAgentPrefabKey = state.carkey;
+                currentAgentPrefabKey = manager.state.carkey;
             }
 
             if (currentAgentPrefabKey != null)
             {
-                while (avatars.Count > state.agents.Count)
+                while (avatars.Count > manager.state.agents.Count)
                 {
                     var go = avatars.Last();
                     avatars.Remove(go);
                     Destroy(go);
                 }
 
-                while (avatars.Count < state.agents.Count)
+                while (avatars.Count < manager.state.agents.Count)
                 {
                     var go = GameObject.Instantiate(manager.GetCarPrefab(currentAgentPrefabKey), transform);
                     avatars.Add(go);
 
+                    foreach (var item in go.GetComponentsInChildren<ProfileController>())
+                    {
+                        DestroyImmediate(item);
+                    }
                     foreach (var item in go.GetComponentsInChildren<Vehicle>())
                     {
-                        Destroy(item);
+                        DestroyImmediate(item);
                     }
                     foreach (var item in go.GetComponentsInChildren<Wheel>())
                     {
-                        Destroy(item);
+                        DestroyImmediate(item);
                     }
                     foreach (var item in go.GetComponentsInChildren<Rigidbody>())
                     {
-                        Destroy(item);
-                    }
-                    foreach (var item in go.GetComponentsInChildren<ProfileController>())
-                    {
-                        Destroy(item);
+                        DestroyImmediate(item);
                     }
                     foreach (var item in go.GetComponentsInChildren<Collider>())
                     {
-                        Destroy(item);
+                        DestroyImmediate(item);
+                    }
+                    foreach (var item in go.GetComponentsInChildren<Autopilot>())
+                    {
+                        DestroyImmediate(item);
                     }
                     // and anything else to turn this into a husk...
                 }
 
-                for (int i = 0; i < state.agents.Count; i++)
+                for (int i = 0; i < manager.state.agents.Count; i++)
                 {
-                    avatars[i].transform.position = state.agents[i].position;
-                    avatars[i].transform.rotation = state.agents[i].rotation;
+                    avatars[i].transform.position = manager.state.agents[i].position;
+                    avatars[i].transform.rotation = manager.state.agents[i].rotation;
                 }
             }
         }
