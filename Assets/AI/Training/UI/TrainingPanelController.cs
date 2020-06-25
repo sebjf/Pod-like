@@ -68,7 +68,6 @@ public class TrainingPanelController : MonoBehaviour
     private void Update()
     {
         ProgressText.text = string.Format("Remaining {0}", TrainingManager.Remaining);
-        InstancsText.text = string.Format("Instances {0}", TrainingManager.RemoteInstances);
     }
 
 }

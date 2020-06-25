@@ -36,7 +36,7 @@ public class ProfileAgentManagerEditor : Editor
         serializedObject.ApplyModifiedProperties();
 
         EditorStyles.label.wordWrap = true;
-        EditorGUILayout.LabelField("File", component.filename);
+        EditorGUILayout.LabelField("File", component.fullfile);
 
         EditorGUILayout.LabelField("Agents Remaining",
             string.Format("{0} Agents",
@@ -50,10 +50,10 @@ public class ProfileAgentManagerEditor : Editor
             );
 
         EditorGUILayout.LabelField("Virtual Time Elapsed",
-    string.Format("{0} Min {1} sec",
-    (int)(component.elapsedVirtualTime / 60),
-    Mathf.Repeat(component.elapsedVirtualTime, 60))
-    );
+            string.Format("{0} Min {1} sec",
+            (int)(component.elapsedVirtualTime / 60),
+            Mathf.Repeat(component.elapsedVirtualTime, 60))
+            );
 
         Repaint();
     }

@@ -132,7 +132,6 @@ GameObject:
   - component: {fileID: 30259262}
   - component: {fileID: 30259263}
   - component: {fileID: 30259260}
-  - component: {fileID: 30259261}
   m_Layer: 0
   m_Name: TrainingManager
   m_TagString: Untagged
@@ -155,18 +154,6 @@ MonoBehaviour:
   aiCars:
   - {fileID: 8122949853098160716, guid: 5e195fe9a6d530d409a4b59d16c3434b, type: 3}
   - {fileID: 4001992816435297627, guid: 81f4ed85e9fcffb42afd49bf93e01887, type: 3}
---- !u!114 &30259261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 30259259}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72d86a935a1412e4ba16701048f7d7cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &30259262
 Transform:
   m_ObjectHideFlags: 0
@@ -193,8 +180,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e33bc0bdb56af29479856726b8ac883e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   directory: Support\TrainingData
-  isRemoteClient: 0
 --- !u!1001 &39775390
 PrefabInstance:
   m_ObjectHideFlags: 0

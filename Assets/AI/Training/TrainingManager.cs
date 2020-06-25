@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.XPath;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -33,70 +34,62 @@ public class TrainingState
     }
 }
 
+[Serializable]
+public class TrainingReport
+{
+    public string filename;
+    public string json;
+}
+
+[Serializable]
+public class TrainingRequest
+{
+    public string circuit;
+    public string car;
+}
+
+[Serializable]
+public class TrainingMessage
+{
+    public string type;
+    public string payload;
+}
+
 public class TrainingManager : MonoBehaviour
 {
     private Dictionary<string, string> circuits;
     private Dictionary<string, GameObject> cars;
 
-    private ConcurrentQueue<TrainingRequest> trainingRequests;
-
-    public TrainingState state;
-    private ProfileAgentManager manager;
-
-    public string directory = @"Support\TrainingData";
-    private List<float> interpolationCoefficients;
-
     public IEnumerable<string> Circuits => circuits.Keys;
     public IEnumerable<string> Cars => cars.Keys;
 
-    // remote instance management
-
-    private List<TrainingManagerClient> instances;
-    private List<TrainingManagerClient> available;
-
-    public bool isRemoteClient;
-    private bool runServer;
-    private TrainingManagerClient client;
-
-    public event Action OnTrainingRequestComplete;
-
-    public GameObject GetCarPrefab(string key)
+    public enum Mode
     {
-        return cars[key];
+        Local,
+        Server,
+        Client
     }
+
+    public Mode mode;
+
+    [HideInInspector]
+    [NonSerialized]
+    public ConcurrentQueue<TrainingRequest> requests;
+    
+    public string directory = @"Support\TrainingData";
     
     public int Remaining {
         get
         {
-            return trainingRequests.Count;
+            return requests.Count;
         }
-    }
-
-    public string RemoteInstances { 
-        get 
-        { 
-            lock(instances)
-            {
-                return instances.Count.ToString();
-            }
-        }
-    }
-
-    [Serializable]
-    public class TrainingRequest
-    {
-        public string circuit;
-        public string car;
     }
 
     private void Awake()
     {
         circuits = new Dictionary<string, string>();
         cars = new Dictionary<string, GameObject>();
-        trainingRequests = new ConcurrentQueue<TrainingRequest>();
-        instances = new List<TrainingManagerClient>();
-        available = new List<TrainingManagerClient>();
-        state = new TrainingState();
+        requests = new ConcurrentQueue<TrainingRequest>();
 
         for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
         {
@@ -108,33 +101,6 @@ public class TrainingManager : MonoBehaviour
         {
             cars.Add(item.name, item);
         }
-
-        interpolationCoefficients = new List<float>();
-        interpolationCoefficients.Add(0.5f);
-        interpolationCoefficients.Add(0.15f);
-
-        OnTrainingRequestComplete += TrainingManager_OnTrainingRequestComplete;
-    }
-
-    private void TrainingManager_OnTrainingRequestComplete()
-    {
-        Debug.Log("Training Request Complete");
-    }
-
-    private void Start()
-    {
-        if (isRemoteClient)
-        {
-            client = new TrainingManagerClient(new TcpClient("127.0.0.1", 8000), this); // this creates a TrainingInstance pointing to this class
-            StartCoroutine(TrainingWorkerCoroutine());
-        }
-        else
-        {
-            StartCoroutine(RemoteWorkerCoroutine());
-            StartCoroutine(RemoteVisualisationWorkerCoroutine());
-            runServer = true;
-            Task.Run(StartServer);
-        }
     }
 
     public void AddTrainingRequests(IEnumerable<string> circuits, IEnumerable<string> cars)
@@ -143,308 +109,142 @@ public class TrainingManager : MonoBehaviour
         {
             foreach (var car in cars)
             {
-                trainingRequests.Enqueue(new TrainingRequest() { car = car, circuit = circuit });
+                requests.Enqueue(new TrainingRequest() { car = car, circuit = circuit });
             }
         }
     }
 
-    public IEnumerator TrainingWorkerCoroutine()
+    public void SaveTrainingData(string filename, string content)
     {
+        var file = Path.Combine(directory, filename);
+        using (FileStream stream = new FileStream(filename, FileMode.Create))
+        {
+            using (StreamWriter writer = new StreamWriter(stream))
+            {
+                writer.Write(content);
+            }
+        }
+    }
+
+    public GameObject Car(string key)
+    {
+        return cars[key];
+    }
+
+    public string Circuit(string key)
+    {
+        return circuits[key];
+    }
+
+    private void Start()
+    {
+        switch (mode)
+        {
+            case Mode.Local:
+                {
+                    var worker = gameObject.AddComponent<TrainingWorker>();
+                    worker.OnTrainingRequestComplete += OnLocalTrainingRequestComplete;
+                }
+                break;
+            case Mode.Server:
+                {
+                    var server = gameObject.AddComponent<TrainingServer>();
+                }
+                break;
+            case Mode.Client:
+                {
+                    var client = gameObject.AddComponent<TrainingClient>();
+                }
+                break;
+        }
+    }
+
+    private void OnLocalTrainingRequestComplete(ProfileAgentManager obj)
+    {
+        SaveTrainingData(obj.filename, obj.ExportJson());
+    }
+}
+
+public class TrainingManagerEndpoint
+{
+    private NetworkStream stream;
+
+    public TrainingManagerEndpoint(TcpClient client)
+    {
+        stream = client.GetStream();
+        Task.Run(ReadWorker);
+    }
+
+    public event Action<TrainingManagerEndpoint, TrainingMessage> OnMessage;
+
+    public void Close()
+    {
+        stream.Close();
+    }
+
+    public async void ReadWorker()
+    {
+        byte[] header = new byte[4];
         while (true)
         {
-            TrainingRequest request;
-            while(!trainingRequests.TryDequeue(out request))
-            {
-                yield return null;
-            }
+            await stream.ReadAsync(header, 0, 4);
+            var length = BitConverter.ToInt32(header, 0);
+            var buffer = new byte[length];
+            await stream.ReadAsync(buffer, 0, length);
 
-            // dereference to the actual objects that will be passed around
-            var path = circuits[request.circuit];
-            var prefab = cars[request.car];
-
-            // load the scene and create the agent trainer
-            var asyncoperation = SceneManager.LoadSceneAsync(path, LoadSceneMode.Additive);
-
-            while (!asyncoperation.isDone)
-            {
-                yield return null;
-            }
-
-            var scene = SceneManager.GetSceneByPath(path);
-            var root = scene.GetRootGameObjects().Select(x => x.GetComponentInChildren<Track>()).Where(x => x != null).First();
-
-            manager = scene.GetRootGameObjects().Select(x => x.GetComponentInChildren<ProfileAgentManager>()).Where(x => x != null).FirstOrDefault();
-            if (manager == null)
-            {
-                manager = root.gameObject.AddComponent<ProfileAgentManager>();
-                // set up manager further here...
-            }
-            manager.AgentPrefab = prefab;
-            manager.directory = directory;
-
-            // set up interpolated paths...
-            var geometry = root.GetComponentInChildren<TrackGeometry>();
-            var existing = geometry.GetComponentsInChildren<InterpolatedPath>().Select(x => x.coefficient).ToList();
-            foreach (var item in interpolationCoefficients)
-            {
-                if (existing.Contains(item))
-                {
-                    continue;
-                }
-                var interpolated = geometry.gameObject.AddComponent<InterpolatedPath>();
-                interpolated.coefficient = item;
-                interpolated.Initialise();
-            }
-
-            var training = true;
-
-            // setup the callbacks
-            manager.OnComplete.RemoveAllListeners();
-            manager.OnComplete.AddListener((x) =>
-            {
-                x.Export();
-                SceneManager.UnloadSceneAsync(path).completed += (asyncresult) =>
-                {
-                    training = false;
-                };
-            });
-
-            // and let it go...
-
-            while (training)
-            {
-                if(isRemoteClient)
-                {
-                    lock (state)
-                    {
-                        state.scenekey = request.circuit;
-                        state.carkey = request.car;
-                        state.agents.Clear();
-                        state.agents.AddRange(manager.Agents.Select(t => new TrainingAgentTransform() { position = t.position, rotation = t.rotation }));
-                    }
-                }
-
-                yield return null;
-            }
-
-            if (OnTrainingRequestComplete != null)
-            {
-                OnTrainingRequestComplete.Invoke();
-            }
+            var message = JsonUtility.FromJson<TrainingMessage>(Encoding.UTF8.GetString(buffer));
+            OnMessage?.Invoke(this, message);
         }
     }
 
-    [Serializable]
-    public class Message
+    public void SendMessage(TrainingMessage message)
     {
-        public string type;
-        public string payload;
+        var data = Encoding.UTF8.GetBytes(JsonUtility.ToJson(message));
+        var header = BitConverter.GetBytes(data.Length);
+        stream.Write(header, 0, 4);
+        stream.Write(data, 0, data.Length);
     }
 
-    private IEnumerator RemoteWorkerCoroutine()
+    public void SendRequest(TrainingRequest request)
     {
-        while(true)
-        {
-            TrainingRequest request;
-            while (!trainingRequests.TryDequeue(out request))
-            {
-                yield return null;
-            }
-
-            while (true)
-            {
-                TrainingManagerClient instance;
-
-                while (true)
-                {
-                    lock (available)
-                    {
-                        if (available.Count > 0)
-                        {
-                            instance = available.First();
-                            available.Remove(instance);
-                            break;
-                        }
-                        else
-                        {
-                            yield return null;
-                        }
-                    }
-                }
-
-                try
-                {
-                    instance.SendRequest(request);
-                    break; // next request
-                }
-                catch (IOException)
-                {
-                    lock(instances)
-                    {
-                        instances.Remove(instance); // client gone away
-                    }
-                }
-            }
-        }
+        TrainingMessage message = new TrainingMessage();
+        message.type = "trainingrequest";
+        message.payload = JsonUtility.ToJson(request);
+        SendMessage(message);
     }
 
-    private IEnumerator RemoteVisualisationWorkerCoroutine()
+    public void RequestStateUpdate()
     {
-        while(true)
-        {
-            yield return new WaitForSeconds(0.1f);
-            if(instances.Count > 0)
-            {
-                var instance = instances.First();
-                try
-                {
-                    instance.RequestStateUpdate();
-                }
-                catch(IOException)
-                {
-                    lock(instances)
-                    {
-                        instances.Remove(instance);
-                    }
-                }
-            }
-        }
+        TrainingMessage message = new TrainingMessage();
+        message.type = "staterequest";
+        message.payload = "";
+        SendMessage(message);
     }
 
-    private void OnApplicationQuit()
+    public void SendStateUpdate(TrainingState state)
     {
-        runServer = false;
-        if(client != null)
-        {
-            client.Close();
-        }
+        TrainingMessage message = new TrainingMessage();
+        message.type = "state";
+        message.payload = JsonUtility.ToJson(state);
+        SendMessage(message);
     }
 
-    public async void StartServer()
+    public void PostComplete()
     {
-        TcpListener listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8000);
-        listener.Start(100);
-        while (runServer)
-        {
-            var client = await listener.AcceptTcpClientAsync();
-            var instance = new TrainingManagerClient(client, this);
-            lock(instances)
-            {
-                instances.Add(instance);
-            }
-        }
-        listener.Stop();
+        TrainingMessage message = new TrainingMessage();
+        message.type = "complete";
+        message.payload = "";
+        SendMessage(message);
     }
 
-    public class TrainingManagerClient
+    public void PostComplete(string filename, string json)
     {
-        private NetworkStream stream;
-        private TrainingManager manager;
-
-        public TrainingManagerClient(TcpClient client, TrainingManager manager)
-        {
-            this.manager = manager;
-            manager.OnTrainingRequestComplete += PostComplete;
-            stream = client.GetStream();
-            Task.Run(ReadWorker);
-            PostComplete();
-        }
-
-        public void Close()
-        {
-            stream.Close();
-        }
-
-        public async void ReadWorker()
-        {
-            byte[] header = new byte[4];
-            while(true)
-            {
-                await stream.ReadAsync(header,0,4);
-                var length = BitConverter.ToInt32(header, 0);
-                var buffer = new byte[length];
-                await stream.ReadAsync(buffer, 0, length);
-
-                var message = JsonUtility.FromJson<Message>(Encoding.UTF8.GetString(buffer));
-
-                if(message.type == "complete")
-                {
-                    lock(manager.available)
-                    {
-                        manager.available.Add(this);
-                    }
-                }
-
-                if(message.type == "trainingrequest")
-                {
-                    var request = JsonUtility.FromJson<TrainingRequest>(message.payload);
-                    manager.trainingRequests.Enqueue(request);
-                }
-
-                if(message.type == "staterequest")
-                {
-                    lock (manager.state)
-                    {
-                        SendStateUpdate(manager.state);
-                    }
-                }
-
-                if(message.type == "state")
-                {
-                    lock (manager.state)
-                    {
-                        var state = JsonUtility.FromJson<TrainingState>(message.payload);
-
-                        manager.state.scenekey = state.scenekey;
-                        manager.state.carkey = state.carkey;
-                        manager.state.agents = state.agents;
-
-                        if (manager.state.scenekey == "") manager.state.scenekey = null;
-                        if (manager.state.carkey == "") manager.state.carkey = null;
-                    }
-                }
-            }
-        }
-
-        private void SendMessage(Message message)
-        {
-            var data = Encoding.UTF8.GetBytes(JsonUtility.ToJson(message));
-            var header = BitConverter.GetBytes(data.Length);
-            stream.Write(header, 0, 4);
-            stream.Write(data, 0, data.Length);
-        }
-
-        public void SendRequest(TrainingRequest request)
-        {
-            Message message = new Message();
-            message.type = "trainingrequest";
-            message.payload = JsonUtility.ToJson(request);
-            SendMessage(message);
-        }
-
-        public void PostComplete()
-        {
-            Message message = new Message();
-            message.type = "complete";
-            message.payload = "";
-            SendMessage(message);
-        }
-
-        public void RequestStateUpdate()
-        {
-            Message message = new Message();
-            message.type = "staterequest";
-            message.payload = "";
-            SendMessage(message);
-        }
-
-        public void SendStateUpdate(TrainingState state)
-        {
-            Message message = new Message();
-            message.type = "state";
-            message.payload = JsonUtility.ToJson(state);
-            SendMessage(message);
-        }
+        TrainingMessage message = new TrainingMessage();
+        message.type = "complete";
+        TrainingReport report = new TrainingReport();
+        report.filename = filename;
+        report.json = json;
+        message.payload = JsonUtility.ToJson(report);
+        SendMessage(message);
     }
-
 }

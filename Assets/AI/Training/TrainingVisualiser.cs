@@ -18,16 +18,20 @@ public class TrainingVisualiser : MonoBehaviour
 
     private TrainingManager manager;
 
+    [NonSerialized]
+    public TrainingState state;
+
     private void Awake()
     {
         manager = GetComponentInParent<TrainingManager>();
         avatars = new List<GameObject>();
+        state = new TrainingState();
     }
 
     // Update is called once per frame
     void Update()
     {
-        lock (manager.state)
+        lock (state)
         {
             if (changeSceneOperation != null)
             {
@@ -39,7 +43,7 @@ public class TrainingVisualiser : MonoBehaviour
 
             if (changeSceneOperation == null)
             {
-                if (currentScene != manager.state.scenekey)
+                if (currentScene != state.scenekey)
                 {
                     if (currentScene != null)
                     {
@@ -51,7 +55,7 @@ public class TrainingVisualiser : MonoBehaviour
                     }
                     else
                     {
-                        var scene = manager.state.scenekey;
+                        var scene = state.scenekey;
                         changeSceneOperation = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
                         changeSceneOperation.completed += (operation) =>
                         {
@@ -61,7 +65,7 @@ public class TrainingVisualiser : MonoBehaviour
                 }
             }
 
-            if (currentAgentPrefabKey != manager.state.carkey)
+            if (currentAgentPrefabKey != state.carkey)
             {
                 foreach (var item in avatars)
                 {
@@ -69,21 +73,21 @@ public class TrainingVisualiser : MonoBehaviour
                 }
 
                 avatars.Clear();
-                currentAgentPrefabKey = manager.state.carkey;
+                currentAgentPrefabKey = state.carkey;
             }
 
             if (currentAgentPrefabKey != null)
             {
-                while (avatars.Count > manager.state.agents.Count)
+                while (avatars.Count > state.agents.Count)
                 {
                     var go = avatars.Last();
                     avatars.Remove(go);
                     Destroy(go);
                 }
 
-                while (avatars.Count < manager.state.agents.Count)
+                while (avatars.Count < state.agents.Count)
                 {
-                    var go = GameObject.Instantiate(manager.GetCarPrefab(currentAgentPrefabKey), transform);
+                    var go = GameObject.Instantiate(manager.Car(currentAgentPrefabKey), transform);
                     avatars.Add(go);
 
                     foreach (var item in go.GetComponentsInChildren<ProfileController>())
@@ -113,10 +117,10 @@ public class TrainingVisualiser : MonoBehaviour
                     // and anything else to turn this into a husk...
                 }
 
-                for (int i = 0; i < manager.state.agents.Count; i++)
+                for (int i = 0; i < state.agents.Count; i++)
                 {
-                    avatars[i].transform.position = manager.state.agents[i].position;
-                    avatars[i].transform.rotation = manager.state.agents[i].rotation;
+                    avatars[i].transform.position = state.agents[i].position;
+                    avatars[i].transform.rotation = state.agents[i].rotation;
                 }
             }
         }

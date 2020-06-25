@@ -52,11 +52,20 @@ public class ProfileAgentManager : MonoBehaviour
     {
         get
         {
+            var t = GetComponentInChildren<Track>().Name.ToLower();
+            var n = AgentPrefab.GetComponentInChildren<ProfileController>().modelName.ToLower();
+            var fn = string.Format("{0}.{1}.trainingprofile.json", n, t);
+            return fn;
+        }
+    }
+
+    public string fullfile
+    {
+        get
+        {
             try
             {
-                var t = GetComponentInChildren<Track>().Name.ToLower();
-                var n = AgentPrefab.GetComponentInChildren<ProfileController>().modelName.ToLower();
-                var fn = string.Format("{0}.{1}.trainingprofile.json", n, t);
+                var fn = filename;
                 var d = Application.dataPath;
                 return Path.GetFullPath(Path.Combine(directory, fn));
             }catch
@@ -256,29 +265,34 @@ public class ProfileAgentManager : MonoBehaviour
 #endif
     }
 
-    public void Export()
-    {
-        Export(filename);
-    }
-
-    public void Export(string filename)
-    {
-        using(FileStream stream = new FileStream(filename, FileMode.Create))
-        {
-            ExportJson(stream);
-        }
-    }
-
-    public void ExportJson(Stream output)
+    public string ExportJson()
     {
         var experienceDataset = new ExperienceDataset();
         foreach (var item in experiences)
         {
             experienceDataset.Add(item);
         }
+        return JsonUtility.ToJson(experienceDataset, true);
+    }
+
+    public void ExportJson(Stream output)
+    {
         using (StreamWriter writer = new StreamWriter(output))
         {
-            writer.Write(JsonUtility.ToJson(experienceDataset, true));
+            writer.Write(ExportJson());
+        }
+    }
+
+    public void Export()
+    {
+        Export(fullfile);
+    }
+
+    public void Export(string filename)
+    {
+        using (FileStream stream = new FileStream(filename, FileMode.Create))
+        {
+            ExportJson(stream);
         }
     }
 
