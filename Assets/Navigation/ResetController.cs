@@ -42,5 +42,8 @@ public class ResetController : MonoBehaviour
 
         body.velocity = Vector3.zero;
         body.angularVelocity = Vector3.zero;
+
+        // the velocities above will be overridden on the next fixedupdate. putting the body to sleep resets the accelerations and forces them to take effect.
+        body.Sleep();
     }
 }
