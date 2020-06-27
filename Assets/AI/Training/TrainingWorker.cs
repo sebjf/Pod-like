@@ -12,8 +12,8 @@ public class TrainingWorker : MonoBehaviour
 
     private List<float> interpolationCoefficients;
 
-    public event Action<ProfileAgentManager> OnTrainingRequestComplete;
-    public event Action<TrainingRequest, ProfileAgentManager> OnTrainingFrame;
+    public event Action<IAgentManager> OnTrainingRequestComplete;
+    public event Action<TrainingRequest, IAgentManager> OnTrainingFrame;
 
     private void Awake()
     {
@@ -21,7 +21,8 @@ public class TrainingWorker : MonoBehaviour
 
         interpolationCoefficients = new List<float>();
         interpolationCoefficients.Add(0.5f);
-        interpolationCoefficients.Add(0.15f);
+        interpolationCoefficients.Add(0.75f);
+        interpolationCoefficients.Add(0.25f);
     }
 
     private void Start()
@@ -54,27 +55,36 @@ public class TrainingWorker : MonoBehaviour
             var scene = SceneManager.GetSceneByPath(path);
             var root = scene.GetRootGameObjects().Select(x => x.GetComponentInChildren<Track>()).Where(x => x != null).First();
 
-            var manager = scene.GetRootGameObjects().Select(x => x.GetComponentInChildren<ProfileAgentManager>()).Where(x => x != null).FirstOrDefault();
-            if (manager == null)
-            {
-                manager = root.gameObject.AddComponent<ProfileAgentManager>();
-                // set up manager further here...
-            }
-            manager.AgentPrefab = prefab;
-
-            // set up interpolated paths...
+            // set up interpolated paths. this should be done before the manager is added. 
             var geometry = root.GetComponentInChildren<TrackGeometry>();
-            var existing = geometry.GetComponentsInChildren<InterpolatedPath>().Select(x => x.coefficient).ToList();
+
+            // delete existing interpolations
+            var existing = geometry.GetComponentsInChildren<InterpolatedPath>();
+            foreach (var item in existing)
+            {
+                DestroyImmediate(item); // delete immediately as the manager should search for paths in its Start() method.
+            }
+
             foreach (var item in interpolationCoefficients)
             {
-                if (existing.Contains(item))
-                {
-                    continue;
-                }
                 var interpolated = geometry.gameObject.AddComponent<InterpolatedPath>();
                 interpolated.coefficient = item;
                 interpolated.Initialise();
             }
+
+            // we add the manager right away. we don't need to worry about removing the old one, because the scene will be unloaded at the end of this
+
+            IAgentManager manager = null;
+            if(request.agent == "profile")
+            {
+                manager = root.gameObject.AddComponent<ProfileAgentManager>();
+            }
+            if(request.agent == "path")
+            {
+                manager = root.gameObject.AddComponent<PathAgentManager>();
+            }
+            
+            manager.SetAgentPrefab(prefab);
 
             var training = true;
 
@@ -82,6 +92,8 @@ public class TrainingWorker : MonoBehaviour
             manager.OnComplete.RemoveAllListeners();
             manager.OnComplete.AddListener((x) =>
             {
+                Debug.Log("TrainingRequest Complete");
+                OnTrainingRequestComplete?.Invoke(manager);
                 SceneManager.UnloadSceneAsync(path).completed += (asyncresult) =>
                 {
                     training = false;
@@ -92,11 +104,13 @@ public class TrainingWorker : MonoBehaviour
 
             while (training)
             {
-                OnTrainingFrame?.Invoke(request, manager);
+                if ((MonoBehaviour)manager)
+                {
+                    OnTrainingFrame?.Invoke(request, manager);
+                }
                 yield return null;
             }
 
-            OnTrainingRequestComplete?.Invoke(manager);
         }
     }
 }

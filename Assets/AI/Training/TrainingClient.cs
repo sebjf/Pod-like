@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -17,6 +18,13 @@ public class TrainingClient : MonoBehaviour
 
     private TrainingState state;
 
+    [Serializable]
+    public class Settings
+    {
+        public string host;
+        public int port;
+    }
+
     private void Awake()
     {
         manager = GetComponent<TrainingManager>();
@@ -28,17 +36,31 @@ public class TrainingClient : MonoBehaviour
 
     void Start()
     {
-        client = new TrainingManagerEndpoint(new TcpClient("127.0.0.1", 8000));
+        var settings = new Settings() { host = "127.0.0.1", port = 8000 };
+
+        try
+        {
+            settings = JsonUtility.FromJson<Settings>(File.ReadAllText("settings.trainingmanager.json"));
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+
+        client = new TrainingManagerEndpoint(new TcpClient(settings.host, settings.port));
         client.OnMessage += OnMessage;
         client.PostComplete();
+        if (Camera.main)
+        {
+            Camera.main.enabled = false;
+        }
     }
-
-    private void OnTrainingRequestComplete(ProfileAgentManager manager)
+    private void OnTrainingRequestComplete(IAgentManager manager)
     {
-        client.PostComplete(manager.filename, manager.ExportJson());
+        client.PostComplete(manager.Filename, manager.ExportJson());
     }
 
-    private void OnTrainingFrame(TrainingRequest request, ProfileAgentManager manager)
+    private void OnTrainingFrame(TrainingRequest request, IAgentManager manager)
     {
         lock (state)
         {

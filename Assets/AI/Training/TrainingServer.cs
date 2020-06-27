@@ -20,6 +20,7 @@ public class TrainingServer : MonoBehaviour
         visualiser = GetComponent<TrainingVisualiser>();
         instances = new List<TrainingManagerEndpoint>();
         available = new List<TrainingManagerEndpoint>();
+        WatchInstance = -1;
     }
 
     private void Start()
@@ -30,16 +31,18 @@ public class TrainingServer : MonoBehaviour
         Task.Run(StartServer);
     }
 
-    public string RemoteInstances
+    public int RemoteInstances
     {
         get
         {
             lock (instances)
             {
-                return instances.Count.ToString();
+                return instances.Count;
             }
         }
     }
+
+    public int WatchInstance;
 
     private List<TrainingManagerEndpoint> instances;
     private List<TrainingManagerEndpoint> available;
@@ -149,16 +152,19 @@ public class TrainingServer : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             if (instances.Count > 0)
             {
-                var instance = instances.First();
-                try
+                if (WatchInstance >= 0 && WatchInstance < instances.Count)
                 {
-                    instance.RequestStateUpdate();
-                }
-                catch (IOException)
-                {
-                    lock (instances)
+                    var instance = instances[WatchInstance];
+                    try
                     {
-                        instances.Remove(instance);
+                        instance.RequestStateUpdate();
+                    }
+                    catch (IOException)
+                    {
+                        lock (instances)
+                        {
+                            instances.Remove(instance);
+                        }
                     }
                 }
             }

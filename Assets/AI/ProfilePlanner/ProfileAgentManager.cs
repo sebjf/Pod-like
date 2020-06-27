@@ -10,7 +10,7 @@ using UnityEngine.Events;
 /// This version assumes cars have already been distributed across tracks and starting locations.
 /// </summary>
 [RequireComponent(typeof(TimeController))]
-public class ProfileAgentManager : MonoBehaviour
+public class ProfileAgentManager : MonoBehaviour, IAgentManager
 {
     public class Experience
     {
@@ -45,10 +45,14 @@ public class ProfileAgentManager : MonoBehaviour
     public GameObject AgentPrefab;
     public string directory = @"Support\Data";
 
-    public class ProfileAgentManagerComplete : UnityEvent<ProfileAgentManager> { }
-    public ProfileAgentManagerComplete OnComplete;
+    public void SetAgentPrefab(GameObject prefab)
+    {
+        this.AgentPrefab = prefab;
+    }
 
-    public string filename
+    public AgentManagerComplete OnComplete { get; set; }
+
+    public string Filename
     {
         get
         {
@@ -65,7 +69,7 @@ public class ProfileAgentManager : MonoBehaviour
         {
             try
             {
-                var fn = filename;
+                var fn = Filename;
                 var d = Application.dataPath;
                 return Path.GetFullPath(Path.Combine(directory, fn));
             }catch
@@ -81,7 +85,16 @@ public class ProfileAgentManager : MonoBehaviour
 
     public IEnumerable<Transform> Agents
     {
-        get { return agents.Select(a => a.profilefinder.transform); }
+        get
+        {
+            if (agents != null)
+            {
+                foreach (var item in agents.Select(a => a.profilefinder.transform))
+                {
+                    yield return item;
+                }
+            }
+        }
     }
 
     [NonSerialized]
@@ -112,7 +125,7 @@ public class ProfileAgentManager : MonoBehaviour
         experiences = new List<Experience>();
         if(OnComplete == null)
         {
-            OnComplete = new ProfileAgentManagerComplete();
+            OnComplete = new AgentManagerComplete();
         }
         OnComplete.AddListener(InternalComplete);
     }
@@ -187,7 +200,7 @@ public class ProfileAgentManager : MonoBehaviour
             container.SetParent(path.transform);
         }
 
-        Util.SetLayer(AgentPrefab, "Car"); // for now car but we may add a training car layer in the future
+        Util.SetLayer(AgentPrefab, TrainingProperties.AgentLayer); // for now car but we may add a training car layer in the future
 
         var agent = GameObject.Instantiate(AgentPrefab, container);
 
@@ -216,9 +229,6 @@ public class ProfileAgentManager : MonoBehaviour
 
         var reset = agent.GetComponent<ResetController>();
         reset.ResetPosition();
-
-        var autopilot = agent.GetComponent<Autopilot>();
-        //autopilot.maxLookahead = autopilotLookahead;
 
         agent.SetActive(true); // prefab may be disabled depending on when it was last updated
 
@@ -252,9 +262,9 @@ public class ProfileAgentManager : MonoBehaviour
         }
     }
 
-    public static void InternalComplete(ProfileAgentManager manager)
+    public void InternalComplete(IAgentManager manager)
     {
-        manager.Export();
+        Export();
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;     //https://answers.unity.com/questions/161858/

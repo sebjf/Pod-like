@@ -46,6 +46,7 @@ public class TrainingRequest
 {
     public string circuit;
     public string car;
+    public string agent;
 }
 
 [Serializable]
@@ -101,23 +102,31 @@ public class TrainingManager : MonoBehaviour
         {
             cars.Add(item.name, item);
         }
+
+        if(!Application.isEditor)
+        {
+            mode = Mode.Client;
+        }
     }
 
-    public void AddTrainingRequests(IEnumerable<string> circuits, IEnumerable<string> cars)
+    public void AddTrainingRequests(IEnumerable<string> circuits, IEnumerable<string> cars, IEnumerable<string> agents)
     {
         foreach (var circuit in circuits)
         {
             foreach (var car in cars)
             {
-                requests.Enqueue(new TrainingRequest() { car = car, circuit = circuit });
+                foreach (var agent in agents)
+                {
+                    requests.Enqueue(new TrainingRequest() { car = car, circuit = circuit, agent = agent});
+                }
             }
         }
     }
 
     public void SaveTrainingData(string filename, string content)
     {
-        var file = Path.Combine(directory, filename);
-        using (FileStream stream = new FileStream(filename, FileMode.Create))
+        var fullfile = Path.GetFullPath(Path.Combine(directory, filename));
+        using (FileStream stream = new FileStream(fullfile, FileMode.Create))
         {
             using (StreamWriter writer = new StreamWriter(stream))
             {
@@ -159,9 +168,9 @@ public class TrainingManager : MonoBehaviour
         }
     }
 
-    private void OnLocalTrainingRequestComplete(ProfileAgentManager obj)
+    private void OnLocalTrainingRequestComplete(IAgentManager obj)
     {
-        SaveTrainingData(obj.filename, obj.ExportJson());
+        SaveTrainingData(obj.Filename, obj.ExportJson());
     }
 }
 
@@ -191,9 +200,15 @@ public class TrainingManagerEndpoint
             var length = BitConverter.ToInt32(header, 0);
             var buffer = new byte[length];
             await stream.ReadAsync(buffer, 0, length);
-
-            var message = JsonUtility.FromJson<TrainingMessage>(Encoding.UTF8.GetString(buffer));
-            OnMessage?.Invoke(this, message);
+            try
+            {
+                var message = JsonUtility.FromJson<TrainingMessage>(Encoding.UTF8.GetString(buffer));
+                OnMessage?.Invoke(this, message);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
         }
     }
 
