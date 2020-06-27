@@ -82,24 +82,34 @@ public class ProfileAgent : MonoBehaviour
         int node = Mathf.FloorToInt(profileIndex);
         var next = Mathf.CeilToInt(profileIndex);
 
+        var error = ComputeError();
+
         if (node > 0) // the car can roll back momentarily in certain cirumstances, such as it starts on a hill
         {
             if (node != prev)   // does the frame straddle an interval?
             {
                 if (prev < node) // check we will iterate forwards - if the car spins out, it can move backwards, in which case it will start again
                 {
-                    while ((prev + 1) != node) // if we've managed to pass multiple nodes within a frame, update the skipped nodes with this frames' data
+                    while ((prev + 1) != node) // if we've managed to pass multiple nodes within a frame, update the skipped nodes with this frames' data up till the penultimate one
                     {
                         prev++;
-                        UpdateNode(prev);
+                        UpdateNode(prev, error);
                     }
                 }
 
-                UpdateNode(node);
+                UpdateNode(node, error); // update the current node
             }
-            if (ComputeError() > errorThreshold)
+
+            if (error > errorThreshold)
             {
-                UpdateNode(node); // if the car spins out it might not reach the next node so trigger the path error handling code here
+                UpdateNode(node, error);  // the error is checked every frame because there are many failure cases that can occur between nodes, even with tight spacing
+            }
+        }
+        else
+        {
+            if (error > errorThreshold)
+            {
+                Reset(); // we are not past node 1 but there is an error. the car may have started in an invalid state, so reset it.
             }
         }
 
@@ -160,11 +170,9 @@ public class ProfileAgent : MonoBehaviour
         return error;
     }
 
-    private void UpdateNode(int i)
+    private void UpdateNode(int i, float error)
     {
         var node = profile[i];
-
-        var error = ComputeError();
 
         node.traction = pathObservations.traction;
         node.actual = pathObservations.speed;
