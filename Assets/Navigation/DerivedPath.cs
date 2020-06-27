@@ -30,11 +30,18 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
     [SerializeField]
     protected TrackGeometry track;
 
+    [SerializeField]
     protected PathCache cache;
 
     private void Awake()
     {
         cache = new PathCache(this, 0.5f);
+    }
+
+    public override void Recompute()
+    {
+        base.Recompute();
+        Awake();
     }
 
     public virtual void Initialise()
@@ -72,6 +79,7 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         {
             waypoints[i].w = (weights[i] - 0.5f) * 2;
         }
+
         Recompute();
     }
 
@@ -103,7 +111,7 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
     public override PathQuery Query(float distance)
     {
-        if(cache != null)
+        if (cache != null)
         {
             return cache.Query(distance);
         }
