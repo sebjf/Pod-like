@@ -133,14 +133,13 @@ public class ProfileController : MonoBehaviour
 
         bool slipping = false;
 
-        if ((Mathf.Rad2Deg * sideslip) > x)
+        var a = (Mathf.Rad2Deg * sideslip) / x;
+
+        autopilot.speed = min + (1 - a) * (max - min); //(the ability for (1-a) to be negative here is deliberate...)
+
+        if (a >= 1)
         {
-            autopilot.speed = min;
             slipping = true;
-        }
-        else
-        {
-            autopilot.speed = max;
         }
 
         if (!slipping)
