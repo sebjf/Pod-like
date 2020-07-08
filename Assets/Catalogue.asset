@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2769e1809354b6449af56428b46a5feb, type: 3}
+  m_Name: Catalogue
+  m_EditorClassIdentifier: 
+  cars:
+  - {fileID: 11400000, guid: f80c145cbc087af4cbf9b555227a0ecd, type: 2}
+  - {fileID: 11400000, guid: 331d33499e5699440a8230204951ff6a, type: 2}
+  - {fileID: 11400000, guid: ffbbbc0dc274043448b8bfa6a73fabef, type: 2}
+  - {fileID: 11400000, guid: bb3e9d6ae8550dc4e82319273465370e, type: 2}
+  - {fileID: 11400000, guid: 3d0911cc645d88a47b89b972f3135829, type: 2}
+  circuits:
+  - {fileID: 11400000, guid: 35154a587d8221147825c2bc9894d37e, type: 2}
+  - {fileID: 11400000, guid: 4f7b6455ac09a464e8dd3822eff402ce, type: 2}
+  - {fileID: 11400000, guid: 98e08a6914cb61a4986a26c7261af1e6, type: 2}
+  - {fileID: 11400000, guid: 377abf4c6c3e5e4408831700062921d4, type: 2}
