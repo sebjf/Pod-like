@@ -69,7 +69,7 @@ public class InterpolatedPath : DerivedPath
 
         for (int i = 0; i < waypoints.Count; i++)
         {
-            waypoints[i].w = coefficients[i] * sp.waypoints[i].w + (1 - coefficients[i]) * mcp.waypoints[i].w;
+            waypoints[i].w = coefficients[i] * mcp.waypoints[i].w + (1 - coefficients[i]) * sp.waypoints[i].w;
         }
 
         FindCrossoverPoints();
