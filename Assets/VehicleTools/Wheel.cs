@@ -9,6 +9,7 @@ public class Wheel : MonoBehaviour
     public float offset;
     public float travel;
     public float radius;
+    public float mass;
 
     public AnimationCurve slipForce;
     public float slipForceScale;
@@ -27,12 +28,17 @@ public class Wheel : MonoBehaviour
     private float displacement;
     private float prevDisplacement;
     private float displacementVel;
+    private float inertia;
+    private int raycastBitmask;
 
     private Vector3 position;
     private Vector3 prevPosition;
     public Vector3 velocity { get; private set; }
     private Vector3 forward;
     private Quaternion rotation;
+
+    private Vector3 road;
+    private float coefficientOfFriction = 1f;
 
     public Vector3 up { get; private set; }
     public Vector3 right { get; private set; }
@@ -46,19 +52,9 @@ public class Wheel : MonoBehaviour
     /// </summary>
     public float sideslipAngle { get; private set; }
 
-    private Vector3 road;
-    private float coefficientOfFriction = 1f;
-
-    private float slipForceRange;
-
     [HideInInspector]
     public float wheelsInContact;
 
-    private int raycastBitmask;
-
-    public float mass;
-
-    private float inertia;
 
     /// <summary>
     /// The offset from the parent transform where the forces should be applied
