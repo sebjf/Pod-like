@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
+using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(ResetController))]
@@ -18,9 +20,17 @@ public class ProfileAgent : MonoBehaviour
     private Autopilot autopilot;
     private PathObservations pathObservations;
     private Vehicle vehicle;
+    private Rigidbody body;
 
     public float speedStepSize = 5f;
     public float errorThreshold = 1f; // tolerance must be high enough to allow slight corner cutting, since the rabbit is a little ahead of the car
+
+    private const float maxSideSlipSum = 20f;
+
+    private float lastUndersteerError;
+
+    [NonSerialized]
+    public bool logToConsole;
 
     [HideInInspector]
     public int currentNode;
@@ -28,6 +38,43 @@ public class ProfileAgent : MonoBehaviour
     [HideInInspector]
     [NonSerialized]
     public bool complete;
+
+    private class Samples
+    {
+        private float[] values;
+        public Samples(int length)
+        {
+            values = new float[length];
+        }
+
+        public void Add(float value)
+        {
+            for (int i = 0; i < values.Length - 1; i++) // it is expected the length is small enough that nothing clever than this will end up being any faster...
+            {
+                values[i] = values[i + 1];
+            }
+            values[values.Length - 1] = value;
+        }
+
+        public float Gradient()
+        {
+            // if any values are zero, the gradient is invalid
+            return 0;
+        }
+    }
+
+    private float Gradient(float current, float previous)
+    {
+        if(current == 0)
+        {
+            return 0;
+        }
+        if(previous == 0)
+        {
+            return 0;
+        }
+        return Mathf.Sign(current - previous);
+    }
 
     public class Node
     {
@@ -41,7 +88,7 @@ public class ProfileAgent : MonoBehaviour
 
         public Node()
         {
-            speed = 100f;
+            speed = 150f;
             traction = true;
             braking = false;
         }
@@ -58,6 +105,9 @@ public class ProfileAgent : MonoBehaviour
         pathObservations = GetComponent<PathObservations>();
         resetController = GetComponent<ResetController>();
         vehicle = GetComponent<Vehicle>();
+        body = GetComponent<Rigidbody>();
+        logToConsole = false;
+        lastUndersteerError = 0f;
         navigator.Reset();
         CreateProfile();
     }
@@ -109,7 +159,7 @@ public class ProfileAgent : MonoBehaviour
         {
             if (error > errorThreshold)
             {
-                Reset(); // we are not past node 1 but there is an error. the car may have started in an invalid state, so reset it.
+                Reset(); // we are not past node 1 but there is an error. the car may have been reset to an invalid state, so reset it again.
             }
         }
 
@@ -125,6 +175,13 @@ public class ProfileAgent : MonoBehaviour
         }
 
         currentNode = node;
+
+#if UNITY_EDITOR
+        if(UnityEditor.Selection.activeGameObject != null)
+        {
+            logToConsole = UnityEditor.Selection.activeGameObject == this.gameObject;
+        }
+#endif
     }
 
     private Node Previous(Node node)
@@ -132,39 +189,80 @@ public class ProfileAgent : MonoBehaviour
         return profile[Util.repeat(profile.IndexOf(node) - 1, profile.Count)];
     }
 
+    public enum TrackingError
+    { 
+        OK,
+        Understeer,
+        JumpTractionLoss,
+        JumpExceededBounds,
+        Spin,
+        Collision,
+        Flip
+    }
+
+    private void Log(TrackingError error)
+    {
+        if(logToConsole)
+        {
+            Debug.Log("PathAgent " + error.ToString());
+        }
+    }
+
     private float ComputeError()
     {
-        var error = pathObservations.understeer;
+        // this function implements the mathematical description of path tracking error. this is quite complicated in order to handle many edge cases.
 
-        if(pathObservations.jumprulesflag)
+        if (pathObservations.jumprulesflag)  // in jump rules the error is geometric, based on the track bounds
         {
-            error = 0; // ignore basic lateral error in favour of path geometry bounds
-
             if (pathObservations.traction)
             {
-                if(pathObservations.sideslipAngle >= 20f)
+                if (pathObservations.sideslipAngle >= maxSideSlipSum)
                 {
-                    error = errorThreshold + 1f;
+                    Log(TrackingError.JumpTractionLoss);
+                    return errorThreshold + 1f;
                 }
             }
-            else 
-            { 
-                var position = navigator.GetTrackPosition();
-                if (Mathf.Abs(position.offset) > 1.0f)
+            else
+            {
+                var trackposition = navigator.GetTrackPosition();
+                if (Mathf.Abs(trackposition.offset) > 1.0f)
                 {
-                    error = errorThreshold + 1f;
+                    Log(TrackingError.JumpExceededBounds);
+                    return errorThreshold + 1f;
                 }
             }
+        }
+
+        if(pathObservations.direction < 0)
+        {
+            Log(TrackingError.Spin);
+            return errorThreshold + 1f;
         }
 
         if(pathObservations.PopCollision())
         {
-            error = errorThreshold + 1f;
+            Log(TrackingError.Collision);
+            return errorThreshold + 1f;
         }
 
         if ( Vector3.Dot(pathObservations.transform.up, Vector3.up) < 0)
         {
-            error = errorThreshold + 1f;
+            Log(TrackingError.Flip);
+            return errorThreshold + 1f;
+        }
+
+        var error = pathObservations.understeer;
+        var errorGradient = Gradient(error, lastUndersteerError);
+        lastUndersteerError = error;
+
+        if(errorGradient <= 0)
+        {
+            error = 0;
+        }
+
+        if ( error > errorThreshold)
+        {
+            Log(TrackingError.Understeer);
         }
 
         return error;
