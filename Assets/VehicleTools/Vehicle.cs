@@ -37,6 +37,11 @@ public class Vehicle : MonoBehaviour
     [HideInInspector]
     public float sideslipAngle;
 
+    [HideInInspector]
+    public float rpm;
+
+    private const float Rad2Rpm = 9.5493f;
+
     public void Awake()
     {
         wheels = GetComponentsInChildren<Wheel>();
@@ -102,7 +107,9 @@ public class Vehicle : MonoBehaviour
 
         angularVelocity /= angularVelocityCount;
 
-        var torque = drivetrain.EvaluateTorque(angularVelocity);
+        rpm = Mathf.Abs(angularVelocity * Rad2Rpm);
+
+        var torque = drivetrain.EvaluateTorque(rpm);
 
         foreach (var wheel in wheels)
         {
@@ -161,6 +168,6 @@ public class Vehicle : MonoBehaviour
             {
                 sideslipAngle += wheel.sideslipAngle;
             }
-        }
+        }        
     }
 }
