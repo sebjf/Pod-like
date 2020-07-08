@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using UnityEngine;
 
 [RequireComponent(typeof(Navigator))]
@@ -16,7 +18,8 @@ public class Autopilot : MonoBehaviour
     private Vehicle vehicle;
     private Navigator navigator;
 
-    private Vector3 worldtarget;
+    [NonSerialized]
+    public Vector3 worldtarget;
 
     private void Awake()
     {
@@ -61,10 +64,8 @@ public class Autopilot : MonoBehaviour
             vehicle.throttle = 0;
             vehicle.brake = 1f;
         }
-
-
-
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
