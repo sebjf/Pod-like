@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad6f5a1037a7f9941bfee19c552b422d, type: 3}
+  m_Name: Bakar
+  m_EditorClassIdentifier: 
+  Name: Bakar
+  Player: {fileID: 3422757078610913552, guid: 567d37c7d21de9c4ebec5fe84c3eef82, type: 3}
+  Agent: {fileID: 6425727429087473606, guid: e2cbeb1b8c8f239469ab686b9d943bde, type: 3}
