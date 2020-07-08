@@ -33,6 +33,14 @@ public class TrackGeometryEditor : Editor
             component.Recompute();
         }
 
+        if(component.selected.Count == 1)
+        {
+            if(GUILayout.Button("Set Start"))
+            {
+                TrackTools.SetStartWaypoint(component, component.selected[0]);
+            }
+        }
+
         // flags
 
         if (component.selected.Count > 0)
