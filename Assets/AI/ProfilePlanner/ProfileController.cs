@@ -36,6 +36,9 @@ public class ProfileController : MonoBehaviour
     [HideInInspector]
     public float[] inclination;
 
+    private Wheel[] rearLeft;
+    private Wheel[] rearRight;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,20 +52,22 @@ public class ProfileController : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             var model = ModelLoader.LoadFromStreamingAssets(modelName + i + ".nn");
-            workers.Add(WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, model));
+            workers.Add(WorkerFactory.CreateWorker(WorkerFactory.Type.CSharpBurst, model));
             inputShape = model.inputs[0].shape;
         }
 
-        classificationWorker = WorkerFactory.CreateWorker(WorkerFactory.Type.ComputePrecompiled, ModelLoader.LoadFromStreamingAssets(modelName + "C" + ".nn"));
+        classificationWorker = WorkerFactory.CreateWorker(WorkerFactory.Type.CSharpBurst, ModelLoader.LoadFromStreamingAssets(modelName + "C" + ".nn"));
 
         numObservations = (inputShape.Last() - 1) / 3;
         inputs = new Tensor(new TensorShape(inputShape));
         estimations = new List<float>();
 
-        profile = new float[numObservations];
         curvature = new float[numObservations];
         camber = new float[numObservations];
         inclination = new float[numObservations];
+
+        rearLeft = vehicle.wheels.Where(w => w.localAttachmentPosition.z < 0).Where(w => w.localAttachmentPosition.x < 0).ToArray();
+        rearRight = vehicle.wheels.Where(w => w.localAttachmentPosition.z < 0).Where(w => w.localAttachmentPosition.x > 0).ToArray();
     }
 
     private void OnDestroy()
@@ -124,7 +129,6 @@ public class ProfileController : MonoBehaviour
             worker.Execute(inputs);
 
             var output = worker.PeekOutput();
-            profile[0] = output[0];
             estimations.Add(output[0]);
         }
 
@@ -151,6 +155,24 @@ public class ProfileController : MonoBehaviour
             if (isstraight)
             {
                 autopilot.speed = 100f;
+            }
+        }
+        
+        if(Mathf.Abs(vehicle.steeringAngle) > 0.99f) // steering lock has triggered ESP intervention. apply corrective yaw moment using differential braking.
+        {
+            if(vehicle.steeringAngle < 0) // left
+            {
+                foreach (var item in rearLeft)
+                {
+                    item.ApplyBrake(1);
+                }
+            }
+            else // right
+            {
+                foreach (var item in rearRight)
+                {
+                    item.ApplyBrake(1);
+                }
             }
         }
     }
