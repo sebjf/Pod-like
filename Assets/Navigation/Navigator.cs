@@ -13,34 +13,26 @@ public class Navigator : MonoBehaviour
     /// <summary>
     /// Total Distance in Track Space travelled by the car (distance travelled across all laps)
     /// </summary>
-    [HideInInspector]
     [NonSerialized]
     public float TotalDistanceTravelled;
 
-    [HideInInspector]
     [NonSerialized]
     public float PreviousTotalDistanceTravelled;
 
     /// <summary>
     /// Distance around Path in Path Space (the distance along a single lap)
     /// </summary>
-    [HideInInspector]
     [NonSerialized]
     public float PathDistance;
 
-    [HideInInspector]
     [NonSerialized]
     public float PreviousPathDistance;
 
-    [HideInInspector]
     [NonSerialized]
     public float distanceTravelledInFrame;
 
-    [HideInInspector]
     [NonSerialized]
     public int Lap;
-
-
 
     private void Start()
     {
@@ -120,9 +112,14 @@ public class Navigator : MonoBehaviour
         return p;
     }
 
-    private void OnDrawGizmos()
+    public Vector3 GetPathPosition()
     {
-        if(!Application.isPlaying)
+        return waypoints.Query(PathDistance).Midpoint;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (!Application.isPlaying)
         {
             FixedUpdate();
         }
@@ -132,7 +129,7 @@ public class Navigator : MonoBehaviour
             waypoints = GetComponentInParent<TrackGeometry>();
         }
 
-        if(waypoints == null)
+        if (waypoints == null)
         {
             return;
         }
