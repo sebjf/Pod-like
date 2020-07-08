@@ -14,6 +14,12 @@ public static class GeometricTests  {
     {
         public Vector3 p;
         public Vector3 q;
+
+        public Segment(Vector3 p, Vector3 q)
+        {
+            this.p = p;
+            this.q = q;
+        }
     }
 
     public static ClosestPointSegmentSegmentResult ClosestPointSegmentSegment(Segment line1, Segment line2)
@@ -138,5 +144,11 @@ public static class GeometricTests  {
         return result;
     }
 
+    public static Vector3 ClosestPointOnLine(Vector3 point, Segment line)
+    {
+        var dir = (line.q - line.p).normalized;
+        var d = Vector3.Dot((point - line.p), dir);
+        return line.p + (dir * d);
+    }
 }
 
