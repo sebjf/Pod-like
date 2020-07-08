@@ -9487,11 +9487,27 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 720051396}
     m_Modifications:
     - target: {fileID: 123379082, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 405367502, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 42.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 405367502, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 405367502, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 396.9216
+      objectReference: {fileID: 0}
+    - target: {fileID: 405367502, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 607673341, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9527,23 +9543,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1267165660, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1267165660, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1267165660, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 76.4
       objectReference: {fileID: 0}
     - target: {fileID: 1267165660, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -15
       objectReference: {fileID: 0}
     - target: {fileID: 1267165660, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 152.8
       objectReference: {fileID: 0}
     - target: {fileID: 1380315901, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
       propertyPath: m_FontData.m_FontSize
@@ -9579,17 +9595,17 @@ PrefabInstance:
     - target: {fileID: 8457277695950770500, guid: d72f710045d70ed46be31f78929fe6d2,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8457277695950770500, guid: d72f710045d70ed46be31f78929fe6d2,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8457277695950770500, guid: d72f710045d70ed46be31f78929fe6d2,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8457277695950770500, guid: d72f710045d70ed46be31f78929fe6d2,
         type: 3}
@@ -9599,7 +9615,7 @@ PrefabInstance:
     - target: {fileID: 8457277695950770500, guid: d72f710045d70ed46be31f78929fe6d2,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8457277695950770500, guid: d72f710045d70ed46be31f78929fe6d2,
         type: 3}
@@ -9624,10 +9640,16 @@ PrefabInstance:
     - target: {fileID: 8457277695950770503, guid: d72f710045d70ed46be31f78929fe6d2,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d72f710045d70ed46be31f78929fe6d2, type: 3}
+--- !u!4 &259677514 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8457277695950770500, guid: d72f710045d70ed46be31f78929fe6d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 259677513}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &287379636 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 914759939, guid: 3de47bfceb3a8d846945b45cdf30f2af,
@@ -10353,6 +10375,80 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e195fe9a6d530d409a4b59d16c3434b, type: 3}
+--- !u!1001 &600633926
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 720051396}
+    m_Modifications:
+    - target: {fileID: 6040912957432424980, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_Name
+      value: Truck
+      objectReference: {fileID: 0}
+    - target: {fileID: 6040912957432424980, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 28.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 14.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -544.69
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.006751437
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99997723
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -0.77400005
+      objectReference: {fileID: 0}
+    - target: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7f00d132985f9464a83b98ba25fb051f, type: 3}
 --- !u!1 &605557290
 GameObject:
   m_ObjectHideFlags: 0
@@ -12095,7 +12191,7 @@ Transform:
   m_Children:
   - {fileID: 720051396}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &605557293
 MonoBehaviour:
@@ -31240,6 +31336,12 @@ MonoBehaviour:
   Barrier: 10
   broadphase: {fileID: 0}
   track: {fileID: 605557291}
+--- !u!4 &642442945 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
+    type: 3}
+  m_PrefabInstance: {fileID: 2087870244}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &650019653
 GameObject:
   m_ObjectHideFlags: 0
@@ -31570,6 +31672,5287 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5dceb223472c1d46a2552ac9983bf6e, type: 3}
+--- !u!1 &680931100 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4001992816435297627, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+    type: 3}
+  m_PrefabInstance: {fileID: 1497381225}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &680931101 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+    type: 3}
+  m_PrefabInstance: {fileID: 1497381225}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &680931102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680931100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6504b2434c37b234ba9638913433477d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profileLength: 40
+  interval: 10
+  speedStepSize: 5
+  errorThreshold: 1
+  currentNode: 0
+--- !u!114 &680931103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680931100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cc5595afc03c874f85ee5d824505823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
+  sideslipAngle: 0
+  lateralError: 0
+  understeer: 0
+  oversteer: 0
+  height: 0
+  traction: 0
+  directionError: 0
+  direction: 0
+  jumprulesflag: 0
+--- !u!114 &680931104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680931100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c79ab878e7913fe43830cb4a1fb5a5bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalLength: 4205.166
+  waypoints:
+  - index: 0
+    start: 0
+    end: 4.9632287
+    x: 0
+    w: 0.11228399
+  - index: 1
+    start: 4.9632287
+    end: 9.932218
+    x: 4.9984274
+    w: 0.10281101
+  - index: 2
+    start: 9.932218
+    end: 14.904772
+    x: 9.996855
+    w: 0.09699401
+  - index: 3
+    start: 14.904772
+    end: 19.87865
+    x: 14.995282
+    w: 0.09521201
+  - index: 4
+    start: 19.87865
+    end: 24.851532
+    x: 19.99371
+    w: 0.09785698
+  - index: 5
+    start: 24.851532
+    end: 29.820972
+    x: 24.992138
+    w: 0.10532351
+  - index: 6
+    start: 29.820972
+    end: 34.78447
+    x: 29.990564
+    w: 0.11801848
+  - index: 7
+    start: 34.78447
+    end: 39.739586
+    x: 34.98899
+    w: 0.13640851
+  - index: 8
+    start: 39.739586
+    end: 44.684025
+    x: 39.98742
+    w: 0.16117498
+  - index: 9
+    start: 44.684025
+    end: 49.61782
+    x: 44.985847
+    w: 0.19369498
+  - index: 10
+    start: 49.61782
+    end: 54.558426
+    x: 49.984276
+    w: 0.196352
+  - index: 11
+    start: 54.558426
+    end: 59.50394
+    x: 54.9827
+    w: 0.195606
+  - index: 12
+    start: 59.50394
+    end: 64.45066
+    x: 59.98113
+    w: 0.201823
+  - index: 13
+    start: 64.45066
+    end: 69.39496
+    x: 64.97955
+    w: 0.21503103
+  - index: 14
+    start: 69.39496
+    end: 74.33337
+    x: 69.97798
+    w: 0.2354725
+  - index: 15
+    start: 74.33337
+    end: 79.26264
+    x: 74.97641
+    w: 0.263518
+  - index: 16
+    start: 79.26264
+    end: 84.180214
+    x: 79.97484
+    w: 0.29981896
+  - index: 17
+    start: 84.180214
+    end: 89.0469
+    x: 84.97327
+    w: 0.34593305
+  - index: 18
+    start: 89.0469
+    end: 93.90352
+    x: 89.971695
+    w: 0.3668315
+  - index: 19
+    start: 93.90352
+    end: 98.74961
+    x: 94.97012
+    w: 0.390086
+  - index: 20
+    start: 98.74961
+    end: 103.57948
+    x: 99.96855
+    w: 0.42129946
+  - index: 21
+    start: 103.57948
+    end: 108.41835
+    x: 104.96697
+    w: 0.45746252
+  - index: 22
+    start: 108.41835
+    end: 113.25383
+    x: 109.9654
+    w: 0.467726
+  - index: 23
+    start: 113.25383
+    end: 118.08071
+    x: 114.96383
+    w: 0.48433247
+  - index: 24
+    start: 118.08071
+    end: 122.89423
+    x: 119.96226
+    w: 0.5069405
+  - index: 25
+    start: 122.89423
+    end: 127.70342
+    x: 124.960686
+    w: 0.5352285
+  - index: 26
+    start: 127.70342
+    end: 132.5487
+    x: 129.9591
+    w: 0.5546855
+  - index: 27
+    start: 132.5487
+    end: 137.40659
+    x: 134.95753
+    w: 0.54328394
+  - index: 28
+    start: 137.40659
+    end: 142.27438
+    x: 139.95596
+    w: 0.53590643
+  - index: 29
+    start: 142.27438
+    end: 147.14963
+    x: 144.95439
+    w: 0.5325395
+  - index: 30
+    start: 147.14963
+    end: 152.1786
+    x: 149.95282
+    w: 0.533124
+  - index: 31
+    start: 152.1786
+    end: 157.2421
+    x: 154.95125
+    w: 0.502426
+  - index: 32
+    start: 157.2421
+    end: 162.30048
+    x: 159.94968
+    w: 0.4671905
+  - index: 33
+    start: 162.30048
+    end: 167.35333
+    x: 164.9481
+    w: 0.431705
+  - index: 34
+    start: 167.35333
+    end: 172.41466
+    x: 169.94653
+    w: 0.39108402
+  - index: 35
+    start: 172.41466
+    end: 178.06114
+    x: 174.94496
+    w: 0.34117097
+  - index: 36
+    start: 178.06114
+    end: 183.74251
+    x: 179.94339
+    w: 0.31792253
+  - index: 37
+    start: 183.74251
+    end: 189.56682
+    x: 184.94182
+    w: 0.33716497
+  - index: 38
+    start: 189.56682
+    end: 195.58377
+    x: 189.94025
+    w: 0.35568246
+  - index: 39
+    start: 195.58377
+    end: 201.4607
+    x: 194.93867
+    w: 0.35085
+  - index: 40
+    start: 201.4607
+    end: 207.83514
+    x: 199.9371
+    w: 0.32115898
+  - index: 41
+    start: 207.83514
+    end: 214.22856
+    x: 204.93552
+    w: 0.37942854
+  - index: 42
+    start: 214.22856
+    end: 220.06224
+    x: 209.93394
+    w: 0.32377198
+  - index: 43
+    start: 220.06224
+    end: 226.14651
+    x: 214.93237
+    w: 0.33457246
+  - index: 44
+    start: 226.14651
+    end: 232.17244
+    x: 219.9308
+    w: 0.37878704
+  - index: 45
+    start: 232.17244
+    end: 237.62384
+    x: 224.92923
+    w: 0.36742046
+  - index: 46
+    start: 237.62384
+    end: 243.09398
+    x: 229.92766
+    w: 0.37980753
+  - index: 47
+    start: 243.09398
+    end: 248.33427
+    x: 234.92609
+    w: 0.36293352
+  - index: 48
+    start: 248.33427
+    end: 253.51471
+    x: 239.92451
+    w: 0.3703875
+  - index: 49
+    start: 253.51471
+    end: 258.6922
+    x: 244.92294
+    w: 0.37798554
+  - index: 50
+    start: 258.6922
+    end: 263.8373
+    x: 249.92137
+    w: 0.3725375
+  - index: 51
+    start: 263.8373
+    end: 268.94907
+    x: 254.9198
+    w: 0.3587925
+  - index: 52
+    start: 268.94907
+    end: 274.0601
+    x: 259.9182
+    w: 0.33909395
+  - index: 53
+    start: 274.0601
+    end: 279.16287
+    x: 264.91666
+    w: 0.30849454
+  - index: 54
+    start: 279.16287
+    end: 284.24762
+    x: 269.91507
+    w: 0.269391
+  - index: 55
+    start: 284.24762
+    end: 289.32257
+    x: 274.9135
+    w: 0.23629254
+  - index: 56
+    start: 289.32257
+    end: 294.38788
+    x: 279.91193
+    w: 0.20429951
+  - index: 57
+    start: 294.38788
+    end: 299.4399
+    x: 284.91037
+    w: 0.16840199
+  - index: 58
+    start: 299.4399
+    end: 304.47543
+    x: 289.90878
+    w: 0.12972397
+  - index: 59
+    start: 304.47543
+    end: 309.4923
+    x: 294.90723
+    w: 0.090848
+  - index: 60
+    start: 309.4923
+    end: 314.50757
+    x: 299.90564
+    w: 0.080936
+  - index: 61
+    start: 314.50757
+    end: 319.52032
+    x: 304.90408
+    w: 0.07045403
+  - index: 62
+    start: 319.52032
+    end: 324.53027
+    x: 309.9025
+    w: 0.060103476
+  - index: 63
+    start: 324.53027
+    end: 329.5373
+    x: 314.90094
+    w: 0.05048354
+  - index: 64
+    start: 329.5373
+    end: 334.54178
+    x: 319.89935
+    w: 0.042117536
+  - index: 65
+    start: 334.54178
+    end: 339.54456
+    x: 324.89777
+    w: 0.035453483
+  - index: 66
+    start: 339.54456
+    end: 344.54666
+    x: 329.8962
+    w: 0.030855477
+  - index: 67
+    start: 344.54666
+    end: 349.54956
+    x: 334.89462
+    w: 0.028646037
+  - index: 68
+    start: 349.54956
+    end: 354.55487
+    x: 339.89307
+    w: 0.02906698
+  - index: 69
+    start: 354.55487
+    end: 359.557
+    x: 344.89148
+    w: 0.032320976
+  - index: 70
+    start: 359.557
+    end: 364.53558
+    x: 349.88992
+    w: 0.049320474
+  - index: 71
+    start: 364.53558
+    end: 369.49387
+    x: 354.88834
+    w: 0.086968035
+  - index: 72
+    start: 369.49387
+    end: 374.42944
+    x: 359.88678
+    w: 0.12737605
+  - index: 73
+    start: 374.42944
+    end: 379.33997
+    x: 364.8852
+    w: 0.17058402
+  - index: 74
+    start: 379.33997
+    end: 384.22287
+    x: 369.88364
+    w: 0.21657953
+  - index: 75
+    start: 384.22287
+    end: 389.07574
+    x: 374.88205
+    w: 0.265302
+  - index: 76
+    start: 389.07574
+    end: 393.8961
+    x: 379.8805
+    w: 0.316662
+  - index: 77
+    start: 393.8961
+    end: 398.68152
+    x: 384.8789
+    w: 0.37054852
+  - index: 78
+    start: 398.68152
+    end: 403.42966
+    x: 389.87735
+    w: 0.4268265
+  - index: 79
+    start: 403.42966
+    end: 408.13828
+    x: 394.87576
+    w: 0.48535445
+  - index: 80
+    start: 408.13828
+    end: 412.80515
+    x: 399.8742
+    w: 0.545974
+  - index: 81
+    start: 412.80515
+    end: 417.42822
+    x: 404.87262
+    w: 0.60853946
+  - index: 82
+    start: 417.42822
+    end: 420.96848
+    x: 409.87103
+    w: 0.6729491
+  - index: 83
+    start: 420.96848
+    end: 423.8661
+    x: 414.86948
+    w: 0.6684445
+  - index: 84
+    start: 423.8661
+    end: 427.51038
+    x: 419.8679
+    w: 0.6023215
+  - index: 85
+    start: 427.51038
+    end: 432.46893
+    x: 424.86633
+    w: 0.519083
+  - index: 86
+    start: 432.46893
+    end: 437.75467
+    x: 429.86475
+    w: 0.38753298
+  - index: 87
+    start: 437.75467
+    end: 443.44086
+    x: 434.8632
+    w: 0.24706453
+  - index: 88
+    start: 443.44086
+    end: 449.62897
+    x: 439.8616
+    w: 0.0938555
+  - index: 89
+    start: 449.62897
+    end: 455.94974
+    x: 444.86005
+    w: -0.10701151
+  - index: 90
+    start: 455.94974
+    end: 460.285
+    x: 449.85846
+    w: -0.3487555
+  - index: 91
+    start: 460.285
+    end: 463.3289
+    x: 454.8569
+    w: -0.514935
+  - index: 92
+    start: 463.3289
+    end: 465.60922
+    x: 459.85532
+    w: -0.64326
+  - index: 93
+    start: 465.60922
+    end: 468.1218
+    x: 464.85376
+    w: -0.675
+  - index: 94
+    start: 468.1218
+    end: 470.89264
+    x: 469.85217
+    w: -0.657934
+  - index: 95
+    start: 470.89264
+    end: 474.9673
+    x: 474.85062
+    w: -0.6440145
+  - index: 96
+    start: 474.9673
+    end: 479.6613
+    x: 479.84903
+    w: -0.597837
+  - index: 97
+    start: 479.6613
+    end: 484.3909
+    x: 484.84744
+    w: -0.54270554
+  - index: 98
+    start: 484.3909
+    end: 489.27618
+    x: 489.8459
+    w: -0.49723148
+  - index: 99
+    start: 489.27618
+    end: 494.29938
+    x: 494.8443
+    w: -0.45593047
+  - index: 100
+    start: 494.29938
+    end: 499.30917
+    x: 499.84274
+    w: -0.41836202
+  - index: 101
+    start: 499.30917
+    end: 504.3106
+    x: 504.84116
+    w: -0.3887905
+  - index: 102
+    start: 504.3106
+    end: 509.31973
+    x: 509.8396
+    w: -0.3658405
+  - index: 103
+    start: 509.31973
+    end: 514.3492
+    x: 514.838
+    w: -0.3499555
+  - index: 104
+    start: 514.3492
+    end: 519.37573
+    x: 519.8364
+    w: -0.3413015
+  - index: 105
+    start: 519.37573
+    end: 524.40063
+    x: 524.8349
+    w: -0.33540648
+  - index: 106
+    start: 524.40063
+    end: 529.42456
+    x: 529.8333
+    w: -0.330924
+  - index: 107
+    start: 529.42456
+    end: 534.4553
+    x: 534.8317
+    w: -0.3265065
+  - index: 108
+    start: 534.4553
+    end: 539.51184
+    x: 539.83014
+    w: -0.32251602
+  - index: 109
+    start: 539.51184
+    end: 544.5682
+    x: 544.8286
+    w: -0.321797
+  - index: 110
+    start: 544.5682
+    end: 549.6236
+    x: 549.827
+    w: -0.31675848
+  - index: 111
+    start: 549.6236
+    end: 554.678
+    x: 554.82544
+    w: -0.30587798
+  - index: 112
+    start: 554.678
+    end: 559.73694
+    x: 559.82385
+    w: -0.287605
+  - index: 113
+    start: 559.73694
+    end: 564.8237
+    x: 564.82227
+    w: -0.264289
+  - index: 114
+    start: 564.8237
+    end: 569.9187
+    x: 569.82074
+    w: -0.248094
+  - index: 115
+    start: 569.9187
+    end: 575.02515
+    x: 574.81915
+    w: -0.2190465
+  - index: 116
+    start: 575.02515
+    end: 580.16974
+    x: 579.81757
+    w: -0.17517349
+  - index: 117
+    start: 580.16974
+    end: 585.35486
+    x: 584.816
+    w: -0.118438974
+  - index: 118
+    start: 585.35486
+    end: 590.5008
+    x: 589.81445
+    w: -0.05117899
+  - index: 119
+    start: 590.5008
+    end: 595.49506
+    x: 594.81287
+    w: 0.039582983
+  - index: 120
+    start: 595.49506
+    end: 600.10516
+    x: 599.8113
+    w: 0.13136101
+  - index: 121
+    start: 600.10516
+    end: 604.2423
+    x: 604.8097
+    w: 0.2176145
+  - index: 122
+    start: 604.2423
+    end: 607.8613
+    x: 609.80817
+    w: 0.32660097
+  - index: 123
+    start: 607.8613
+    end: 611.75616
+    x: 614.8066
+    w: 0.35655603
+  - index: 124
+    start: 611.75616
+    end: 616.0018
+    x: 619.805
+    w: 0.286378
+  - index: 125
+    start: 616.0018
+    end: 620.5983
+    x: 624.8034
+    w: 0.24102798
+  - index: 126
+    start: 620.5983
+    end: 625.3938
+    x: 629.8019
+    w: 0.17786497
+  - index: 127
+    start: 625.3938
+    end: 630.2445
+    x: 634.8003
+    w: 0.12899
+  - index: 128
+    start: 630.2445
+    end: 635.3017
+    x: 639.7987
+    w: 0.06994049
+  - index: 129
+    start: 635.3017
+    end: 640.5316
+    x: 644.7971
+    w: -0.041586027
+  - index: 130
+    start: 640.5316
+    end: 645.84
+    x: 649.79553
+    w: -0.12200847
+  - index: 131
+    start: 645.84
+    end: 650.9726
+    x: 654.794
+    w: -0.16865098
+  - index: 132
+    start: 650.9726
+    end: 656.0574
+    x: 659.7924
+    w: -0.24576999
+  - index: 133
+    start: 656.0574
+    end: 661.15137
+    x: 664.79083
+    w: -0.31532353
+  - index: 134
+    start: 661.15137
+    end: 666.2574
+    x: 669.78925
+    w: -0.36450404
+  - index: 135
+    start: 666.2574
+    end: 671.3747
+    x: 674.7877
+    w: -0.3966695
+  - index: 136
+    start: 671.3747
+    end: 676.50073
+    x: 679.78613
+    w: -0.414694
+  - index: 137
+    start: 676.50073
+    end: 681.6317
+    x: 684.78455
+    w: -0.4212665
+  - index: 138
+    start: 681.6317
+    end: 686.7635
+    x: 689.78296
+    w: -0.4186995
+  - index: 139
+    start: 686.7635
+    end: 691.8654
+    x: 694.78143
+    w: -0.40815303
+  - index: 140
+    start: 691.8654
+    end: 696.9151
+    x: 699.77985
+    w: -0.39711696
+  - index: 141
+    start: 696.9151
+    end: 701.9664
+    x: 704.77826
+    w: -0.39259
+  - index: 142
+    start: 701.9664
+    end: 707.01843
+    x: 709.7767
+    w: -0.38289598
+  - index: 143
+    start: 707.01843
+    end: 712.04193
+    x: 714.77515
+    w: -0.36877948
+  - index: 144
+    start: 712.04193
+    end: 717.05316
+    x: 719.77356
+    w: -0.352976
+  - index: 145
+    start: 717.05316
+    end: 722.0669
+    x: 724.772
+    w: -0.336479
+  - index: 146
+    start: 722.0669
+    end: 727.08264
+    x: 729.7704
+    w: -0.317558
+  - index: 147
+    start: 727.08264
+    end: 732.0999
+    x: 734.7688
+    w: -0.29674304
+  - index: 148
+    start: 732.0999
+    end: 737.11804
+    x: 739.7673
+    w: -0.27455348
+  - index: 149
+    start: 737.11804
+    end: 742.13354
+    x: 744.7657
+    w: -0.25145555
+  - index: 150
+    start: 742.13354
+    end: 747.1487
+    x: 749.7641
+    w: -0.22706002
+  - index: 151
+    start: 747.1487
+    end: 752.1636
+    x: 754.7625
+    w: -0.20242299
+  - index: 152
+    start: 752.1636
+    end: 757.1778
+    x: 759.761
+    w: -0.17810601
+  - index: 153
+    start: 757.1778
+    end: 762.19104
+    x: 764.7594
+    w: -0.15439501
+  - index: 154
+    start: 762.19104
+    end: 767.19824
+    x: 769.7578
+    w: -0.131536
+  - index: 155
+    start: 767.19824
+    end: 772.21
+    x: 774.7562
+    w: -0.109752
+  - index: 156
+    start: 772.21
+    end: 777.22003
+    x: 779.7547
+    w: -0.08920449
+  - index: 157
+    start: 777.22003
+    end: 782.22754
+    x: 784.7531
+    w: -0.06996247
+  - index: 158
+    start: 782.22754
+    end: 787.2343
+    x: 789.7515
+    w: -0.052066028
+  - index: 159
+    start: 787.2343
+    end: 792.2398
+    x: 794.74994
+    w: -0.035533533
+  - index: 160
+    start: 792.2398
+    end: 797.2441
+    x: 799.7484
+    w: -0.020362005
+  - index: 161
+    start: 797.2441
+    end: 802.2474
+    x: 804.7468
+    w: -0.0065145195
+  - index: 162
+    start: 802.2474
+    end: 807.24994
+    x: 809.74524
+    w: 0.0060899854
+  - index: 163
+    start: 807.24994
+    end: 812.25195
+    x: 814.74365
+    w: 0.017540008
+  - index: 164
+    start: 812.25195
+    end: 817.2534
+    x: 819.74207
+    w: 0.027941465
+  - index: 165
+    start: 817.2534
+    end: 822.25385
+    x: 824.74054
+    w: 0.037535965
+  - index: 166
+    start: 822.25385
+    end: 827.2537
+    x: 829.73895
+    w: 0.04686153
+  - index: 167
+    start: 827.2537
+    end: 832.2532
+    x: 834.73737
+    w: 0.055514038
+  - index: 168
+    start: 832.2532
+    end: 837.25165
+    x: 839.7358
+    w: 0.063630015
+  - index: 169
+    start: 837.25165
+    end: 842.24994
+    x: 844.73425
+    w: 0.06982604
+  - index: 170
+    start: 842.24994
+    end: 847.2479
+    x: 849.73267
+    w: 0.07558951
+  - index: 171
+    start: 847.2479
+    end: 852.2457
+    x: 854.7311
+    w: 0.08117452
+  - index: 172
+    start: 852.2457
+    end: 857.2422
+    x: 859.7295
+    w: 0.08668405
+  - index: 173
+    start: 857.2422
+    end: 862.23816
+    x: 864.72797
+    w: 0.09175995
+  - index: 174
+    start: 862.23816
+    end: 867.2339
+    x: 869.7264
+    w: 0.096066505
+  - index: 175
+    start: 867.2339
+    end: 872.2294
+    x: 874.7248
+    w: 0.100491524
+  - index: 176
+    start: 872.2294
+    end: 877.2208
+    x: 879.7232
+    w: 0.10506803
+  - index: 177
+    start: 877.2208
+    end: 882.21027
+    x: 884.7216
+    w: 0.107872486
+  - index: 178
+    start: 882.21027
+    end: 887.1996
+    x: 889.7201
+    w: 0.10861698
+  - index: 179
+    start: 887.1996
+    end: 892.18884
+    x: 894.7185
+    w: 0.10943797
+  - index: 180
+    start: 892.18884
+    end: 897.17725
+    x: 899.7169
+    w: 0.11027053
+  - index: 181
+    start: 897.17725
+    end: 902.16846
+    x: 904.71533
+    w: 0.10424852
+  - index: 182
+    start: 902.16846
+    end: 907.1611
+    x: 909.7138
+    w: 0.096176475
+  - index: 183
+    start: 907.1611
+    end: 912.1562
+    x: 914.7122
+    w: 0.08777195
+  - index: 184
+    start: 912.1562
+    end: 917.15515
+    x: 919.71063
+    w: 0.07865855
+  - index: 185
+    start: 917.15515
+    end: 922.15515
+    x: 924.70905
+    w: 0.06891149
+  - index: 186
+    start: 922.15515
+    end: 927.1563
+    x: 929.7075
+    w: 0.058484495
+  - index: 187
+    start: 927.1563
+    end: 932.15894
+    x: 934.70593
+    w: 0.047257543
+  - index: 188
+    start: 932.15894
+    end: 937.1634
+    x: 939.70435
+    w: 0.03291598
+  - index: 189
+    start: 937.1634
+    end: 942.1691
+    x: 944.70276
+    w: 0.017373458
+  - index: 190
+    start: 942.1691
+    end: 947.1763
+    x: 949.70123
+    w: 0.0006675422
+  - index: 191
+    start: 947.1763
+    end: 952.1852
+    x: 954.69965
+    w: -0.017293483
+  - index: 192
+    start: 952.1852
+    end: 957.19604
+    x: 959.69806
+    w: -0.036595985
+  - index: 193
+    start: 957.19604
+    end: 962.20844
+    x: 964.6965
+    w: -0.05730799
+  - index: 194
+    start: 962.20844
+    end: 967.2223
+    x: 969.6949
+    w: -0.07889947
+  - index: 195
+    start: 967.2223
+    end: 972.238
+    x: 974.69336
+    w: -0.10126302
+  - index: 196
+    start: 972.238
+    end: 977.25555
+    x: 979.6918
+    w: -0.12523101
+  - index: 197
+    start: 977.25555
+    end: 982.2751
+    x: 984.6902
+    w: -0.15077798
+  - index: 198
+    start: 982.2751
+    end: 987.2965
+    x: 989.6886
+    w: -0.17783451
+  - index: 199
+    start: 987.2965
+    end: 992.3193
+    x: 994.6871
+    w: -0.206308
+  - index: 200
+    start: 992.3193
+    end: 997.3224
+    x: 999.6855
+    w: -0.2360355
+  - index: 201
+    start: 997.3224
+    end: 1002.32153
+    x: 1004.6839
+    w: -0.26618648
+  - index: 202
+    start: 1002.32153
+    end: 1007.31616
+    x: 1009.6823
+    w: -0.297104
+  - index: 203
+    start: 1007.31616
+    end: 1012.30554
+    x: 1014.6808
+    w: -0.32852697
+  - index: 204
+    start: 1012.30554
+    end: 1017.28906
+    x: 1019.6792
+    w: -0.360139
+  - index: 205
+    start: 1017.28906
+    end: 1022.26636
+    x: 1024.6776
+    w: -0.39159447
+  - index: 206
+    start: 1022.26636
+    end: 1027.1571
+    x: 1029.676
+    w: -0.422526
+  - index: 207
+    start: 1027.1571
+    end: 1032.0267
+    x: 1034.6744
+    w: -0.4377805
+  - index: 208
+    start: 1032.0267
+    end: 1036.8888
+    x: 1039.6729
+    w: -0.449444
+  - index: 209
+    start: 1036.8888
+    end: 1041.7454
+    x: 1044.6713
+    w: -0.459414
+  - index: 210
+    start: 1041.7454
+    end: 1046.5986
+    x: 1049.6698
+    w: -0.4672345
+  - index: 211
+    start: 1046.5986
+    end: 1051.452
+    x: 1054.6682
+    w: -0.4724235
+  - index: 212
+    start: 1051.452
+    end: 1056.31
+    x: 1059.6666
+    w: -0.474477
+  - index: 213
+    start: 1056.31
+    end: 1061.1422
+    x: 1064.665
+    w: -0.472855
+  - index: 214
+    start: 1061.1422
+    end: 1065.925
+    x: 1069.6635
+    w: -0.45412147
+  - index: 215
+    start: 1065.925
+    end: 1070.8156
+    x: 1074.6619
+    w: -0.38879648
+  - index: 216
+    start: 1070.8156
+    end: 1075.8345
+    x: 1079.6603
+    w: -0.316747
+  - index: 217
+    start: 1075.8345
+    end: 1081.0103
+    x: 1084.6587
+    w: -0.23653097
+  - index: 218
+    start: 1081.0103
+    end: 1086.3839
+    x: 1089.6572
+    w: -0.1461465
+  - index: 219
+    start: 1086.3839
+    end: 1091.9264
+    x: 1094.6556
+    w: -0.04151447
+  - index: 220
+    start: 1091.9264
+    end: 1097.5409
+    x: 1099.654
+    w: 0.12669647
+  - index: 221
+    start: 1097.5409
+    end: 1102.8624
+    x: 1104.6525
+    w: 0.30768645
+  - index: 222
+    start: 1102.8624
+    end: 1106.9343
+    x: 1109.6509
+    w: 0.47029048
+  - index: 223
+    start: 1106.9343
+    end: 1110.3936
+    x: 1114.6493
+    w: 0.5512265
+  - index: 224
+    start: 1110.3936
+    end: 1113.2737
+    x: 1119.6477
+    w: 0.61851394
+  - index: 225
+    start: 1113.2737
+    end: 1115.3943
+    x: 1124.6461
+    w: 0.67278457
+  - index: 226
+    start: 1115.3943
+    end: 1117.639
+    x: 1129.6445
+    w: 0.67492
+  - index: 227
+    start: 1117.639
+    end: 1120.1522
+    x: 1134.6431
+    w: 0.66343653
+  - index: 228
+    start: 1120.1522
+    end: 1123.5848
+    x: 1139.6415
+    w: 0.65243703
+  - index: 229
+    start: 1123.5848
+    end: 1128.3674
+    x: 1144.6399
+    w: 0.5977905
+  - index: 230
+    start: 1128.3674
+    end: 1133.3339
+    x: 1149.6383
+    w: 0.46653748
+  - index: 231
+    start: 1133.3339
+    end: 1138.476
+    x: 1154.6367
+    w: 0.33393103
+  - index: 232
+    start: 1138.476
+    end: 1143.7969
+    x: 1159.6351
+    w: 0.20006105
+  - index: 233
+    start: 1143.7969
+    end: 1149.1415
+    x: 1164.6335
+    w: 0.071840465
+  - index: 234
+    start: 1149.1415
+    end: 1154.3428
+    x: 1169.632
+    w: -0.027773991
+  - index: 235
+    start: 1154.3428
+    end: 1159.4302
+    x: 1174.6305
+    w: -0.11506799
+  - index: 236
+    start: 1159.4302
+    end: 1164.4246
+    x: 1179.6289
+    w: -0.19248499
+  - index: 237
+    start: 1164.4246
+    end: 1169.3416
+    x: 1184.6273
+    w: -0.261757
+  - index: 238
+    start: 1169.3416
+    end: 1174.258
+    x: 1189.6257
+    w: -0.3242295
+  - index: 239
+    start: 1174.258
+    end: 1179.1656
+    x: 1194.6241
+    w: -0.33953297
+  - index: 240
+    start: 1179.1656
+    end: 1184.0656
+    x: 1199.6226
+    w: -0.346893
+  - index: 241
+    start: 1184.0656
+    end: 1188.9618
+    x: 1204.621
+    w: -0.35084397
+  - index: 242
+    start: 1188.9618
+    end: 1193.8572
+    x: 1209.6194
+    w: -0.352079
+  - index: 243
+    start: 1193.8572
+    end: 1198.7535
+    x: 1214.6178
+    w: -0.35130703
+  - index: 244
+    start: 1198.7535
+    end: 1203.6514
+    x: 1219.6163
+    w: -0.349236
+  - index: 245
+    start: 1203.6514
+    end: 1208.5505
+    x: 1224.6147
+    w: -0.346577
+  - index: 246
+    start: 1208.5505
+    end: 1213.4556
+    x: 1229.6132
+    w: -0.344062
+  - index: 247
+    start: 1213.4556
+    end: 1218.3756
+    x: 1234.6116
+    w: -0.31822202
+  - index: 248
+    start: 1218.3756
+    end: 1223.3085
+    x: 1239.61
+    w: -0.29022402
+  - index: 249
+    start: 1223.3085
+    end: 1228.251
+    x: 1244.6084
+    w: -0.26450497
+  - index: 250
+    start: 1228.251
+    end: 1233.1995
+    x: 1249.6068
+    w: -0.24190947
+  - index: 251
+    start: 1233.1995
+    end: 1238.1498
+    x: 1254.6052
+    w: -0.22335099
+  - index: 252
+    start: 1238.1498
+    end: 1243.0964
+    x: 1259.6038
+    w: -0.20986101
+  - index: 253
+    start: 1243.0964
+    end: 1247.961
+    x: 1264.6022
+    w: -0.20286
+  - index: 254
+    start: 1247.961
+    end: 1252.8198
+    x: 1269.6006
+    w: -0.18155152
+  - index: 255
+    start: 1252.8198
+    end: 1257.7133
+    x: 1274.599
+    w: -0.1524145
+  - index: 256
+    start: 1257.7133
+    end: 1262.617
+    x: 1279.5974
+    w: -0.13121101
+  - index: 257
+    start: 1262.617
+    end: 1267.501
+    x: 1284.5958
+    w: -0.11964147
+  - index: 258
+    start: 1267.501
+    end: 1272.3263
+    x: 1289.5942
+    w: -0.11998002
+  - index: 259
+    start: 1272.3263
+    end: 1277.0347
+    x: 1294.5927
+    w: -0.13591653
+  - index: 260
+    start: 1277.0347
+    end: 1281.9147
+    x: 1299.5911
+    w: -0.10713303
+  - index: 261
+    start: 1281.9147
+    end: 1287.0724
+    x: 1304.5896
+    w: 0.00084245205
+  - index: 262
+    start: 1287.0724
+    end: 1292.4254
+    x: 1309.588
+    w: 0.08958697
+  - index: 263
+    start: 1292.4254
+    end: 1297.7206
+    x: 1314.5864
+    w: 0.15632348
+  - index: 264
+    start: 1297.7206
+    end: 1302.8751
+    x: 1319.5848
+    w: 0.23285154
+  - index: 265
+    start: 1302.8751
+    end: 1308.0208
+    x: 1324.5833
+    w: 0.320329
+  - index: 266
+    start: 1308.0208
+    end: 1313.0907
+    x: 1329.5817
+    w: 0.38895097
+  - index: 267
+    start: 1313.0907
+    end: 1318.0674
+    x: 1334.5801
+    w: 0.42158002
+  - index: 268
+    start: 1318.0674
+    end: 1323.0398
+    x: 1339.5785
+    w: 0.41789353
+  - index: 269
+    start: 1323.0398
+    end: 1328.0278
+    x: 1344.577
+    w: 0.39738953
+  - index: 270
+    start: 1328.0278
+    end: 1333.0557
+    x: 1349.5754
+    w: 0.35915053
+  - index: 271
+    start: 1333.0557
+    end: 1338.1553
+    x: 1354.5739
+    w: 0.30172098
+  - index: 272
+    start: 1338.1553
+    end: 1343.3743
+    x: 1359.5723
+    w: 0.22274897
+  - index: 273
+    start: 1343.3743
+    end: 1348.799
+    x: 1364.5707
+    w: 0.11825904
+  - index: 274
+    start: 1348.799
+    end: 1354.0562
+    x: 1369.5691
+    w: -0.019425958
+  - index: 275
+    start: 1354.0562
+    end: 1358.3204
+    x: 1374.5675
+    w: -0.16997299
+  - index: 276
+    start: 1358.3204
+    end: 1361.4664
+    x: 1379.5659
+    w: -0.312845
+  - index: 277
+    start: 1361.4664
+    end: 1363.6266
+    x: 1384.5643
+    w: -0.43465704
+  - index: 278
+    start: 1363.6266
+    end: 1366.1605
+    x: 1389.5629
+    w: -0.49254453
+  - index: 279
+    start: 1366.1605
+    end: 1369.6317
+    x: 1394.5613
+    w: -0.41483352
+  - index: 280
+    start: 1369.6317
+    end: 1373.9825
+    x: 1399.5597
+    w: -0.31740552
+  - index: 281
+    start: 1373.9825
+    end: 1379.117
+    x: 1404.5581
+    w: -0.20718202
+  - index: 282
+    start: 1379.117
+    end: 1384.4126
+    x: 1409.5565
+    w: -0.06823404
+  - index: 283
+    start: 1384.4126
+    end: 1389.6669
+    x: 1414.5549
+    w: 0.07065448
+  - index: 284
+    start: 1389.6669
+    end: 1394.8524
+    x: 1419.5533
+    w: 0.18535051
+  - index: 285
+    start: 1394.8524
+    end: 1399.9781
+    x: 1424.5518
+    w: 0.2722825
+  - index: 286
+    start: 1399.9781
+    end: 1405.0725
+    x: 1429.5503
+    w: 0.3331195
+  - index: 287
+    start: 1405.0725
+    end: 1410.1183
+    x: 1434.5487
+    w: 0.37366647
+  - index: 288
+    start: 1410.1183
+    end: 1415.125
+    x: 1439.5471
+    w: 0.40164053
+  - index: 289
+    start: 1415.125
+    end: 1420.122
+    x: 1444.5455
+    w: 0.41846055
+  - index: 290
+    start: 1420.122
+    end: 1425.1157
+    x: 1449.544
+    w: 0.42299247
+  - index: 291
+    start: 1425.1157
+    end: 1430.1113
+    x: 1454.5424
+    w: 0.41742802
+  - index: 292
+    start: 1430.1113
+    end: 1435.1074
+    x: 1459.5408
+    w: 0.40360802
+  - index: 293
+    start: 1435.1074
+    end: 1440.1044
+    x: 1464.5392
+    w: 0.38174748
+  - index: 294
+    start: 1440.1044
+    end: 1445.1136
+    x: 1469.5376
+    w: 0.35135654
+  - index: 295
+    start: 1445.1136
+    end: 1450.1365
+    x: 1474.5361
+    w: 0.31525597
+  - index: 296
+    start: 1450.1365
+    end: 1455.2386
+    x: 1479.5345
+    w: 0.27418852
+  - index: 297
+    start: 1455.2386
+    end: 1460.3362
+    x: 1484.533
+    w: 0.2357685
+  - index: 298
+    start: 1460.3362
+    end: 1465.4205
+    x: 1489.5314
+    w: 0.19428653
+  - index: 299
+    start: 1465.4205
+    end: 1470.4885
+    x: 1494.5298
+    w: 0.15014954
+  - index: 300
+    start: 1470.4885
+    end: 1475.554
+    x: 1499.5282
+    w: 0.104097545
+  - index: 301
+    start: 1475.554
+    end: 1480.6049
+    x: 1504.5266
+    w: 0.07557504
+  - index: 302
+    start: 1480.6049
+    end: 1485.6351
+    x: 1509.525
+    w: 0.050583497
+  - index: 303
+    start: 1485.6351
+    end: 1490.6459
+    x: 1514.5236
+    w: 0.024913982
+  - index: 304
+    start: 1490.6459
+    end: 1495.6509
+    x: 1519.522
+    w: 0.011785507
+  - index: 305
+    start: 1495.6509
+    end: 1500.6512
+    x: 1524.5204
+    w: 0.0034989715
+  - index: 306
+    start: 1500.6512
+    end: 1505.6469
+    x: 1529.5188
+    w: -0.0047769845
+  - index: 307
+    start: 1505.6469
+    end: 1510.6381
+    x: 1534.5172
+    w: -0.0128044635
+  - index: 308
+    start: 1510.6381
+    end: 1515.6321
+    x: 1539.5156
+    w: -0.020401478
+  - index: 309
+    start: 1515.6321
+    end: 1520.6278
+    x: 1544.514
+    w: -0.0075494796
+  - index: 310
+    start: 1520.6278
+    end: 1525.6254
+    x: 1549.5125
+    w: 0.0070565343
+  - index: 311
+    start: 1525.6254
+    end: 1530.6249
+    x: 1554.5109
+    w: 0.022668466
+  - index: 312
+    start: 1530.6249
+    end: 1535.6262
+    x: 1559.5094
+    w: 0.03932695
+  - index: 313
+    start: 1535.6262
+    end: 1540.6199
+    x: 1564.5078
+    w: 0.05701448
+  - index: 314
+    start: 1540.6199
+    end: 1545.6072
+    x: 1569.5062
+    w: 0.066237986
+  - index: 315
+    start: 1545.6072
+    end: 1550.593
+    x: 1574.5046
+    w: 0.07024346
+  - index: 316
+    start: 1550.593
+    end: 1555.5773
+    x: 1579.503
+    w: 0.074636996
+  - index: 317
+    start: 1555.5773
+    end: 1560.5598
+    x: 1584.5015
+    w: 0.07932097
+  - index: 318
+    start: 1560.5598
+    end: 1565.5424
+    x: 1589.4999
+    w: 0.08416304
+  - index: 319
+    start: 1565.5424
+    end: 1570.5306
+    x: 1594.4983
+    w: 0.079098016
+  - index: 320
+    start: 1570.5306
+    end: 1575.5226
+    x: 1599.4968
+    w: 0.067113996
+  - index: 321
+    start: 1575.5226
+    end: 1580.5187
+    x: 1604.4952
+    w: 0.054701537
+  - index: 322
+    start: 1580.5187
+    end: 1585.5195
+    x: 1609.4937
+    w: 0.041637957
+  - index: 323
+    start: 1585.5195
+    end: 1590.527
+    x: 1614.4921
+    w: 0.027679533
+  - index: 324
+    start: 1590.527
+    end: 1595.5331
+    x: 1619.4905
+    w: 0.009493515
+  - index: 325
+    start: 1595.5331
+    end: 1600.5295
+    x: 1624.4889
+    w: -0.017455027
+  - index: 326
+    start: 1600.5295
+    end: 1605.5157
+    x: 1629.4873
+    w: -0.045797527
+  - index: 327
+    start: 1605.5157
+    end: 1610.4908
+    x: 1634.4857
+    w: -0.0757155
+  - index: 328
+    start: 1610.4908
+    end: 1615.4543
+    x: 1639.4841
+    w: -0.10741849
+  - index: 329
+    start: 1615.4543
+    end: 1620.4049
+    x: 1644.4827
+    w: -0.1411175
+  - index: 330
+    start: 1620.4049
+    end: 1625.3419
+    x: 1649.4811
+    w: -0.1770395
+  - index: 331
+    start: 1625.3419
+    end: 1630.2218
+    x: 1654.4795
+    w: -0.21546502
+  - index: 332
+    start: 1630.2218
+    end: 1635.0829
+    x: 1659.4779
+    w: -0.224775
+  - index: 333
+    start: 1635.0829
+    end: 1639.9633
+    x: 1664.4763
+    w: -0.20923302
+  - index: 334
+    start: 1639.9633
+    end: 1644.8577
+    x: 1669.4747
+    w: -0.19679752
+  - index: 335
+    start: 1644.8577
+    end: 1649.7595
+    x: 1674.4731
+    w: -0.18800052
+  - index: 336
+    start: 1649.7595
+    end: 1654.6608
+    x: 1679.4716
+    w: -0.1836605
+  - index: 337
+    start: 1654.6608
+    end: 1659.5704
+    x: 1684.47
+    w: -0.1853505
+  - index: 338
+    start: 1659.5704
+    end: 1664.5161
+    x: 1689.4685
+    w: -0.170703
+  - index: 339
+    start: 1664.5161
+    end: 1669.4749
+    x: 1694.4669
+    w: -0.13370952
+  - index: 340
+    start: 1669.4749
+    end: 1674.444
+    x: 1699.4653
+    w: -0.10540798
+  - index: 341
+    start: 1674.444
+    end: 1679.42
+    x: 1704.4637
+    w: -0.08423151
+  - index: 342
+    start: 1679.42
+    end: 1684.3997
+    x: 1709.4622
+    w: -0.06974152
+  - index: 343
+    start: 1684.3997
+    end: 1689.379
+    x: 1714.4606
+    w: -0.061871514
+  - index: 344
+    start: 1689.379
+    end: 1694.3572
+    x: 1719.459
+    w: -0.060663044
+  - index: 345
+    start: 1694.3572
+    end: 1699.3444
+    x: 1724.4574
+    w: -0.05610749
+  - index: 346
+    start: 1699.3444
+    end: 1704.3339
+    x: 1729.4559
+    w: -0.049847007
+  - index: 347
+    start: 1704.3339
+    end: 1709.3252
+    x: 1734.4543
+    w: -0.050914496
+  - index: 348
+    start: 1709.3252
+    end: 1714.3197
+    x: 1739.4528
+    w: -0.05937299
+  - index: 349
+    start: 1714.3197
+    end: 1719.3162
+    x: 1744.4512
+    w: -0.075240985
+  - index: 350
+    start: 1719.3162
+    end: 1724.3152
+    x: 1749.4496
+    w: -0.09876248
+  - index: 351
+    start: 1724.3152
+    end: 1729.3176
+    x: 1754.448
+    w: -0.130135
+  - index: 352
+    start: 1729.3176
+    end: 1734.3042
+    x: 1759.4464
+    w: -0.16969849
+  - index: 353
+    start: 1734.3042
+    end: 1739.2205
+    x: 1764.4448
+    w: -0.212673
+  - index: 354
+    start: 1739.2205
+    end: 1744.1143
+    x: 1769.4432
+    w: -0.24893698
+  - index: 355
+    start: 1744.1143
+    end: 1748.8945
+    x: 1774.4418
+    w: -0.2946785
+  - index: 356
+    start: 1748.8945
+    end: 1753.4205
+    x: 1779.4402
+    w: -0.341109
+  - index: 357
+    start: 1753.4205
+    end: 1757.8771
+    x: 1784.4386
+    w: -0.37588203
+  - index: 358
+    start: 1757.8771
+    end: 1762.3156
+    x: 1789.437
+    w: -0.39759302
+  - index: 359
+    start: 1762.3156
+    end: 1766.661
+    x: 1794.4354
+    w: -0.410973
+  - index: 360
+    start: 1766.661
+    end: 1770.9495
+    x: 1799.4338
+    w: -0.41568154
+  - index: 361
+    start: 1770.9495
+    end: 1775.4296
+    x: 1804.4323
+    w: -0.4059135
+  - index: 362
+    start: 1775.4296
+    end: 1780.0823
+    x: 1809.4307
+    w: -0.378519
+  - index: 363
+    start: 1780.0823
+    end: 1784.7891
+    x: 1814.4292
+    w: -0.34153998
+  - index: 364
+    start: 1784.7891
+    end: 1789.6925
+    x: 1819.4276
+    w: -0.31194448
+  - index: 365
+    start: 1789.6925
+    end: 1794.6227
+    x: 1824.426
+    w: -0.26002848
+  - index: 366
+    start: 1794.6227
+    end: 1799.5743
+    x: 1829.4244
+    w: -0.215972
+  - index: 367
+    start: 1799.5743
+    end: 1804.5881
+    x: 1834.4229
+    w: -0.17905448
+  - index: 368
+    start: 1804.5881
+    end: 1809.6038
+    x: 1839.4213
+    w: -0.13500853
+  - index: 369
+    start: 1809.6038
+    end: 1814.6195
+    x: 1844.4197
+    w: -0.09688249
+  - index: 370
+    start: 1814.6195
+    end: 1819.6372
+    x: 1849.4181
+    w: -0.06506953
+  - index: 371
+    start: 1819.6372
+    end: 1824.6486
+    x: 1854.4165
+    w: -0.038962483
+  - index: 372
+    start: 1824.6486
+    end: 1829.6549
+    x: 1859.415
+    w: -0.018515974
+  - index: 373
+    start: 1829.6549
+    end: 1834.658
+    x: 1864.4135
+    w: -0.003422454
+  - index: 374
+    start: 1834.658
+    end: 1839.659
+    x: 1869.4119
+    w: 0.010067478
+  - index: 375
+    start: 1839.659
+    end: 1844.6592
+    x: 1874.4103
+    w: 0.019021511
+  - index: 376
+    start: 1844.6592
+    end: 1849.6605
+    x: 1879.4087
+    w: 0.023580521
+  - index: 377
+    start: 1849.6605
+    end: 1854.6614
+    x: 1884.4071
+    w: 0.024370462
+  - index: 378
+    start: 1854.6614
+    end: 1859.6615
+    x: 1889.4055
+    w: 0.02128002
+  - index: 379
+    start: 1859.6615
+    end: 1864.6627
+    x: 1894.4039
+    w: 0.01660055
+  - index: 380
+    start: 1864.6627
+    end: 1869.6641
+    x: 1899.4025
+    w: 0.017296523
+  - index: 381
+    start: 1869.6641
+    end: 1874.6649
+    x: 1904.4009
+    w: 0.014944971
+  - index: 382
+    start: 1874.6649
+    end: 1879.6649
+    x: 1909.3993
+    w: 0.011793017
+  - index: 383
+    start: 1879.6649
+    end: 1884.6635
+    x: 1914.3977
+    w: 0.0067429543
+  - index: 384
+    start: 1884.6635
+    end: 1889.6605
+    x: 1919.3961
+    w: -0.00057403743
+  - index: 385
+    start: 1889.6605
+    end: 1894.6584
+    x: 1924.3945
+    w: -0.0012199879
+  - index: 386
+    start: 1894.6584
+    end: 1899.657
+    x: 1929.393
+    w: 0.0010954738
+  - index: 387
+    start: 1899.657
+    end: 1904.6556
+    x: 1934.3914
+    w: 0.0018100291
+  - index: 388
+    start: 1904.6556
+    end: 1909.6542
+    x: 1939.3898
+    w: 0.001118958
+  - index: 389
+    start: 1909.6542
+    end: 1914.6525
+    x: 1944.3883
+    w: 0.0007955134
+  - index: 390
+    start: 1914.6525
+    end: 1919.6509
+    x: 1949.3867
+    w: 0.0021760017
+  - index: 391
+    start: 1919.6509
+    end: 1924.6494
+    x: 1954.3851
+    w: 0.00266096
+  - index: 392
+    start: 1924.6494
+    end: 1929.648
+    x: 1959.3835
+    w: 0.0023994893
+  - index: 393
+    start: 1929.648
+    end: 1934.6465
+    x: 1964.382
+    w: 0.0015249997
+  - index: 394
+    start: 1934.6465
+    end: 1939.645
+    x: 1969.3804
+    w: 0.00016251206
+  - index: 395
+    start: 1939.645
+    end: 1944.6436
+    x: 1974.3788
+    w: -0.001579985
+  - index: 396
+    start: 1944.6436
+    end: 1949.6422
+    x: 1979.3772
+    w: -0.003752485
+  - index: 397
+    start: 1949.6422
+    end: 1954.6407
+    x: 1984.3757
+    w: -0.0063254684
+  - index: 398
+    start: 1954.6407
+    end: 1959.6388
+    x: 1989.3741
+    w: -0.008965984
+  - index: 399
+    start: 1959.6388
+    end: 1964.6368
+    x: 1994.3726
+    w: -0.010528013
+  - index: 400
+    start: 1964.6368
+    end: 1969.6348
+    x: 1999.371
+    w: -0.011908501
+  - index: 401
+    start: 1969.6348
+    end: 1974.633
+    x: 2004.3694
+    w: -0.013076499
+  - index: 402
+    start: 1974.633
+    end: 1979.6315
+    x: 2009.3678
+    w: -0.011904508
+  - index: 403
+    start: 1979.6315
+    end: 1984.6299
+    x: 2014.3662
+    w: -0.010132492
+  - index: 404
+    start: 1984.6299
+    end: 1989.6261
+    x: 2019.3646
+    w: -0.007846981
+  - index: 405
+    start: 1989.6261
+    end: 1994.6246
+    x: 2024.363
+    w: -0.0073329955
+  - index: 406
+    start: 1994.6246
+    end: 1999.6232
+    x: 2029.3616
+    w: -0.006750986
+  - index: 407
+    start: 1999.6232
+    end: 2004.6202
+    x: 2034.36
+    w: -0.0053109825
+  - index: 408
+    start: 2004.6202
+    end: 2009.617
+    x: 2039.3584
+    w: 0.00038400292
+  - index: 409
+    start: 2009.617
+    end: 2014.6133
+    x: 2044.3568
+    w: 0.0077765137
+  - index: 410
+    start: 2014.6133
+    end: 2019.6117
+    x: 2049.3552
+    w: 0.0018770099
+  - index: 411
+    start: 2019.6117
+    end: 2024.6102
+    x: 2054.3538
+    w: -0.0030235052
+  - index: 412
+    start: 2024.6102
+    end: 2029.6097
+    x: 2059.352
+    w: -0.006395504
+  - index: 413
+    start: 2029.6097
+    end: 2034.609
+    x: 2064.3506
+    w: -0.010265499
+  - index: 414
+    start: 2034.609
+    end: 2039.6085
+    x: 2069.3489
+    w: -0.012359992
+  - index: 415
+    start: 2039.6085
+    end: 2044.6083
+    x: 2074.3474
+    w: -0.013782978
+  - index: 416
+    start: 2044.6083
+    end: 2049.6084
+    x: 2079.3457
+    w: -0.01658149
+  - index: 417
+    start: 2049.6084
+    end: 2054.6082
+    x: 2084.3442
+    w: -0.017076
+  - index: 418
+    start: 2054.6082
+    end: 2059.6084
+    x: 2089.3425
+    w: -0.016469017
+  - index: 419
+    start: 2059.6084
+    end: 2064.6086
+    x: 2094.341
+    w: -0.015795514
+  - index: 420
+    start: 2064.6086
+    end: 2069.5984
+    x: 2099.3396
+    w: -0.012175515
+  - index: 421
+    start: 2069.5984
+    end: 2074.599
+    x: 2104.338
+    w: -0.0076979846
+  - index: 422
+    start: 2074.599
+    end: 2079.601
+    x: 2109.3364
+    w: -0.0016749948
+  - index: 423
+    start: 2079.601
+    end: 2084.6055
+    x: 2114.3347
+    w: 0.008408517
+  - index: 424
+    start: 2084.6055
+    end: 2089.6157
+    x: 2119.3333
+    w: 0.023336992
+  - index: 425
+    start: 2089.6157
+    end: 2094.633
+    x: 2124.3315
+    w: 0.043362483
+  - index: 426
+    start: 2094.633
+    end: 2099.651
+    x: 2129.33
+    w: 0.06850849
+  - index: 427
+    start: 2099.651
+    end: 2104.682
+    x: 2134.3286
+    w: 0.09951201
+  - index: 428
+    start: 2104.682
+    end: 2109.7236
+    x: 2139.327
+    w: 0.13673854
+  - index: 429
+    start: 2109.7236
+    end: 2114.745
+    x: 2144.3254
+    w: 0.18051851
+  - index: 430
+    start: 2114.745
+    end: 2119.73
+    x: 2149.3237
+    w: 0.22891998
+  - index: 431
+    start: 2119.73
+    end: 2124.2935
+    x: 2154.3223
+    w: 0.28283447
+  - index: 432
+    start: 2124.2935
+    end: 2128.7063
+    x: 2159.3206
+    w: 0.33155197
+  - index: 433
+    start: 2128.7063
+    end: 2133.093
+    x: 2164.319
+    w: 0.3886845
+  - index: 434
+    start: 2133.093
+    end: 2137.529
+    x: 2169.3174
+    w: 0.37352604
+  - index: 435
+    start: 2137.529
+    end: 2142.063
+    x: 2174.316
+    w: 0.36507848
+  - index: 436
+    start: 2142.063
+    end: 2146.847
+    x: 2179.3145
+    w: 0.35613
+  - index: 437
+    start: 2146.847
+    end: 2151.6953
+    x: 2184.3127
+    w: 0.33347946
+  - index: 438
+    start: 2151.6953
+    end: 2156.6418
+    x: 2189.3113
+    w: 0.3166245
+  - index: 439
+    start: 2156.6418
+    end: 2161.5881
+    x: 2194.3096
+    w: 0.30480754
+  - index: 440
+    start: 2161.5881
+    end: 2166.5374
+    x: 2199.308
+    w: 0.29560354
+  - index: 441
+    start: 2166.5374
+    end: 2171.4868
+    x: 2204.3064
+    w: 0.287625
+  - index: 442
+    start: 2171.4868
+    end: 2176.4507
+    x: 2209.305
+    w: 0.287379
+  - index: 443
+    start: 2176.4507
+    end: 2181.4258
+    x: 2214.3032
+    w: 0.2903145
+  - index: 444
+    start: 2181.4258
+    end: 2186.4033
+    x: 2219.3018
+    w: 0.2975515
+  - index: 445
+    start: 2186.4033
+    end: 2191.3833
+    x: 2224.3003
+    w: 0.31112602
+  - index: 446
+    start: 2191.3833
+    end: 2196.3618
+    x: 2229.2986
+    w: 0.33068854
+  - index: 447
+    start: 2196.3618
+    end: 2201.3386
+    x: 2234.297
+    w: 0.35299352
+  - index: 448
+    start: 2201.3386
+    end: 2206.3167
+    x: 2239.2954
+    w: 0.37799898
+  - index: 449
+    start: 2206.3167
+    end: 2211.293
+    x: 2244.294
+    w: 0.40743652
+  - index: 450
+    start: 2211.293
+    end: 2216.245
+    x: 2249.2922
+    w: 0.44040903
+  - index: 451
+    start: 2216.245
+    end: 2221.1912
+    x: 2254.2908
+    w: 0.46916497
+  - index: 452
+    start: 2221.1912
+    end: 2226.1292
+    x: 2259.289
+    w: 0.50025296
+  - index: 453
+    start: 2226.1292
+    end: 2231.0518
+    x: 2264.2876
+    w: 0.53278947
+  - index: 454
+    start: 2231.0518
+    end: 2235.7454
+    x: 2269.2861
+    w: 0.565606
+  - index: 455
+    start: 2235.7454
+    end: 2240.4158
+    x: 2274.2844
+    w: 0.58649504
+  - index: 456
+    start: 2240.4158
+    end: 2245.064
+    x: 2279.283
+    w: 0.6064725
+  - index: 457
+    start: 2245.064
+    end: 2249.416
+    x: 2284.2812
+    w: 0.62482405
+  - index: 458
+    start: 2249.416
+    end: 2253.6484
+    x: 2289.2798
+    w: 0.61282456
+  - index: 459
+    start: 2253.6484
+    end: 2257.965
+    x: 2294.278
+    w: 0.580837
+  - index: 460
+    start: 2257.965
+    end: 2262.6194
+    x: 2299.2766
+    w: 0.54635894
+  - index: 461
+    start: 2262.6194
+    end: 2267.8242
+    x: 2304.2751
+    w: 0.485413
+  - index: 462
+    start: 2267.8242
+    end: 2273.0742
+    x: 2309.2734
+    w: 0.36146995
+  - index: 463
+    start: 2273.0742
+    end: 2278.3938
+    x: 2314.272
+    w: 0.2121625
+  - index: 464
+    start: 2278.3938
+    end: 2283.6492
+    x: 2319.2703
+    w: 0.02903451
+  - index: 465
+    start: 2283.6492
+    end: 2288.4302
+    x: 2324.2688
+    w: -0.1364805
+  - index: 466
+    start: 2288.4302
+    end: 2292.753
+    x: 2329.267
+    w: -0.2953285
+  - index: 467
+    start: 2292.753
+    end: 2297.2915
+    x: 2334.2656
+    w: -0.4842795
+  - index: 468
+    start: 2297.2915
+    end: 2301.8843
+    x: 2339.264
+    w: -0.44547153
+  - index: 469
+    start: 2301.8843
+    end: 2306.471
+    x: 2344.2625
+    w: -0.43571854
+  - index: 470
+    start: 2306.471
+    end: 2310.9958
+    x: 2349.261
+    w: -0.450429
+  - index: 471
+    start: 2310.9958
+    end: 2315.4155
+    x: 2354.2593
+    w: -0.4876275
+  - index: 472
+    start: 2315.4155
+    end: 2319.8794
+    x: 2359.2578
+    w: -0.50260055
+  - index: 473
+    start: 2319.8794
+    end: 2324.404
+    x: 2364.256
+    w: -0.42528298
+  - index: 474
+    start: 2324.404
+    end: 2328.9277
+    x: 2369.2546
+    w: -0.3821435
+  - index: 475
+    start: 2328.9277
+    end: 2333.3914
+    x: 2374.253
+    w: -0.36442798
+  - index: 476
+    start: 2333.3914
+    end: 2337.734
+    x: 2379.2515
+    w: -0.3671375
+  - index: 477
+    start: 2337.734
+    end: 2342.2917
+    x: 2384.2498
+    w: -0.38726103
+  - index: 478
+    start: 2342.2917
+    end: 2346.9807
+    x: 2389.2483
+    w: -0.3016755
+  - index: 479
+    start: 2346.9807
+    end: 2351.772
+    x: 2394.2468
+    w: -0.22467548
+  - index: 480
+    start: 2351.772
+    end: 2356.6438
+    x: 2399.245
+    w: -0.160159
+  - index: 481
+    start: 2356.6438
+    end: 2361.5718
+    x: 2404.2437
+    w: -0.10899547
+  - index: 482
+    start: 2361.5718
+    end: 2366.5327
+    x: 2409.242
+    w: -0.0723965
+  - index: 483
+    start: 2366.5327
+    end: 2371.5022
+    x: 2414.2405
+    w: -0.05146098
+  - index: 484
+    start: 2371.5022
+    end: 2376.478
+    x: 2419.2388
+    w: -0.04719299
+  - index: 485
+    start: 2376.478
+    end: 2381.4678
+    x: 2424.2373
+    w: -0.02505003
+  - index: 486
+    start: 2381.4678
+    end: 2386.4646
+    x: 2429.2356
+    w: 0.004045993
+  - index: 487
+    start: 2386.4646
+    end: 2391.4663
+    x: 2434.2341
+    w: 0.020871505
+  - index: 488
+    start: 2391.4663
+    end: 2396.47
+    x: 2439.2327
+    w: 0.026881024
+  - index: 489
+    start: 2396.47
+    end: 2401.473
+    x: 2444.231
+    w: 0.023488998
+  - index: 490
+    start: 2401.473
+    end: 2406.4722
+    x: 2449.2295
+    w: 0.012213007
+  - index: 491
+    start: 2406.4722
+    end: 2411.471
+    x: 2454.2278
+    w: -0.003035456
+  - index: 492
+    start: 2411.471
+    end: 2416.4702
+    x: 2459.2263
+    w: -0.0033789575
+  - index: 493
+    start: 2416.4702
+    end: 2421.47
+    x: 2464.2246
+    w: -0.006292537
+  - index: 494
+    start: 2421.47
+    end: 2426.4692
+    x: 2469.2231
+    w: -0.0100219995
+  - index: 495
+    start: 2426.4692
+    end: 2431.4675
+    x: 2474.2217
+    w: -0.012853503
+  - index: 496
+    start: 2431.4675
+    end: 2436.465
+    x: 2479.22
+    w: -0.013079986
+  - index: 497
+    start: 2436.465
+    end: 2441.4622
+    x: 2484.2185
+    w: -0.009051472
+  - index: 498
+    start: 2441.4622
+    end: 2446.4604
+    x: 2489.2168
+    w: 0.00083750486
+  - index: 499
+    start: 2446.4604
+    end: 2451.462
+    x: 2494.2153
+    w: 0.018141016
+  - index: 500
+    start: 2451.462
+    end: 2456.4705
+    x: 2499.2136
+    w: 0.044361517
+  - index: 501
+    start: 2456.4705
+    end: 2461.4902
+    x: 2504.2122
+    w: 0.080970466
+  - index: 502
+    start: 2461.4902
+    end: 2466.5076
+    x: 2509.2104
+    w: 0.1294555
+  - index: 503
+    start: 2466.5076
+    end: 2471.4878
+    x: 2514.209
+    w: 0.18415952
+  - index: 504
+    start: 2471.4878
+    end: 2476.4531
+    x: 2519.2075
+    w: 0.23864251
+  - index: 505
+    start: 2476.4531
+    end: 2481.3994
+    x: 2524.2058
+    w: 0.30601647
+  - index: 506
+    start: 2481.3994
+    end: 2486.17
+    x: 2529.2043
+    w: 0.38694248
+  - index: 507
+    start: 2486.17
+    end: 2490.6619
+    x: 2534.2026
+    w: 0.44415304
+  - index: 508
+    start: 2490.6619
+    end: 2495.0312
+    x: 2539.2012
+    w: 0.46340495
+  - index: 509
+    start: 2495.0312
+    end: 2499.1655
+    x: 2544.1995
+    w: 0.4945335
+  - index: 510
+    start: 2499.1655
+    end: 2503.2698
+    x: 2549.198
+    w: 0.482233
+  - index: 511
+    start: 2503.2698
+    end: 2507.3481
+    x: 2554.1963
+    w: 0.4616295
+  - index: 512
+    start: 2507.3481
+    end: 2511.6897
+    x: 2559.1948
+    w: 0.45495903
+  - index: 513
+    start: 2511.6897
+    end: 2516.357
+    x: 2564.1934
+    w: 0.41285247
+  - index: 514
+    start: 2516.357
+    end: 2521.095
+    x: 2569.1917
+    w: 0.3446485
+  - index: 515
+    start: 2521.095
+    end: 2525.8877
+    x: 2574.1902
+    w: 0.28961647
+  - index: 516
+    start: 2525.8877
+    end: 2530.7188
+    x: 2579.1885
+    w: 0.24691403
+  - index: 517
+    start: 2530.7188
+    end: 2535.5696
+    x: 2584.187
+    w: 0.21635503
+  - index: 518
+    start: 2535.5696
+    end: 2540.422
+    x: 2589.1853
+    w: 0.19795898
+  - index: 519
+    start: 2540.422
+    end: 2545.318
+    x: 2594.1838
+    w: 0.19203451
+  - index: 520
+    start: 2545.318
+    end: 2550.2466
+    x: 2599.1821
+    w: 0.17035046
+  - index: 521
+    start: 2550.2466
+    end: 2555.185
+    x: 2604.1807
+    w: 0.148836
+  - index: 522
+    start: 2555.185
+    end: 2560.1284
+    x: 2609.1792
+    w: 0.13739099
+  - index: 523
+    start: 2560.1284
+    end: 2565.0718
+    x: 2614.1775
+    w: 0.1353085
+  - index: 524
+    start: 2565.0718
+    end: 2570.009
+    x: 2619.176
+    w: 0.14199603
+  - index: 525
+    start: 2570.009
+    end: 2574.9353
+    x: 2624.1743
+    w: 0.156878
+  - index: 526
+    start: 2574.9353
+    end: 2579.8452
+    x: 2629.1729
+    w: 0.17943999
+  - index: 527
+    start: 2579.8452
+    end: 2584.754
+    x: 2634.1711
+    w: 0.20806196
+  - index: 528
+    start: 2584.754
+    end: 2589.6716
+    x: 2639.1697
+    w: 0.200474
+  - index: 529
+    start: 2589.6716
+    end: 2594.5933
+    x: 2644.168
+    w: 0.198867
+  - index: 530
+    start: 2594.5933
+    end: 2599.514
+    x: 2649.1665
+    w: 0.20197001
+  - index: 531
+    start: 2599.514
+    end: 2604.43
+    x: 2654.165
+    w: 0.20884499
+  - index: 532
+    start: 2604.43
+    end: 2609.339
+    x: 2659.1633
+    w: 0.2186465
+  - index: 533
+    start: 2609.339
+    end: 2614.239
+    x: 2664.1619
+    w: 0.23054847
+  - index: 534
+    start: 2614.239
+    end: 2619.13
+    x: 2669.1602
+    w: 0.24373356
+  - index: 535
+    start: 2619.13
+    end: 2624.0115
+    x: 2674.1587
+    w: 0.25741196
+  - index: 536
+    start: 2624.0115
+    end: 2628.975
+    x: 2679.157
+    w: 0.27083847
+  - index: 537
+    start: 2628.975
+    end: 2633.9575
+    x: 2684.1555
+    w: 0.22717553
+  - index: 538
+    start: 2633.9575
+    end: 2638.9446
+    x: 2689.154
+    w: 0.17074451
+  - index: 539
+    start: 2638.9446
+    end: 2643.9387
+    x: 2694.1523
+    w: 0.11075151
+  - index: 540
+    start: 2643.9387
+    end: 2648.942
+    x: 2699.151
+    w: 0.04630351
+  - index: 541
+    start: 2648.942
+    end: 2653.9578
+    x: 2704.1492
+    w: -0.023517013
+  - index: 542
+    start: 2653.9578
+    end: 2658.99
+    x: 2709.1477
+    w: -0.09963849
+  - index: 543
+    start: 2658.99
+    end: 2664.044
+    x: 2714.146
+    w: -0.18301848
+  - index: 544
+    start: 2664.044
+    end: 2668.8914
+    x: 2719.1445
+    w: -0.27479148
+  - index: 545
+    start: 2668.8914
+    end: 2673.6719
+    x: 2724.1428
+    w: -0.31210452
+  - index: 546
+    start: 2673.6719
+    end: 2678.402
+    x: 2729.1414
+    w: -0.3468555
+  - index: 547
+    start: 2678.402
+    end: 2683.066
+    x: 2734.14
+    w: -0.388663
+  - index: 548
+    start: 2683.066
+    end: 2687.6484
+    x: 2739.1382
+    w: -0.43739152
+  - index: 549
+    start: 2687.6484
+    end: 2692.1348
+    x: 2744.1367
+    w: -0.49301448
+  - index: 550
+    start: 2692.1348
+    end: 2696.533
+    x: 2749.135
+    w: -0.5561025
+  - index: 551
+    start: 2696.533
+    end: 2700.9731
+    x: 2754.1335
+    w: -0.56418
+  - index: 552
+    start: 2700.9731
+    end: 2705.4531
+    x: 2759.1318
+    w: -0.54329395
+  - index: 553
+    start: 2705.4531
+    end: 2709.9514
+    x: 2764.1304
+    w: -0.5320475
+  - index: 554
+    start: 2709.9514
+    end: 2714.4495
+    x: 2769.1287
+    w: -0.52920496
+  - index: 555
+    start: 2714.4495
+    end: 2718.9285
+    x: 2774.1272
+    w: -0.5343545
+  - index: 556
+    start: 2718.9285
+    end: 2723.3691
+    x: 2779.1257
+    w: -0.5475835
+  - index: 557
+    start: 2723.3691
+    end: 2727.6394
+    x: 2784.124
+    w: -0.5697645
+  - index: 558
+    start: 2727.6394
+    end: 2731.9612
+    x: 2789.1226
+    w: -0.55718
+  - index: 559
+    start: 2731.9612
+    end: 2736.352
+    x: 2794.1208
+    w: -0.540859
+  - index: 560
+    start: 2736.352
+    end: 2740.7903
+    x: 2799.1194
+    w: -0.53020746
+  - index: 561
+    start: 2740.7903
+    end: 2745.2527
+    x: 2804.1177
+    w: -0.52593505
+  - index: 562
+    start: 2745.2527
+    end: 2749.7085
+    x: 2809.1162
+    w: -0.529401
+  - index: 563
+    start: 2749.7085
+    end: 2754.7478
+    x: 2814.1145
+    w: -0.543234
+  - index: 564
+    start: 2754.7478
+    end: 2759.681
+    x: 2819.113
+    w: -0.35260952
+  - index: 565
+    start: 2759.681
+    end: 2764.5078
+    x: 2824.1116
+    w: -0.16782202
+  - index: 566
+    start: 2764.5078
+    end: 2769.2412
+    x: 2829.1099
+    w: 0.007619992
+  - index: 567
+    start: 2769.2412
+    end: 2773.8887
+    x: 2834.1084
+    w: 0.17583153
+  - index: 568
+    start: 2773.8887
+    end: 2778.4565
+    x: 2839.1067
+    w: 0.33817905
+  - index: 569
+    start: 2778.4565
+    end: 2782.9487
+    x: 2844.1052
+    w: 0.495741
+  - index: 570
+    start: 2782.9487
+    end: 2787.5535
+    x: 2849.1035
+    w: 0.64934105
+  - index: 571
+    start: 2787.5535
+    end: 2792.159
+    x: 2854.102
+    w: 0.51359546
+  - index: 572
+    start: 2792.159
+    end: 2796.76
+    x: 2859.1006
+    w: 0.37499797
+  - index: 573
+    start: 2796.76
+    end: 2801.3582
+    x: 2864.0989
+    w: 0.24142554
+  - index: 574
+    start: 2801.3582
+    end: 2805.9546
+    x: 2869.0974
+    w: 0.11144404
+  - index: 575
+    start: 2805.9546
+    end: 2810.5522
+    x: 2874.0957
+    w: -0.016186535
+  - index: 576
+    start: 2810.5522
+    end: 2815.1545
+    x: 2879.0942
+    w: -0.14262652
+  - index: 577
+    start: 2815.1545
+    end: 2819.7678
+    x: 2884.0925
+    w: -0.26900202
+  - index: 578
+    start: 2819.7678
+    end: 2824.4016
+    x: 2889.091
+    w: -0.3966185
+  - index: 579
+    start: 2824.4016
+    end: 2829.0774
+    x: 2894.0894
+    w: -0.5273105
+  - index: 580
+    start: 2829.0774
+    end: 2832.939
+    x: 2899.088
+    w: -0.664479
+  - index: 581
+    start: 2832.939
+    end: 2836.6777
+    x: 2904.0864
+    w: -0.675
+  - index: 582
+    start: 2836.6777
+    end: 2840.5146
+    x: 2909.0847
+    w: -0.655709
+  - index: 583
+    start: 2840.5146
+    end: 2844.4094
+    x: 2914.0833
+    w: -0.644977
+  - index: 584
+    start: 2844.4094
+    end: 2848.3281
+    x: 2919.0815
+    w: -0.6417645
+  - index: 585
+    start: 2848.3281
+    end: 2852.2385
+    x: 2924.08
+    w: -0.645678
+  - index: 586
+    start: 2852.2385
+    end: 2856.008
+    x: 2929.0784
+    w: -0.6569385
+  - index: 587
+    start: 2856.008
+    end: 2859.7715
+    x: 2934.077
+    w: -0.6141085
+  - index: 588
+    start: 2859.7715
+    end: 2863.6455
+    x: 2939.0752
+    w: -0.531983
+  - index: 589
+    start: 2863.6455
+    end: 2867.6084
+    x: 2944.0737
+    w: -0.4659245
+  - index: 590
+    start: 2867.6084
+    end: 2871.9558
+    x: 2949.0723
+    w: -0.41262102
+  - index: 591
+    start: 2871.9558
+    end: 2877.1665
+    x: 2954.0706
+    w: -0.349689
+  - index: 592
+    start: 2877.1665
+    end: 2882.2202
+    x: 2959.069
+    w: -0.22950152
+  - index: 593
+    start: 2882.2202
+    end: 2887.142
+    x: 2964.0674
+    w: -0.103955984
+  - index: 594
+    start: 2887.142
+    end: 2891.9465
+    x: 2969.066
+    w: 0.02995351
+  - index: 595
+    start: 2891.9465
+    end: 2896.645
+    x: 2974.0642
+    w: 0.17514852
+  - index: 596
+    start: 2896.645
+    end: 2901.2458
+    x: 2979.0627
+    w: 0.33500597
+  - index: 597
+    start: 2901.2458
+    end: 2905.4106
+    x: 2984.061
+    w: 0.51370203
+  - index: 598
+    start: 2905.4106
+    end: 2909.5347
+    x: 2989.0596
+    w: 0.54937506
+  - index: 599
+    start: 2909.5347
+    end: 2913.8025
+    x: 2994.058
+    w: 0.49408752
+  - index: 600
+    start: 2913.8025
+    end: 2918.2427
+    x: 2999.0564
+    w: 0.4385265
+  - index: 601
+    start: 2918.2427
+    end: 2923.0874
+    x: 3004.055
+    w: 0.386995
+  - index: 602
+    start: 2923.0874
+    end: 2927.916
+    x: 3009.0532
+    w: 0.38658398
+  - index: 603
+    start: 2927.916
+    end: 2932.7266
+    x: 3014.0518
+    w: 0.387197
+  - index: 604
+    start: 2932.7266
+    end: 2937.518
+    x: 3019.05
+    w: 0.3891545
+  - index: 605
+    start: 2937.518
+    end: 2942.2883
+    x: 3024.0486
+    w: 0.39263102
+  - index: 606
+    start: 2942.2883
+    end: 2947.0352
+    x: 3029.047
+    w: 0.3977325
+  - index: 607
+    start: 2947.0352
+    end: 2951.757
+    x: 3034.0454
+    w: 0.40451095
+  - index: 608
+    start: 2951.757
+    end: 2956.452
+    x: 3039.044
+    w: 0.41301197
+  - index: 609
+    start: 2956.452
+    end: 2961.0283
+    x: 3044.0422
+    w: 0.42332152
+  - index: 610
+    start: 2961.0283
+    end: 2965.5593
+    x: 3049.0408
+    w: 0.42129454
+  - index: 611
+    start: 2965.5593
+    end: 2970.1501
+    x: 3054.039
+    w: 0.40060148
+  - index: 612
+    start: 2970.1501
+    end: 2974.7947
+    x: 3059.0376
+    w: 0.3812075
+  - index: 613
+    start: 2974.7947
+    end: 2979.4878
+    x: 3064.036
+    w: 0.36354047
+  - index: 614
+    start: 2979.4878
+    end: 2984.223
+    x: 3069.0344
+    w: 0.34832597
+  - index: 615
+    start: 2984.223
+    end: 2988.993
+    x: 3074.033
+    w: 0.33655655
+  - index: 616
+    start: 2988.993
+    end: 2993.7915
+    x: 3079.0312
+    w: 0.32948202
+  - index: 617
+    start: 2993.7915
+    end: 2998.6108
+    x: 3084.0298
+    w: 0.32870847
+  - index: 618
+    start: 2998.6108
+    end: 3003.444
+    x: 3089.028
+    w: 0.336274
+  - index: 619
+    start: 3003.444
+    end: 3008.2837
+    x: 3094.0266
+    w: 0.35484952
+  - index: 620
+    start: 3008.2837
+    end: 3013.1228
+    x: 3099.025
+    w: 0.3881105
+  - index: 621
+    start: 3013.1228
+    end: 3017.9546
+    x: 3104.0234
+    w: 0.44151798
+  - index: 622
+    start: 3017.9546
+    end: 3022.6287
+    x: 3109.0217
+    w: 0.52428955
+  - index: 623
+    start: 3022.6287
+    end: 3026.577
+    x: 3114.0203
+    w: 0.62281954
+  - index: 624
+    start: 3026.577
+    end: 3030.384
+    x: 3119.0188
+    w: 0.6193675
+  - index: 625
+    start: 3030.384
+    end: 3034.499
+    x: 3124.017
+    w: 0.62928355
+  - index: 626
+    start: 3034.499
+    end: 3039.1355
+    x: 3129.0156
+    w: 0.52110803
+  - index: 627
+    start: 3039.1355
+    end: 3043.9
+    x: 3134.014
+    w: 0.34175396
+  - index: 628
+    start: 3043.9
+    end: 3048.7842
+    x: 3139.0125
+    w: 0.20111948
+  - index: 629
+    start: 3048.7842
+    end: 3053.781
+    x: 3144.0107
+    w: 0.08941752
+  - index: 630
+    start: 3053.781
+    end: 3058.8823
+    x: 3149.0093
+    w: -0.00012646616
+  - index: 631
+    start: 3058.8823
+    end: 3064.0166
+    x: 3154.0076
+    w: -0.07247698
+  - index: 632
+    start: 3064.0166
+    end: 3069.0264
+    x: 3159.006
+    w: -0.12228249
+  - index: 633
+    start: 3069.0264
+    end: 3073.9897
+    x: 3164.0046
+    w: -0.145864
+  - index: 634
+    start: 3073.9897
+    end: 3078.914
+    x: 3169.003
+    w: -0.16490649
+  - index: 635
+    start: 3078.914
+    end: 3083.8037
+    x: 3174.0015
+    w: -0.18068
+  - index: 636
+    start: 3083.8037
+    end: 3088.6616
+    x: 3178.9998
+    w: -0.19418998
+  - index: 637
+    start: 3088.6616
+    end: 3093.4888
+    x: 3183.9983
+    w: -0.20623702
+  - index: 638
+    start: 3093.4888
+    end: 3098.2856
+    x: 3188.9966
+    w: -0.21747799
+  - index: 639
+    start: 3098.2856
+    end: 3103.0503
+    x: 3193.995
+    w: -0.22844599
+  - index: 640
+    start: 3103.0503
+    end: 3107.7803
+    x: 3198.9937
+    w: -0.23956801
+  - index: 641
+    start: 3107.7803
+    end: 3112.472
+    x: 3203.992
+    w: -0.25118697
+  - index: 642
+    start: 3112.472
+    end: 3117.1235
+    x: 3208.9905
+    w: -0.26316696
+  - index: 643
+    start: 3117.1235
+    end: 3121.826
+    x: 3213.9888
+    w: -0.24812151
+  - index: 644
+    start: 3121.826
+    end: 3126.5718
+    x: 3218.9873
+    w: -0.23405647
+  - index: 645
+    start: 3126.5718
+    end: 3131.3542
+    x: 3223.9856
+    w: -0.22170101
+  - index: 646
+    start: 3131.3542
+    end: 3136.1638
+    x: 3228.9841
+    w: -0.21193099
+  - index: 647
+    start: 3136.1638
+    end: 3140.9912
+    x: 3233.9824
+    w: -0.20580252
+  - index: 648
+    start: 3140.9912
+    end: 3145.8264
+    x: 3238.981
+    w: -0.20454851
+  - index: 649
+    start: 3145.8264
+    end: 3150.6587
+    x: 3243.9795
+    w: -0.209625
+  - index: 650
+    start: 3150.6587
+    end: 3155.4783
+    x: 3248.9778
+    w: -0.22275001
+  - index: 651
+    start: 3155.4783
+    end: 3160.2744
+    x: 3253.9763
+    w: -0.24601552
+  - index: 652
+    start: 3160.2744
+    end: 3165.0374
+    x: 3258.9746
+    w: -0.282116
+  - index: 653
+    start: 3165.0374
+    end: 3169.6665
+    x: 3263.9731
+    w: -0.33502352
+  - index: 654
+    start: 3169.6665
+    end: 3174.2097
+    x: 3268.9714
+    w: -0.36533248
+  - index: 655
+    start: 3174.2097
+    end: 3178.7795
+    x: 3273.97
+    w: -0.3586945
+  - index: 656
+    start: 3178.7795
+    end: 3183.3389
+    x: 3278.9683
+    w: -0.3671205
+  - index: 657
+    start: 3183.3389
+    end: 3187.854
+    x: 3283.9668
+    w: -0.3897165
+  - index: 658
+    start: 3187.854
+    end: 3192.32
+    x: 3288.9653
+    w: -0.4274715
+  - index: 659
+    start: 3192.32
+    end: 3196.8088
+    x: 3293.9636
+    w: -0.4233945
+  - index: 660
+    start: 3196.8088
+    end: 3201.29
+    x: 3298.9622
+    w: -0.422296
+  - index: 661
+    start: 3201.29
+    end: 3205.474
+    x: 3303.9604
+    w: -0.4337315
+  - index: 662
+    start: 3205.474
+    end: 3209.4822
+    x: 3308.959
+    w: -0.43707448
+  - index: 663
+    start: 3209.4822
+    end: 3213.613
+    x: 3313.9573
+    w: -0.43701452
+  - index: 664
+    start: 3213.613
+    end: 3218.22
+    x: 3318.9558
+    w: -0.4198395
+  - index: 665
+    start: 3218.22
+    end: 3222.9514
+    x: 3323.954
+    w: -0.33588248
+  - index: 666
+    start: 3222.9514
+    end: 3227.7856
+    x: 3328.9526
+    w: -0.26341552
+  - index: 667
+    start: 3227.7856
+    end: 3232.7163
+    x: 3333.9512
+    w: -0.20174551
+  - index: 668
+    start: 3232.7163
+    end: 3237.7778
+    x: 3338.9495
+    w: -0.147948
+  - index: 669
+    start: 3237.7778
+    end: 3242.8303
+    x: 3343.948
+    w: -0.086819485
+  - index: 670
+    start: 3242.8303
+    end: 3247.8777
+    x: 3348.9463
+    w: -0.035125464
+  - index: 671
+    start: 3247.8777
+    end: 3252.9214
+    x: 3353.9448
+    w: 0.008193523
+  - index: 672
+    start: 3252.9214
+    end: 3257.958
+    x: 3358.943
+    w: 0.044084996
+  - index: 673
+    start: 3257.958
+    end: 3262.976
+    x: 3363.9417
+    w: 0.07607448
+  - index: 674
+    start: 3262.976
+    end: 3267.9858
+    x: 3368.94
+    w: 0.10804145
+  - index: 675
+    start: 3267.9858
+    end: 3272.9895
+    x: 3373.9385
+    w: 0.1355305
+  - index: 676
+    start: 3272.9895
+    end: 3277.989
+    x: 3378.937
+    w: 0.15946254
+  - index: 677
+    start: 3277.989
+    end: 3282.986
+    x: 3383.9353
+    w: 0.18074751
+  - index: 678
+    start: 3282.986
+    end: 3287.9443
+    x: 3388.9338
+    w: 0.20029303
+  - index: 679
+    start: 3287.9443
+    end: 3292.8816
+    x: 3393.9321
+    w: 0.2103205
+  - index: 680
+    start: 3292.8816
+    end: 3297.8154
+    x: 3398.9307
+    w: 0.21586654
+  - index: 681
+    start: 3297.8154
+    end: 3302.7458
+    x: 3403.929
+    w: 0.22220454
+  - index: 682
+    start: 3302.7458
+    end: 3307.671
+    x: 3408.9275
+    w: 0.23016652
+  - index: 683
+    start: 3307.671
+    end: 3312.5881
+    x: 3413.926
+    w: 0.24055997
+  - index: 684
+    start: 3312.5881
+    end: 3317.4978
+    x: 3418.9243
+    w: 0.25417802
+  - index: 685
+    start: 3317.4978
+    end: 3322.426
+    x: 3423.9229
+    w: 0.26555097
+  - index: 686
+    start: 3322.426
+    end: 3327.3645
+    x: 3428.9211
+    w: 0.2350735
+  - index: 687
+    start: 3327.3645
+    end: 3332.311
+    x: 3433.9197
+    w: 0.21006101
+  - index: 688
+    start: 3332.311
+    end: 3337.264
+    x: 3438.918
+    w: 0.19115552
+  - index: 689
+    start: 3337.264
+    end: 3342.2212
+    x: 3443.9165
+    w: 0.17891246
+  - index: 690
+    start: 3342.2212
+    end: 3347.1814
+    x: 3448.9148
+    w: 0.1738415
+  - index: 691
+    start: 3347.1814
+    end: 3352.143
+    x: 3453.9133
+    w: 0.17635003
+  - index: 692
+    start: 3352.143
+    end: 3357.0894
+    x: 3458.9119
+    w: 0.18680504
+  - index: 693
+    start: 3357.0894
+    end: 3361.968
+    x: 3463.9102
+    w: 0.20386451
+  - index: 694
+    start: 3361.968
+    end: 3366.8252
+    x: 3468.9087
+    w: 0.22315848
+  - index: 695
+    start: 3366.8252
+    end: 3371.6501
+    x: 3473.907
+    w: 0.2508165
+  - index: 696
+    start: 3371.6501
+    end: 3376.4314
+    x: 3478.9055
+    w: 0.28666702
+  - index: 697
+    start: 3376.4314
+    end: 3381.1584
+    x: 3483.9038
+    w: 0.3303915
+  - index: 698
+    start: 3381.1584
+    end: 3385.8203
+    x: 3488.9023
+    w: 0.38160503
+  - index: 699
+    start: 3385.8203
+    end: 3390.408
+    x: 3493.9006
+    w: 0.440067
+  - index: 700
+    start: 3390.408
+    end: 3394.9126
+    x: 3498.8992
+    w: 0.50624156
+  - index: 701
+    start: 3394.9126
+    end: 3399.1926
+    x: 3503.8977
+    w: 0.5825415
+  - index: 702
+    start: 3399.1926
+    end: 3403.4595
+    x: 3508.896
+    w: 0.591063
+  - index: 703
+    start: 3403.4595
+    end: 3407.8052
+    x: 3513.8945
+    w: 0.56063545
+  - index: 704
+    start: 3407.8052
+    end: 3412.2073
+    x: 3518.8928
+    w: 0.53827953
+  - index: 705
+    start: 3412.2073
+    end: 3416.6477
+    x: 3523.8914
+    w: 0.522241
+  - index: 706
+    start: 3416.6477
+    end: 3421.1108
+    x: 3528.8896
+    w: 0.511774
+  - index: 707
+    start: 3421.1108
+    end: 3425.7397
+    x: 3533.8882
+    w: 0.506498
+  - index: 708
+    start: 3425.7397
+    end: 3430.437
+    x: 3538.8865
+    w: 0.475101
+  - index: 709
+    start: 3430.437
+    end: 3435.169
+    x: 3543.885
+    w: 0.44242048
+  - index: 710
+    start: 3435.169
+    end: 3439.9285
+    x: 3548.8835
+    w: 0.41403204
+  - index: 711
+    start: 3439.9285
+    end: 3444.7097
+    x: 3553.8818
+    w: 0.389621
+  - index: 712
+    start: 3444.7097
+    end: 3449.6472
+    x: 3558.8804
+    w: 0.36883602
+  - index: 713
+    start: 3449.6472
+    end: 3454.655
+    x: 3563.8787
+    w: 0.2848415
+  - index: 714
+    start: 3454.655
+    end: 3459.7126
+    x: 3568.8772
+    w: 0.19206497
+  - index: 715
+    start: 3459.7126
+    end: 3464.8225
+    x: 3573.8755
+    w: 0.10097653
+  - index: 716
+    start: 3464.8225
+    end: 3469.9883
+    x: 3578.874
+    w: 0.010802031
+  - index: 717
+    start: 3469.9883
+    end: 3475.056
+    x: 3583.8726
+    w: -0.079392985
+  - index: 718
+    start: 3475.056
+    end: 3479.9736
+    x: 3588.8708
+    w: -0.15241551
+  - index: 719
+    start: 3479.9736
+    end: 3484.7659
+    x: 3593.8694
+    w: -0.22331251
+  - index: 720
+    start: 3484.7659
+    end: 3489.4297
+    x: 3598.8677
+    w: -0.2984425
+  - index: 721
+    start: 3489.4297
+    end: 3493.9602
+    x: 3603.8662
+    w: -0.37871403
+  - index: 722
+    start: 3493.9602
+    end: 3498.3477
+    x: 3608.8645
+    w: -0.465392
+  - index: 723
+    start: 3498.3477
+    end: 3502.7979
+    x: 3613.863
+    w: -0.4635045
+  - index: 724
+    start: 3502.7979
+    end: 3507.348
+    x: 3618.8613
+    w: -0.405518
+  - index: 725
+    start: 3507.348
+    end: 3511.9788
+    x: 3623.8599
+    w: -0.356287
+  - index: 726
+    start: 3511.9788
+    end: 3516.6677
+    x: 3628.8584
+    w: -0.315098
+  - index: 727
+    start: 3516.6677
+    end: 3521.4988
+    x: 3633.8567
+    w: -0.2827005
+  - index: 728
+    start: 3521.4988
+    end: 3526.431
+    x: 3638.8552
+    w: -0.23343602
+  - index: 729
+    start: 3526.431
+    end: 3531.3904
+    x: 3643.8535
+    w: -0.177617
+  - index: 730
+    start: 3531.3904
+    end: 3536.3657
+    x: 3648.852
+    w: -0.13234448
+  - index: 731
+    start: 3536.3657
+    end: 3541.3054
+    x: 3653.8503
+    w: -0.09835346
+  - index: 732
+    start: 3541.3054
+    end: 3546.2666
+    x: 3658.8489
+    w: -0.06679703
+  - index: 733
+    start: 3546.2666
+    end: 3551.219
+    x: 3663.8472
+    w: -0.049944043
+  - index: 734
+    start: 3551.219
+    end: 3556.3062
+    x: 3668.8457
+    w: -0.011777997
+  - index: 735
+    start: 3556.3062
+    end: 3561.5027
+    x: 3673.8442
+    w: 0.052025497
+  - index: 736
+    start: 3561.5027
+    end: 3566.6072
+    x: 3678.8425
+    w: 0.09593853
+  - index: 737
+    start: 3566.6072
+    end: 3571.701
+    x: 3683.841
+    w: 0.15633947
+  - index: 738
+    start: 3571.701
+    end: 3576.7979
+    x: 3688.8394
+    w: 0.20129848
+  - index: 739
+    start: 3576.7979
+    end: 3581.895
+    x: 3693.838
+    w: 0.22763604
+  - index: 740
+    start: 3581.895
+    end: 3586.9902
+    x: 3698.8362
+    w: 0.23552597
+  - index: 741
+    start: 3586.9902
+    end: 3592.1501
+    x: 3703.8347
+    w: 0.22476846
+  - index: 742
+    start: 3592.1501
+    end: 3597.385
+    x: 3708.833
+    w: 0.20587754
+  - index: 743
+    start: 3597.385
+    end: 3602.5664
+    x: 3713.8315
+    w: 0.17752153
+  - index: 744
+    start: 3602.5664
+    end: 3607.7375
+    x: 3718.83
+    w: 0.123393
+  - index: 745
+    start: 3607.7375
+    end: 3612.9175
+    x: 3723.8284
+    w: 0.091023475
+  - index: 746
+    start: 3612.9175
+    end: 3617.9836
+    x: 3728.827
+    w: 0.05800453
+  - index: 747
+    start: 3617.9836
+    end: 3623.0112
+    x: 3733.8252
+    w: 0.011503488
+  - index: 748
+    start: 3623.0112
+    end: 3627.9573
+    x: 3738.8237
+    w: -0.0074700117
+  - index: 749
+    start: 3627.9573
+    end: 3632.794
+    x: 3743.822
+    w: -0.052401036
+  - index: 750
+    start: 3632.794
+    end: 3637.6929
+    x: 3748.8206
+    w: -0.06549004
+  - index: 751
+    start: 3637.6929
+    end: 3642.5994
+    x: 3753.819
+    w: -0.059981525
+  - index: 752
+    start: 3642.5994
+    end: 3647.5437
+    x: 3758.8174
+    w: -0.07417351
+  - index: 753
+    start: 3647.5437
+    end: 3652.5166
+    x: 3763.816
+    w: -0.080585
+  - index: 754
+    start: 3652.5166
+    end: 3657.4934
+    x: 3768.8142
+    w: -0.09437047
+  - index: 755
+    start: 3657.4934
+    end: 3662.459
+    x: 3773.8127
+    w: -0.1219295
+  - index: 756
+    start: 3662.459
+    end: 3667.4111
+    x: 3778.811
+    w: -0.15665701
+  - index: 757
+    start: 3667.4111
+    end: 3672.3425
+    x: 3783.8096
+    w: -0.20290649
+  - index: 758
+    start: 3672.3425
+    end: 3676.971
+    x: 3788.8079
+    w: -0.261258
+  - index: 759
+    start: 3676.971
+    end: 3681.38
+    x: 3793.8064
+    w: -0.300085
+  - index: 760
+    start: 3681.38
+    end: 3685.6357
+    x: 3798.805
+    w: -0.33335048
+  - index: 761
+    start: 3685.6357
+    end: 3689.711
+    x: 3803.8032
+    w: -0.37354654
+  - index: 762
+    start: 3689.711
+    end: 3693.966
+    x: 3808.8018
+    w: -0.3393855
+  - index: 763
+    start: 3693.966
+    end: 3698.504
+    x: 3813.8
+    w: -0.30235952
+  - index: 764
+    start: 3698.504
+    end: 3703.447
+    x: 3818.7986
+    w: -0.24720798
+  - index: 765
+    start: 3703.447
+    end: 3708.619
+    x: 3823.7969
+    w: -0.15353651
+  - index: 766
+    start: 3708.619
+    end: 3713.8848
+    x: 3828.7954
+    w: -0.05789803
+  - index: 767
+    start: 3713.8848
+    end: 3719.1206
+    x: 3833.7937
+    w: 0.03968452
+  - index: 768
+    start: 3719.1206
+    end: 3724.3342
+    x: 3838.7922
+    w: 0.13150598
+  - index: 769
+    start: 3724.3342
+    end: 3729.5312
+    x: 3843.7908
+    w: 0.21890599
+  - index: 770
+    start: 3729.5312
+    end: 3734.6292
+    x: 3848.789
+    w: 0.30296704
+  - index: 771
+    start: 3734.6292
+    end: 3739.343
+    x: 3853.7876
+    w: 0.38398102
+  - index: 772
+    start: 3739.343
+    end: 3743.9075
+    x: 3858.786
+    w: 0.46332452
+  - index: 773
+    start: 3743.9075
+    end: 3748.3274
+    x: 3863.7844
+    w: 0.53675103
+  - index: 774
+    start: 3748.3274
+    end: 3752.7104
+    x: 3868.7827
+    w: 0.5658505
+  - index: 775
+    start: 3752.7104
+    end: 3757.0125
+    x: 3873.7812
+    w: 0.59706104
+  - index: 776
+    start: 3757.0125
+    end: 3761.3262
+    x: 3878.7795
+    w: 0.604928
+  - index: 777
+    start: 3761.3262
+    end: 3766.0212
+    x: 3883.778
+    w: 0.59371495
+  - index: 778
+    start: 3766.0212
+    end: 3770.855
+    x: 3888.7766
+    w: 0.539461
+  - index: 779
+    start: 3770.855
+    end: 3775.8054
+    x: 3893.775
+    w: 0.47632846
+  - index: 780
+    start: 3775.8054
+    end: 3780.8616
+    x: 3898.7734
+    w: 0.41617152
+  - index: 781
+    start: 3780.8616
+    end: 3785.9106
+    x: 3903.7717
+    w: 0.35934648
+  - index: 782
+    start: 3785.9106
+    end: 3790.9517
+    x: 3908.7703
+    w: 0.307651
+  - index: 783
+    start: 3790.9517
+    end: 3795.985
+    x: 3913.7686
+    w: 0.261215
+  - index: 784
+    start: 3795.985
+    end: 3800.9863
+    x: 3918.767
+    w: 0.22008348
+  - index: 785
+    start: 3800.9863
+    end: 3805.9917
+    x: 3923.7654
+    w: 0.18592954
+  - index: 786
+    start: 3805.9917
+    end: 3810.9949
+    x: 3928.764
+    w: 0.15781549
+  - index: 787
+    start: 3810.9949
+    end: 3815.995
+    x: 3933.7625
+    w: 0.1343815
+  - index: 788
+    start: 3815.995
+    end: 3820.993
+    x: 3938.7607
+    w: 0.115736485
+  - index: 789
+    start: 3820.993
+    end: 3825.9873
+    x: 3943.7593
+    w: 0.10193603
+  - index: 790
+    start: 3825.9873
+    end: 3830.9753
+    x: 3948.7576
+    w: 0.092997506
+  - index: 791
+    start: 3830.9753
+    end: 3835.958
+    x: 3953.756
+    w: 0.089664
+  - index: 792
+    start: 3835.958
+    end: 3840.9363
+    x: 3958.7544
+    w: 0.0913655
+  - index: 793
+    start: 3840.9363
+    end: 3845.9092
+    x: 3963.753
+    w: 0.097775
+  - index: 794
+    start: 3845.9092
+    end: 3850.8755
+    x: 3968.7515
+    w: 0.10878353
+  - index: 795
+    start: 3850.8755
+    end: 3855.835
+    x: 3973.7498
+    w: 0.124251485
+  - index: 796
+    start: 3855.835
+    end: 3860.7864
+    x: 3978.7483
+    w: 0.14401451
+  - index: 797
+    start: 3860.7864
+    end: 3865.7292
+    x: 3983.7466
+    w: 0.16786051
+  - index: 798
+    start: 3865.7292
+    end: 3870.6624
+    x: 3988.745
+    w: 0.19555247
+  - index: 799
+    start: 3870.6624
+    end: 3875.5913
+    x: 3993.7434
+    w: 0.22690198
+  - index: 800
+    start: 3875.5913
+    end: 3880.5298
+    x: 3998.742
+    w: 0.208592
+  - index: 801
+    start: 3880.5298
+    end: 3885.478
+    x: 4003.7402
+    w: 0.17962456
+  - index: 802
+    start: 3885.478
+    end: 3890.4346
+    x: 4008.7388
+    w: 0.15377253
+  - index: 803
+    start: 3890.4346
+    end: 3895.3982
+    x: 4013.7373
+    w: 0.13088095
+  - index: 804
+    start: 3895.3982
+    end: 3900.3687
+    x: 4018.7356
+    w: 0.11077604
+  - index: 805
+    start: 3900.3687
+    end: 3905.3445
+    x: 4023.7341
+    w: 0.093255
+  - index: 806
+    start: 3905.3445
+    end: 3910.3254
+    x: 4028.7324
+    w: 0.07811351
+  - index: 807
+    start: 3910.3254
+    end: 3915.31
+    x: 4033.731
+    w: 0.06513952
+  - index: 808
+    start: 3915.31
+    end: 3920.2983
+    x: 4038.7292
+    w: 0.05413398
+  - index: 809
+    start: 3920.2983
+    end: 3925.289
+    x: 4043.7278
+    w: 0.04489951
+  - index: 810
+    start: 3925.289
+    end: 3930.282
+    x: 4048.726
+    w: 0.037242517
+  - index: 811
+    start: 3930.282
+    end: 3935.2766
+    x: 4053.7246
+    w: 0.030983478
+  - index: 812
+    start: 3935.2766
+    end: 3940.273
+    x: 4058.7231
+    w: 0.025945991
+  - index: 813
+    start: 3940.273
+    end: 3945.2725
+    x: 4063.7214
+    w: 0.02035302
+  - index: 814
+    start: 3945.2725
+    end: 3950.2712
+    x: 4068.72
+    w: 0.010451019
+  - index: 815
+    start: 3950.2712
+    end: 3955.2703
+    x: 4073.7183
+    w: 0.0012595057
+  - index: 816
+    start: 3955.2703
+    end: 3960.2688
+    x: 4078.7168
+    w: -0.0073550045
+  - index: 817
+    start: 3960.2688
+    end: 3965.2673
+    x: 4083.715
+    w: -0.015514478
+  - index: 818
+    start: 3965.2673
+    end: 3970.2656
+    x: 4088.7136
+    w: -0.023334011
+  - index: 819
+    start: 3970.2656
+    end: 3975.2646
+    x: 4093.712
+    w: -0.030917987
+  - index: 820
+    start: 3975.2646
+    end: 3980.2644
+    x: 4098.7104
+    w: -0.034717023
+  - index: 821
+    start: 3980.2644
+    end: 3985.2642
+    x: 4103.709
+    w: -0.036374018
+  - index: 822
+    start: 3985.2642
+    end: 3990.2637
+    x: 4108.7075
+    w: -0.03804499
+  - index: 823
+    start: 3990.2637
+    end: 3995.2607
+    x: 4113.7056
+    w: -0.03979999
+  - index: 824
+    start: 3995.2607
+    end: 4000.2576
+    x: 4118.704
+    w: -0.04154849
+  - index: 825
+    start: 4000.2576
+    end: 4005.2544
+    x: 4123.7026
+    w: -0.043531
+  - index: 826
+    start: 4005.2544
+    end: 4010.2505
+    x: 4128.701
+    w: -0.045806497
+  - index: 827
+    start: 4010.2505
+    end: 4015.2415
+    x: 4133.699
+    w: -0.048430502
+  - index: 828
+    start: 4015.2415
+    end: 4020.2354
+    x: 4138.6978
+    w: -0.050027505
+  - index: 829
+    start: 4020.2354
+    end: 4025.2295
+    x: 4143.6963
+    w: -0.04993552
+  - index: 830
+    start: 4025.2295
+    end: 4030.2239
+    x: 4148.695
+    w: -0.050327986
+  - index: 831
+    start: 4030.2239
+    end: 4035.2178
+    x: 4153.6934
+    w: -0.051237002
+  - index: 832
+    start: 4035.2178
+    end: 4040.212
+    x: 4158.6914
+    w: -0.052691504
+  - index: 833
+    start: 4040.212
+    end: 4045.2056
+    x: 4163.69
+    w: -0.054714516
+  - index: 834
+    start: 4045.2056
+    end: 4050.2004
+    x: 4168.6885
+    w: -0.051901013
+  - index: 835
+    start: 4050.2004
+    end: 4055.1956
+    x: 4173.687
+    w: -0.045252025
+  - index: 836
+    start: 4055.1956
+    end: 4060.1917
+    x: 4178.685
+    w: -0.03920749
+  - index: 837
+    start: 4060.1917
+    end: 4065.1885
+    x: 4183.6836
+    w: -0.0337715
+  - index: 838
+    start: 4065.1885
+    end: 4070.1855
+    x: 4188.682
+    w: -0.028938487
+  - index: 839
+    start: 4070.1855
+    end: 4075.183
+    x: 4193.6807
+    w: -0.024701506
+  - index: 840
+    start: 4075.183
+    end: 4080.1802
+    x: 4198.679
+    w: -0.02103652
+  - index: 841
+    start: 4080.1802
+    end: 4085.1794
+    x: 4203.6772
+    w: -0.017826006
+  - index: 842
+    start: 4085.1794
+    end: 4090.1785
+    x: 4208.676
+    w: -0.0150915235
+  - index: 843
+    start: 4090.1785
+    end: 4095.1772
+    x: 4213.6743
+    w: -0.012839019
+  - index: 844
+    start: 4095.1772
+    end: 4100.1763
+    x: 4218.673
+    w: -0.011024997
+  - index: 845
+    start: 4100.1763
+    end: 4105.1743
+    x: 4223.6714
+    w: -0.009594023
+  - index: 846
+    start: 4105.1743
+    end: 4110.173
+    x: 4228.6694
+    w: -0.008481994
+  - index: 847
+    start: 4110.173
+    end: 4115.172
+    x: 4233.668
+    w: -0.007890508
+  - index: 848
+    start: 4115.172
+    end: 4120.171
+    x: 4238.6665
+    w: -0.008716479
+  - index: 849
+    start: 4120.171
+    end: 4125.17
+    x: 4243.665
+    w: -0.009620503
+  - index: 850
+    start: 4125.17
+    end: 4130.1694
+    x: 4248.663
+    w: -0.010500491
+  - index: 851
+    start: 4130.1694
+    end: 4135.169
+    x: 4253.6616
+    w: -0.011238992
+  - index: 852
+    start: 4135.169
+    end: 4140.168
+    x: 4258.66
+    w: -0.011708498
+  - index: 853
+    start: 4140.168
+    end: 4145.167
+    x: 4263.6587
+    w: -0.011764497
+  - index: 854
+    start: 4145.167
+    end: 4150.165
+    x: 4268.657
+    w: -0.011254996
+  - index: 855
+    start: 4150.165
+    end: 4155.163
+    x: 4273.6553
+    w: -0.010010511
+  - index: 856
+    start: 4155.163
+    end: 4160.1606
+    x: 4278.654
+    w: -0.007850006
+  - index: 857
+    start: 4160.1606
+    end: 4165.157
+    x: 4283.6523
+    w: -0.004581481
+  - index: 858
+    start: 4165.157
+    end: 4170.1523
+    x: 4288.651
+    w: 0.0000034719706
+  - index: 859
+    start: 4170.1523
+    end: 4175.1465
+    x: 4293.649
+    w: 0.006120518
+  - index: 860
+    start: 4175.1465
+    end: 4180.139
+    x: 4298.6475
+    w: 0.013998494
+  - index: 861
+    start: 4180.139
+    end: 4185.1304
+    x: 4303.646
+    w: 0.023879468
+  - index: 862
+    start: 4185.1304
+    end: 4190.1196
+    x: 4308.6445
+    w: 0.03600648
+  - index: 863
+    start: 4190.1196
+    end: 4195.107
+    x: 4313.643
+    w: 0.05063349
+  - index: 864
+    start: 4195.107
+    end: 4200.093
+    x: 4318.641
+    w: 0.068022
+  - index: 865
+    start: 4200.093
+    end: 4205.166
+    x: 4323.6396
+    w: 0.088431
+  Resolution: 5
+  Barrier: 3
+  broadphase: {fileID: 0}
+  track: {fileID: 605557291}
+  coefficient: 0.75
+  coefficients:
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  - 0.75
+  crossoverPoints: 190000005a000000a9000000c3000000de000000e7000000f00000008f010000c7010000f00100001b0200004302000051020000530200006f020000a7020000cd02000009030000380300004a030000
+--- !u!114 &680931105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680931100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5f5aacfd58206f4fa3b93a9e37e867f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableCapture: 0
 --- !u!1 &720051395
 GameObject:
   m_ObjectHideFlags: 0
@@ -31602,6 +36985,11 @@ Transform:
   - {fileID: 287379636}
   - {fileID: 1800088061}
   - {fileID: 1891853471}
+  - {fileID: 940986649}
+  - {fileID: 1140630601}
+  - {fileID: 680931101}
+  - {fileID: 642442945}
+  - {fileID: 259677514}
   m_Father: {fileID: 605557292}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -31709,6 +37097,31 @@ PrefabInstance:
       propertyPath: Lap
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].value
+      value: 321.66965
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].time
+      value: 1527.3348
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].inSlope
+      value: -1.7441192
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].outSlope
+      value: -1.7441192
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].outWeight
+      value: 0.081759326
+      objectReference: {fileID: 0}
     - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -31772,7 +37185,7 @@ PrefabInstance:
     - target: {fileID: 4001992816435297627, guid: 81f4ed85e9fcffb42afd49bf93e01887,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5106066053930418821, guid: 81f4ed85e9fcffb42afd49bf93e01887,
         type: 3}
@@ -31810,7 +37223,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 417d4ed6c7063e44f8d3632e0ce8717c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  profileFilename: D:\temp11\speeds_additional.txt
+  directory: Support\DrivingProfiles
 --- !u!114 &741473710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32072,6 +37485,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5dceb223472c1d46a2552ac9983bf6e, type: 3}
+--- !u!4 &940986649 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6385667734228709550, guid: 7f00d132985f9464a83b98ba25fb051f,
+    type: 3}
+  m_PrefabInstance: {fileID: 600633926}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &989121522
 GameObject:
   m_ObjectHideFlags: 0
@@ -32318,7 +37737,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 28.64
+      value: 23.76
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.y
@@ -32326,7 +37745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -544.69
+      value: -544.76
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalRotation.x
@@ -32359,36 +37778,6 @@ PrefabInstance:
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: waypoints
-      value: 
-      objectReference: {fileID: 605557293}
-    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: StartingPosition
-      value: 4056
-      objectReference: {fileID: 0}
-    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: TrackDistance
-      value: 16.879713
-      objectReference: {fileID: 0}
-    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: PreviousTrackDistance
-      value: 16.879713
-      objectReference: {fileID: 0}
-    - target: {fileID: 1697420620939968213, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: Lap
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3377283260564951050, guid: 18c0919ec78c5d242b13903617a9e1ae,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
@@ -32473,24 +37862,91 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ebcea604ff807241af381466f9e94ad, type: 3}
---- !u!1 &1124282405 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae,
-    type: 3}
-  m_PrefabInstance: {fileID: 1081926555}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1124282415
-MonoBehaviour:
+--- !u!1001 &1140630600
+PrefabInstance:
   m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 720051396}
+    m_Modifications:
+    - target: {fileID: 919132148382516366, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: priority
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 23
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 15.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -544.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.006751437
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99997723
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -0.77400005
+      objectReference: {fileID: 0}
+    - target: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517050780302740271, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_Name
+      value: Saber
+      objectReference: {fileID: 0}
+    - target: {fileID: 6517050780302740271, guid: 18714368e35b0cf409798d9a3924d951,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 18714368e35b0cf409798d9a3924d951, type: 3}
+--- !u!4 &1140630601 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5853245252014494101, guid: 18714368e35b0cf409798d9a3924d951,
+    type: 3}
+  m_PrefabInstance: {fileID: 1140630600}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1124282405}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 371c9897ddd304043ac46d7e08778d3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!33 &1193897718 stripped
 MeshFilter:
   m_CorrespondingSourceObject: {fileID: 3300000, guid: 7ebcea604ff807241af381466f9e94ad,
@@ -32619,6 +38075,176 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 163027993}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1497381225
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 720051396}
+    m_Modifications:
+    - target: {fileID: 71937020185018635, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: waypoints
+      value: 
+      objectReference: {fileID: 680931104}
+    - target: {fileID: 71937020185018635, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: StartingPosition
+      value: 4100
+      objectReference: {fileID: 0}
+    - target: {fileID: 182620607449991432, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: waypoints
+      value: 
+      objectReference: {fileID: 605557293}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: StartingPosition
+      value: 4042.1028
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: TrackDistance
+      value: 4052.9133
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: PreviousTrackDistance
+      value: 4052.9133
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: Laps
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: TotalDistanceTravelled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: PreviousTotalDistanceTravelled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: distanceTravelledInFrame
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307985188519252438, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: Lap
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].value
+      value: 321.66965
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].time
+      value: 1527.3348
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].inSlope
+      value: -1.7441192
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].outSlope
+      value: -1.7441192
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992815143968559, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: torqueCurve.m_Curve.Array.data[1].outWeight
+      value: 0.081759326
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 21.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 14.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -467
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.006751437
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99997723
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -0.77400005
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297626, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297627, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_Name
+      value: Gamma Profile Agent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4001992816435297627, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5106066053930418821, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: offset
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5106066053930418821, guid: 81f4ed85e9fcffb42afd49bf93e01887,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 170273913, guid: 81f4ed85e9fcffb42afd49bf93e01887, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 81f4ed85e9fcffb42afd49bf93e01887, type: 3}
 --- !u!1 &1653825886
 GameObject:
   m_ObjectHideFlags: 0
@@ -33222,104 +38848,82 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5dceb223472c1d46a2552ac9983bf6e, type: 3}
---- !u!1001 &4425553958155673189
+--- !u!1001 &2087870244
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 720051396}
     m_Modifications:
-    - target: {fileID: 1173102511, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1601609173, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1601609173, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2038656678, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
-      propertyPath: samplesOnScreen
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 2038656678, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
-      propertyPath: seriesProfiles.Array.data[0].scale
-      value: 0.004
-      objectReference: {fileID: 0}
-    - target: {fileID: 2038656678, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
-      propertyPath: seriesProfiles.Array.data[2].scale
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2038656678, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
-      propertyPath: seriesProfiles.Array.data[1].scale
-      value: 0.004
-      objectReference: {fileID: 0}
-    - target: {fileID: 2038656678, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
-      propertyPath: seriesProfiles.Array.data[3].scale
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878024, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 301726664464786836, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
-      propertyPath: m_Name
-      value: Graph
-      objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+      propertyPath: waypoints
+      value: 
+      objectReference: {fileID: 605557293}
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 28.64
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 15.33
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -544.69
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.006751437
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.99997723
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -0.77400005
       objectReference: {fileID: 0}
-    - target: {fileID: 4425553959739878026, guid: 7690f62d3b67acc4bbc1c1e168326310,
+    - target: {fileID: 2407625388317393378, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3036070618562730840, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
+        type: 3}
+      propertyPath: m_Name
+      value: Saber Agent
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036070618562730840, guid: 4fe9a4492a51eb54890758e3bc6f8b84,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7690f62d3b67acc4bbc1c1e168326310, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 4fe9a4492a51eb54890758e3bc6f8b84, type: 3}
