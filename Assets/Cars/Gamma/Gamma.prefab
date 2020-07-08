@@ -77,6 +77,7 @@ MonoBehaviour:
   offset: 0.087500006
   travel: 0.35000002
   radius: 0.6
+  mass: 20
   slipForce:
     serializedVersion: 2
     m_Curve:
@@ -101,7 +102,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 20000
+  slipForceScale: 4
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -144,13 +145,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardSlipScale: 20000
+  forwardSlipScale: 4
   brakingTorque: 2000
   steers: 0
   drives: 1
   steerAngle: 0
   wheelsInContact: 0
-  mass: 20
   localAttachmentPosition: {x: -1.269, y: -0.02, z: -1.878}
   height: 0.35
 --- !u!1 &474698328
@@ -168,8 +168,8 @@ GameObject:
   - component: {fileID: 1230204972}
   - component: {fileID: 3377283260564951050}
   - component: {fileID: 343465207}
-  - component: {fileID: 1697420620939968213}
   - component: {fileID: 7185422284977984932}
+  - component: {fileID: -5226852784286650872}
   m_Layer: 8
   m_Name: Gamma
   m_TagString: Untagged
@@ -184,8 +184,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474698328}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 1.2999878, z: -0}
+  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0, y: 1.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5814457300490532201}
@@ -250,6 +250,7 @@ MonoBehaviour:
   speed: 0
   wheelsInContact: 0
   sideslipAngle: 0
+  rpm: 0
 --- !u!114 &1230204972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,37 +268,35 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -0.00016403198
-      value: 0.65615845
-      inSlope: 1.0564256
-      outSlope: 1.0564256
+      time: 1.6366231
+      value: 570.1068
+      inSlope: -0.042903986
+      outSlope: -0.042903986
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.060431637
+      outWeight: 0.10600386
     - serializedVersion: 3
-      time: 0.7448097
-      value: 0.89183503
-      inSlope: -1.2670542
-      outSlope: -1.2670542
+      time: 1754.5056
+      value: 184.94894
+      inSlope: -1.2040293
+      outSlope: -1.2040293
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.17914644
-      outWeight: 0.62592155
+      inWeight: 0.02188119
+      outWeight: 0.17272528
     - serializedVersion: 3
-      time: 1
+      time: 2000
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.09481531
+      outSlope: -0.09481531
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0.18164709
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  torqueCurveScalar: 800
-  rpmScalar: 2000
 --- !u!114 &3377283260564951050
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -305,7 +304,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 474698328}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a153b537e94eebb4cb71f0937cfe5ab8, type: 3}
   m_Name: 
@@ -54324,20 +54323,6 @@ MonoBehaviour:
     - {fileID: 1223322117}
     - {fileID: 1223322116}
     - {fileID: 1223322115}
---- !u!114 &1697420620939968213
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474698328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57b43f307b34f5741a615aaaf87f5591, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypoints: {fileID: 0}
-  StartingPosition: -1
 --- !u!114 &7185422284977984932
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54354,6 +54339,20 @@ MonoBehaviour:
   lookAtTarget: {fileID: 48921566}
   positionTarget: {fileID: 1780430346}
   sideView: {fileID: 159124328}
+--- !u!114 &-5226852784286650872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474698328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57b43f307b34f5741a615aaaf87f5591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints: {fileID: 0}
+  StartingPosition: -1
 --- !u!1 &681467350
 GameObject:
   m_ObjectHideFlags: 0
@@ -54463,6 +54462,7 @@ MonoBehaviour:
   offset: 0.105000004
   travel: 0.42000002
   radius: 0.6
+  mass: 20
   slipForce:
     serializedVersion: 2
     m_Curve:
@@ -54487,7 +54487,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 20000
+  slipForceScale: 4
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -54530,13 +54530,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardSlipScale: 20000
+  forwardSlipScale: 4
   brakingTorque: 2000
   steers: 1
   drives: 1
   steerAngle: 0
   wheelsInContact: 0
-  mass: 20
   localAttachmentPosition: {x: 1.17, y: -0.02, z: 1.901}
   height: 0.42000002
 --- !u!114 &1223322115
@@ -54556,6 +54555,7 @@ MonoBehaviour:
   offset: 0.105000004
   travel: 0.42000002
   radius: 0.6
+  mass: 20
   slipForce:
     serializedVersion: 2
     m_Curve:
@@ -54580,7 +54580,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 20000
+  slipForceScale: 4
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -54623,13 +54623,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardSlipScale: 20000
+  forwardSlipScale: 4
   brakingTorque: 2000
   steers: 1
   drives: 1
   steerAngle: 0
   wheelsInContact: 0
-  mass: 20
   localAttachmentPosition: {x: -1.14, y: -0.02, z: 1.901}
   height: 0.42000002
 --- !u!1 &1575151655
@@ -54712,6 +54711,7 @@ MonoBehaviour:
   offset: 0.087500006
   travel: 0.35000002
   radius: 0.6
+  mass: 20
   slipForce:
     serializedVersion: 2
     m_Curve:
@@ -54736,7 +54736,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  slipForceScale: 40
+  slipForceScale: 4
   forwardSlipForce:
     serializedVersion: 2
     m_Curve:
@@ -54779,13 +54779,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardSlipScale: 40
+  forwardSlipScale: 4
   brakingTorque: 2000
   steers: 0
   drives: 1
   steerAngle: 0
   wheelsInContact: 0
-  mass: 20
   localAttachmentPosition: {x: 1.264, y: -0.02, z: -1.878}
   height: 0.35
 --- !u!1 &3975550122954535092
