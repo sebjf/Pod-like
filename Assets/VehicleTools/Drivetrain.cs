@@ -8,15 +8,10 @@ public class Drivetrain : MonoBehaviour
     public float throttle;
 
     public AnimationCurve torqueCurve;
-    public float torqueCurveScalar = 10000;
-    public float rpmScalar = 2000;
 
-    private const float Rad2Rpm = 9.5493f;
-
-    public float EvaluateTorque(float wheelAngularVelocity)
+    public float EvaluateTorque(float rpm)
     {
-        var rpm = wheelAngularVelocity * Rad2Rpm;
-        var torque = torqueCurve.Evaluate(Mathf.Abs(rpm / rpmScalar)) * torqueCurveScalar * throttle;
+        var torque = torqueCurve.Evaluate(rpm) * throttle;
         return torque;
     }
 
