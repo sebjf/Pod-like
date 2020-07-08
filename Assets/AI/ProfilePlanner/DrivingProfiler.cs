@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class DrivingProfiler : MonoBehaviour
 {
-    public string profileFilename;
+    public string directory = @"Support\DrivingProfiles";
 
     private Navigator navigator;
     private Rigidbody body;
@@ -21,6 +22,7 @@ public class DrivingProfiler : MonoBehaviour
         public float[] speed;
         public float[] direction;
         public float[] steeringangle;
+        public float[] lateralerror;
 
         public Profile(int length)
         {
@@ -28,10 +30,27 @@ public class DrivingProfiler : MonoBehaviour
             speed = new float[length];
             direction = new float[length];
             steeringangle = new float[length];
+            lateralerror = new float[length];
         }
     }
 
     private Profile profile;
+
+    public string filename
+    {
+        get
+        {
+            return string.Format("{0}.drivingprofile.json", gameObject.name);
+        }
+    }
+
+    public string fullfile
+    {
+        get
+        {
+            return Path.GetFullPath(Path.Combine(directory, filename));
+        }
+    }
 
 
     private void Awake()
@@ -75,11 +94,12 @@ public class DrivingProfiler : MonoBehaviour
         if(observations)
         {
             profile.direction[index] = observations.directionError;
+            profile.lateralerror[index] = observations.understeer + -observations.oversteer;
         }
         profile.steeringangle[index] = vehicle.steeringAngle * vehicle.maxSteerAngle;
     }
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
         if (profile != null)
         {
@@ -88,13 +108,18 @@ public class DrivingProfiler : MonoBehaviour
                 profile.distance[i] = path.waypoints[i].Distance;
             }
 
-            Export(profileFilename);
+            Export(directory);
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+
     }
 
     public void Export(string filename)
     {
-        using (FileStream stream = new FileStream(filename, FileMode.Create))
+        using (FileStream stream = new FileStream(fullfile, FileMode.Create))
         {
             using (StreamWriter writer = new StreamWriter(stream))
             {

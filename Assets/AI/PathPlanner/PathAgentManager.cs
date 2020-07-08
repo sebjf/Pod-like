@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -91,6 +92,9 @@ public class PathAgentManager : MonoBehaviour, IAgentManager
         }
 
         var agent = GameObject.Instantiate(AgentPrefab, container);
+
+        agent.name = agent.name + " " + agents.Count;
+
         var path = agent.gameObject.AddComponent<InterpolatedPath>();
         path.coefficient = coefficient;
         path.Initialise();

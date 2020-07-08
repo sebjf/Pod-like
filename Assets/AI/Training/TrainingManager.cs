@@ -15,6 +15,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [Serializable]
+public class TrainingProcessSettings
+{
+    public string host;
+    public int port;
+    public string mode;
+}
+
+[Serializable]
 public struct TrainingAgentTransform
 {
     public Vector3 position;
@@ -56,20 +64,22 @@ public class TrainingMessage
     public string payload;
 }
 
+public enum Mode
+{
+    Local,
+    Server,
+    Client
+}
+
 public class TrainingManager : MonoBehaviour
 {
     private Dictionary<string, string> circuits;
     private Dictionary<string, GameObject> cars;
 
+    public Catalogue catalogue;
+
     public IEnumerable<string> Circuits => circuits.Keys;
     public IEnumerable<string> Cars => cars.Keys;
-
-    public enum Mode
-    {
-        Local,
-        Server,
-        Client
-    }
 
     public Mode mode;
 
@@ -78,6 +88,9 @@ public class TrainingManager : MonoBehaviour
     public ConcurrentQueue<TrainingRequest> requests;
     
     public string directory = @"Support\TrainingData";
+
+    public string processCommand;
+    public int processCount;
     
     public int Remaining {
         get
@@ -92,20 +105,14 @@ public class TrainingManager : MonoBehaviour
         cars = new Dictionary<string, GameObject>();
         requests = new ConcurrentQueue<TrainingRequest>();
 
-        for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+        foreach (var item in catalogue.cars.Where(i => i.Agent != null))
         {
-            var path = SceneUtility.GetScenePathByBuildIndex(i);
-            circuits.Add(Path.GetFileNameWithoutExtension(path), path);
+            cars.Add(item.Name, item.Agent);
         }
 
-        foreach (var item in GetComponent<Catalogue>().aiCars)
+        foreach (var item in catalogue.circuits)
         {
-            cars.Add(item.name, item);
-        }
-
-        if(!Application.isEditor)
-        {
-            mode = Mode.Client;
+            circuits.Add(item.Name, item.sceneName);
         }
     }
 
@@ -147,6 +154,33 @@ public class TrainingManager : MonoBehaviour
 
     private void Start()
     {
+        var settings = new TrainingProcessSettings() { mode = "client", host = "127.0.0.1", port = 8000 };
+
+        try
+        {
+            settings = JsonUtility.FromJson<TrainingProcessSettings>(File.ReadAllText("settings.trainingmanager.json"));
+        }
+        catch (Exception e)
+        {
+            Debug.LogException(e);
+        }
+
+        if(!Application.isEditor)
+        {
+            switch (settings.mode.ToLower())
+            {
+                case "client":
+                    mode = Mode.Client;
+                    break;
+                case "server":
+                    mode = Mode.Server;
+                    break;
+                case "local":
+                    mode = Mode.Local;
+                    break;
+            }
+        }
+
         switch (mode)
         {
             case Mode.Local:
@@ -158,14 +192,28 @@ public class TrainingManager : MonoBehaviour
             case Mode.Server:
                 {
                     var server = gameObject.AddComponent<TrainingServer>();
+                    server.settings = settings;
                 }
                 break;
             case Mode.Client:
                 {
                     var client = gameObject.AddComponent<TrainingClient>();
+                    client.settings = settings;
                 }
                 break;
         }
+
+        switch (mode)
+        {
+            case Mode.Server:
+                for (int i = 0; i < processCount; i++)
+                {
+                    System.Diagnostics.Process.Start(processCommand, "");
+                }
+                break;
+        }
+
+
     }
 
     private void OnLocalTrainingRequestComplete(IAgentManager obj)
@@ -199,7 +247,11 @@ public class TrainingManagerEndpoint
             await stream.ReadAsync(header, 0, 4);
             var length = BitConverter.ToInt32(header, 0);
             var buffer = new byte[length];
-            await stream.ReadAsync(buffer, 0, length);
+            var read = 0;
+            while (read < length)
+            {
+                read += await stream.ReadAsync(buffer, read, length - read);
+            }
             try
             {
                 var message = JsonUtility.FromJson<TrainingMessage>(Encoding.UTF8.GetString(buffer));

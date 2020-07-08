@@ -52,7 +52,7 @@ public class TrainingWorker : MonoBehaviour
                 yield return null;
             }
 
-            var scene = SceneManager.GetSceneByPath(path);
+            var scene = SceneManager.GetSceneByName(path);
             var root = scene.GetRootGameObjects().Select(x => x.GetComponentInChildren<Track>()).Where(x => x != null).First();
 
             // set up interpolated paths. this should be done before the manager is added. 
@@ -63,6 +63,13 @@ public class TrainingWorker : MonoBehaviour
             foreach (var item in existing)
             {
                 DestroyImmediate(item); // delete immediately as the manager should search for paths in its Start() method.
+            }
+
+            // and cars
+            var cars = geometry.transform.Find("Cars");
+            if(cars)
+            {
+                Destroy(cars.gameObject);
             }
 
             foreach (var item in interpolationCoefficients)
@@ -87,6 +94,7 @@ public class TrainingWorker : MonoBehaviour
             manager.SetAgentPrefab(prefab);
 
             var training = true;
+            var running = true;
 
             // setup the callbacks
             manager.OnComplete.RemoveAllListeners();
@@ -94,23 +102,26 @@ public class TrainingWorker : MonoBehaviour
             {
                 Debug.Log("TrainingRequest Complete");
                 OnTrainingRequestComplete?.Invoke(manager);
+                request.circuit = "";
+                request.car = "";
+                OnTrainingFrame?.Invoke(request, manager);
+                training = false;
                 SceneManager.UnloadSceneAsync(path).completed += (asyncresult) =>
                 {
-                    training = false;
+                    running = false;
                 };
             });
 
             // and let it go...
 
-            while (training)
+            while (running)
             {
-                if ((MonoBehaviour)manager)
+                if (training)
                 {
                     OnTrainingFrame?.Invoke(request, manager);
                 }
                 yield return null;
             }
-
         }
     }
 }

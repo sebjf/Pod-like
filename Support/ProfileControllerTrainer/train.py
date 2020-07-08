@@ -1,3 +1,5 @@
+# Run this from within an appropriate conda enviroment (in VSCode, pick the enviroment by in the bottom left, toolbar)
+
 import numpy as np
 import keras
 import tensorflow
@@ -8,9 +10,10 @@ import subprocess
 
 # environment parameters
 
-modelname = "gamma"
+modelname = "truck"
 
 source = os.path.abspath(os.path.join(os.getcwd(), "../TrainingData"))
+networks = os.path.abspath(os.path.join(os.getcwd(), "../Networks"))
 destination = os.path.abspath(os.path.join(os.getcwd(), "../../Assets/StreamingAssets"))
 
 train_controller = True
@@ -106,7 +109,6 @@ for profile in profiles:
 flattened_width = x_train.shape[1]
 
 if train_controller:
-    models = []
     for n in range(5):
         keras.backend.clear_session()
         inputs = keras.Input(shape=(flattened_width,))
@@ -137,10 +139,9 @@ if train_controller:
             )
         
         model.name = modelname + str(n)
-        model.save(os.path.join(source, model.name + ".h5"))
-        models.append(model)
-
-        modelh5 = os.path.join(source, model.name + ".h5")
+        modelh5 = os.path.join(networks, model.name + ".h5")
+        model.save(modelh5)
+        
         modelnn = os.path.join(destination, model.name + ".nn")
         subprocess.run("python Barracuda/Tools/keras_to_barracuda.py \"{0}\" \"{1}\"".format(modelh5, modelnn), shell=True) # run in subprocess because calls are stateful
 
@@ -166,9 +167,9 @@ if train_classifier:
         )
     
     model.name = modelname + "C"
-    model.save(os.path.join(source, model.name + ".h5"))
+    modelh5 = os.path.join(networks, model.name + ".h5")
+    model.save(modelh5)
 
-    modelh5 = os.path.join(source, model.name + ".h5")
     modelnn = os.path.join(destination, model.name + ".nn")
     subprocess.run("python Barracuda/Tools/keras_to_barracuda.py \"{0}\" \"{1}\"".format(modelh5, modelnn), shell=True) # run in subprocess because calls are stateful
 

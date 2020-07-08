@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,10 +8,13 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using UnityEngine;
 
+
 [RequireComponent(typeof(TrainingManager))]
 [RequireComponent(typeof(TrainingVisualiser))]
 public class TrainingServer : MonoBehaviour
 {
+    public TrainingProcessSettings settings;
+
     private TrainingManager manager;
     private TrainingVisualiser visualiser;
 
@@ -51,7 +55,7 @@ public class TrainingServer : MonoBehaviour
 
     public async void StartServer()
     {
-        TcpListener listener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8000);
+        TcpListener listener = new TcpListener(IPAddress.Parse(settings.host), settings.port);
         listener.Start(100);
         while (runServer)
         {

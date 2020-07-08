@@ -55,12 +55,15 @@ public class TrainingVisualiser : MonoBehaviour
                     }
                     else
                     {
-                        var scene = state.scenekey;
-                        changeSceneOperation = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
-                        changeSceneOperation.completed += (operation) =>
+                        if (state.scenekey != null)
                         {
-                            currentScene = scene;
-                        };
+                            var scene = state.scenekey;
+                            changeSceneOperation = SceneManager.LoadSceneAsync(scene, LoadSceneMode.Additive);
+                            changeSceneOperation.completed += (operation) =>
+                            {
+                                currentScene = scene;
+                            };
+                        }
                     }
                 }
             }

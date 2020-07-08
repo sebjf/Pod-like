@@ -23,7 +23,6 @@ public class ProfileControllerMonitor : MonoBehaviour
                 var agent = UnityEditor.Selection.activeGameObject.GetComponentInChildren<ProfileController>();
                 if (agent)
                 {
-                    GraphOverlay.Plot("Profile", agent.profile);
                     GraphOverlay.Plot("Curvature", agent.curvature);
                     GraphOverlay.Plot("Camber", agent.camber);
                     GraphOverlay.Plot("Inclination", agent.inclination);

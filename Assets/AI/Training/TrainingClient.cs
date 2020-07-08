@@ -12,18 +12,13 @@ using UnityEngine;
 [RequireComponent(typeof(TrainingWorker))]
 public class TrainingClient : MonoBehaviour
 {
+    public TrainingProcessSettings settings;
+
     private TrainingManagerEndpoint client;
     private TrainingManager manager;
     private TrainingWorker worker;
 
     private TrainingState state;
-
-    [Serializable]
-    public class Settings
-    {
-        public string host;
-        public int port;
-    }
 
     private void Awake()
     {
@@ -36,17 +31,6 @@ public class TrainingClient : MonoBehaviour
 
     void Start()
     {
-        var settings = new Settings() { host = "127.0.0.1", port = 8000 };
-
-        try
-        {
-            settings = JsonUtility.FromJson<Settings>(File.ReadAllText("settings.trainingmanager.json"));
-        }
-        catch (Exception e)
-        {
-            Debug.LogException(e);
-        }
-
         client = new TrainingManagerEndpoint(new TcpClient(settings.host, settings.port));
         client.OnMessage += OnMessage;
         client.PostComplete();
