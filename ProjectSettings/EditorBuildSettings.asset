@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Circuits/Plant21/Plant21.unity
     guid: be917ad419275ec46bef3b588434807f
+  - enabled: 1
+    path: Assets/Circuits/Nuke/Nuke.unity
+    guid: 33c6cd0e036cc8c479178568b945b6fb
   m_configObjects: {}

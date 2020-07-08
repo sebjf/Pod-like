@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public static class TrainingProperties
 {
-    public static string AgentLayer = "Car";
+    public static string AgentLayer = "Training Car";
 }
 
 public class AgentManagerComplete : UnityEvent<IAgentManager> 
