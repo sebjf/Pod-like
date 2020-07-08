@@ -49,6 +49,7 @@ MonoBehaviour:
   offset: 0.12571266
   travel: 0.50285065
   radius: 0.5642015
+  mass: 20
   slipForce:
     serializedVersion: 2
     m_Curve:
@@ -122,7 +123,6 @@ MonoBehaviour:
   drives: 1
   steerAngle: 0
   wheelsInContact: 0
-  mass: 20
   localAttachmentPosition: {x: -1.3046265, y: 0.54985064, z: -1.95}
   height: 0.50285065
 --- !u!1 &914759940
@@ -156,7 +156,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914759940}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 1.7242432, z: 0}
+  m_LocalPosition: {x: -0, y: 0.59, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1827813816738230018}
@@ -219,6 +219,7 @@ MonoBehaviour:
   speed: 0
   wheelsInContact: 0
   sideslipAngle: 0
+  rpm: 0
 --- !u!114 &914759944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -236,37 +237,35 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0.6969147
-      inSlope: 1.056426
-      outSlope: 1.056426
+      time: 2.442997
+      value: 1025.3745
+      inSlope: 0.060720693
+      outSlope: 0.060720693
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.059925046
     - serializedVersion: 3
-      time: 0.6936966
-      value: 0.7885387
-      inSlope: -1.820707
-      outSlope: -1.820707
+      time: 1080.7227
+      value: 524.68286
+      inSlope: -2.9620662
+      outSlope: -2.9620662
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.033074815
+      outWeight: 0.17348078
     - serializedVersion: 3
-      time: 1
+      time: 1500
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.015792374
+      outSlope: 0.015792374
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.8388618
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  torqueCurveScalar: 1100
-  rpmScalar: 1500
 --- !u!114 &5158299566702106700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49887,6 +49886,7 @@ MonoBehaviour:
   offset: 0.1075
   travel: 0.43
   radius: 0.563492
+  mass: 20
   slipForce:
     serializedVersion: 2
     m_Curve:
@@ -49960,7 +49960,6 @@ MonoBehaviour:
   drives: 1
   steerAngle: 0
   wheelsInContact: 0
-  mass: 20
   localAttachmentPosition: {x: 1.54216, y: 0.37, z: 2.068}
   height: 0.43
 --- !u!1 &1280059481
@@ -50012,6 +50011,7 @@ MonoBehaviour:
   offset: 0.1075
   travel: 0.43
   radius: 0.563492
+  mass: 20
   slipForce:
     serializedVersion: 2
     m_Curve:
@@ -50085,7 +50085,6 @@ MonoBehaviour:
   drives: 1
   steerAngle: 0
   wheelsInContact: 0
-  mass: 20
   localAttachmentPosition: {x: -1.54216, y: 0.37, z: 2.068}
   height: 0.43
 --- !u!1 &1395924277
@@ -50167,6 +50166,7 @@ MonoBehaviour:
   offset: 0.12571266
   travel: 0.50285065
   radius: 0.5642165
+  mass: 20
   slipForce:
     serializedVersion: 2
     m_Curve:
@@ -50240,7 +50240,6 @@ MonoBehaviour:
   drives: 1
   steerAngle: 0
   wheelsInContact: 0
-  mass: 20
   localAttachmentPosition: {x: 1.3046265, y: 0.54985064, z: -1.95}
   height: 0.50285065
 --- !u!1 &2035527729
