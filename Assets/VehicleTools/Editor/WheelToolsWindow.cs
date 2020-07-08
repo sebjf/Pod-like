@@ -16,6 +16,8 @@ class WheelTools : EditorWindow
 
     void OnGUI()
     {
+        EditorGUILayout.HelpBox("Selecting the vehicle prefab will automatically select all the wheels.", MessageType.Info); // https://answers.unity.com/questions/1019430
+
         selectedWheels.Clear();
         foreach (var item in Selection.gameObjects)
         {
@@ -28,12 +30,16 @@ class WheelTools : EditorWindow
             }
         }
 
+        EditorGUILayout.HelpBox("Use Add Wheel to create the Wheel Component on the selected item. Wheels are added automatically by the Vehicle Tools.", MessageType.Info); // https://answers.unity.com/questions/1019430
+
         if (GUILayout.Button("Add Wheel"))
         {
             AddWheel(Selection.activeTransform);
         }
 
-        if (GUILayout.Button("Set Default Settings"))
+        EditorGUILayout.HelpBox("Initialise the wheel with fixed, default settings, and a radius based on the mesh.", MessageType.Info); // https://answers.unity.com/questions/1019430
+
+        if (GUILayout.Button("Reset Default Settings"))
         {
             foreach (var wheel in selectedWheels)
             {
@@ -41,7 +47,7 @@ class WheelTools : EditorWindow
             }
         }
 
-        if (GUILayout.Button("Set Radius"))
+        if (GUILayout.Button("Reset Radius"))
         {
             foreach (var wheel in selectedWheels)
             {
@@ -51,6 +57,9 @@ class WheelTools : EditorWindow
 
         EditorGUILayout.LabelField("Suspension Tools");
 
+        EditorGUILayout.HelpBox("Sets the attachment point to be to the height of the center of mass.", MessageType.Info); // https://answers.unity.com/questions/1019430
+
+
         if (GUILayout.Button("Set Attachment Point"))
         {
             foreach (var wheel in selectedWheels)
@@ -58,6 +67,9 @@ class WheelTools : EditorWindow
                 SetAttachmentPoint(wheel);
             }
         }
+
+        EditorGUILayout.HelpBox("Sets the travel of the wheel based on the current Mesh position.", MessageType.Info); // https://answers.unity.com/questions/1019430
+
 
         if (GUILayout.Button("Set Travel"))
         {
@@ -76,6 +88,8 @@ class WheelTools : EditorWindow
         }
 
         EditorGUILayout.LabelField("Pose Controls");
+
+        EditorGUILayout.HelpBox("Sets the Height of the Wheel to what it would be at runtime.", MessageType.Info); // https://answers.unity.com/questions/1019430
 
         if (GUILayout.Button("Set Height From Mass"))
         {
@@ -177,10 +191,10 @@ class WheelTools : EditorWindow
         var worldAttachmentPoint = rb.transform.localToWorldMatrix.MultiplyPoint(wheel.localAttachmentPosition);
         var length = (worldAttachmentPoint - wheel.transform.position).magnitude;
 
+        Undo.RecordObject(wheel, "Set Wheel Travel");
+
         wheel.offset = length * 0.25f;
         wheel.travel = length;
-
-        EditorUtility.SetDirty(wheel);
     }
 
     /// <summary>
@@ -243,8 +257,8 @@ class WheelTools : EditorWindow
         wheel.B = 10000;
         wheel.mass = 20;
         wheel.brakingTorque = 1000;
-        wheel.slipForceScale = 10000f;
-        wheel.forwardSlipScale = 12000f;
+        wheel.slipForceScale = 4;
+        wheel.forwardSlipScale = 4;
 
         wheel.slipForce = new AnimationCurve();
         var curve = wheel.slipForce;

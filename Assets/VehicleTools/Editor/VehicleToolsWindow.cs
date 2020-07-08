@@ -29,19 +29,11 @@ class VehicleTools : EditorWindow
 
     void OnGUI()
     {
-        if (GUILayout.Button("Initialise Rigidbody"))
-        {
-            InitialiseRigidbody(Selection.activeGameObject);
-        }
+        EditorGUILayout.HelpBox("To begin, create a new prefab and manually place the wheels. Select the prefab in the scene and press the buttons below.", MessageType.Info); // https://answers.unity.com/questions/1019430
 
-        if (GUILayout.Button("Initialise Vehicle"))
+        if (GUILayout.Button("Initialise Vehicle Body"))
         {
             InitialiseVehicle(Selection.activeGameObject);
-        }
-
-        if (GUILayout.Button("Load Wheel Geometry"))
-        {
-            LoadWheelGeometry(Selection.activeGameObject);
         }
 
         if (GUILayout.Button("Initialise Wheels"))
@@ -49,7 +41,12 @@ class VehicleTools : EditorWindow
             InitialiseWheels(Selection.activeGameObject);
         }
 
+        EditorGUILayout.HelpBox("After initialising the body and wheels, use the Wheel Tools window to configure the wheels", MessageType.Info); // https://answers.unity.com/questions/1019430
+
         EditorGUILayout.LabelField("Physics");
+
+        EditorGUILayout.HelpBox("After setting center of mass, press W to return to the Gizmo", MessageType.Info); // https://answers.unity.com/questions/1019430
+
 
         setCenterOfMass = GUILayout.Toggle(setCenterOfMass, "Set Center Of Mass", "Button");
 
@@ -90,70 +87,26 @@ class VehicleTools : EditorWindow
         }
     }
 
-    void LoadWheelGeometry(GameObject asset)
-    {
-        // Use the mesh to find the directory of this car.
-
-        var paths = AssetTools.FindAssetPaths(asset);
-
-        // load the wheels
-
-        if(!asset.transform.Find("WheelRearL"))
-        {
-            var wheelasset = Path.Combine(paths.directory, "WheelRearL.obj");
-            var wheelgameobject = Instantiate(AssetDatabase.LoadAssetAtPath(wheelasset, typeof(GameObject))) as GameObject;
-            wheelgameobject.name = "WheelRearL";
-            wheelgameobject.transform.parent = asset.transform;
-        }
-
-        if (!asset.transform.Find("WheelFrontL"))
-        {
-            var wheelasset = Path.Combine(paths.directory, "WheelFrontL.obj");
-            var wheelgameobject = Instantiate(AssetDatabase.LoadAssetAtPath(wheelasset, typeof(GameObject))) as GameObject;
-            wheelgameobject.name = "WheelFrontL";
-            wheelgameobject.transform.parent = asset.transform;
-        }
-
-        if (!asset.transform.Find("WheelRearR"))
-        {
-            var wheelasset = Path.Combine(paths.directory, "WheelRearR.obj");
-            var wheelgameobject = Instantiate(AssetDatabase.LoadAssetAtPath(wheelasset, typeof(GameObject))) as GameObject;
-            wheelgameobject.name = "WheelRearR";
-            wheelgameobject.transform.parent = asset.transform;
-        }
-
-        if (!asset.transform.Find("WheelFrontR"))
-        {
-            var wheelasset = Path.Combine(paths.directory, "WheelFrontR.obj");
-            var wheelgameobject = Instantiate(AssetDatabase.LoadAssetAtPath(wheelasset, typeof(GameObject))) as GameObject;
-            wheelgameobject.name = "WheelFrontR";
-            wheelgameobject.transform.parent = asset.transform;
-        }
-    }
-
-    public static void InitialiseRigidbody(GameObject asset)
+    public static void InitialiseVehicle(GameObject asset)
     {
         var rb = asset.GetComponent<Rigidbody>();
-        if(rb == null)
+        if (rb == null)
         {
             rb = asset.AddComponent<Rigidbody>();
-        }
 
-        rb.mass = 1500f;
-        rb.drag = 0.12f;
-        rb.angularDrag = 0.1f;
+            rb.mass = 1500f;
+            rb.drag = 0.12f;
+            rb.angularDrag = 0.1f;
+        }
 
         var mf = asset.GetComponentInChildren<MeshFilter>();
         var mc = mf.GetComponent<MeshCollider>();
-        if(mc == null)
+        if (mc == null)
         {
             mc = mf.gameObject.AddComponent<MeshCollider>();
             mc.convex = true;
         }
-    }
 
-    public static void InitialiseVehicle(GameObject asset)
-    {
         var controllerinput = asset.GetComponent<VehicleControllerInput>();
         if (controllerinput == null)
         {
@@ -170,16 +123,13 @@ class VehicleTools : EditorWindow
         if (drivetrain == null)
         {
             drivetrain = asset.AddComponent<Drivetrain>();
+
+            drivetrain.torqueCurve = new AnimationCurve();
+            var curve = drivetrain.torqueCurve;
+            curve.AddKey(new Keyframe(0f, 800f, -0.04290399f, -0.04290399f));
+            curve.AddKey(new Keyframe(1825.365f, 167.7371f, -2.252331f, -2.252331f));
+            curve.AddKey(new Keyframe(2000f, 0f, -0.01201525f, -0.01201525f));
         }
-
-        drivetrain.torqueCurveScalar = 800;
-        drivetrain.rpmScalar = 2000;
-
-        drivetrain.torqueCurve = new AnimationCurve();
-        var curve = drivetrain.torqueCurve;
-        curve.AddKey(new Keyframe(0f, 0.6969147f, 1.056426f, 1.056426f));
-        curve.AddKey(new Keyframe(0.6936966f, 0.7885387f, -1.820707f, -1.820707f));
-        curve.AddKey(new Keyframe(1f, 0f, 0f, 0f));
 
         var camrigguid = AssetDatabase.FindAssets("CamRig t:GameObject").First();
         var camrig = Instantiate(AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(camrigguid), typeof(GameObject))) as GameObject;
@@ -190,13 +140,6 @@ class VehicleTools : EditorWindow
     public static void InitialiseWheels(GameObject asset)
     {
         WheelTools.AddWheelsForBody(asset.transform);
-
-        var wheelManager = asset.GetComponent<WheelManager>();
-        if(wheelManager == null)
-        {
-            wheelManager = asset.AddComponent<WheelManager>();
-            wheelManager.Reset();
-        }
     }
 
     public static void CreateHighResolutionGeometry(GameObject asset)
