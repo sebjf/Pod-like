@@ -46,4 +46,13 @@ public class ResetController : MonoBehaviour
         // the velocities above will be overridden on the next fixedupdate. putting the body to sleep resets the accelerations and forces them to take effect.
         body.Sleep();
     }
+
+    public static void PlacePrefab(Transform car, TrackPath geometry, float distance, float offset)
+    {
+        var q = geometry.Query(distance);
+        car.position = q.Midpoint + (q.Tangent * offset) + car.localPosition;
+        car.forward = q.Forward;
+        car.up = q.Up;
+    }
+
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CameraButton : MonoBehaviour
 {
     public CamRig cameraRig;
-    public DriftCamera cameraController;
+    public RaceCamera cameraController;
 
     private void Awake()
     {

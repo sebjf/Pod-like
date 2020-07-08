@@ -5,17 +5,17 @@ using UnityEngine.UI;
 
 public class DashboardController : MonoBehaviour
 {
+    public new RaceCamera camera;
+
     Text m_SpeedText;
     Text brakingText;
     Text sideslipText;
-    DriftCamera cameraController;
 
     private void Awake()
     {
         m_SpeedText = transform.Find("Speed").GetComponent<Text>();
         brakingText = transform.Find("Braking").GetComponent<Text>();
         sideslipText = transform.Find("Sideslip").GetComponent<Text>();
-        cameraController = GetComponentInParent<DriftCamera>();
     }
 
     // Start is called before the first frame update
@@ -27,12 +27,12 @@ public class DashboardController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(cameraController.Target != null)
+        if(camera.Target != null)
         {
-            var vehicle = cameraController.Target.GetComponent<Vehicle>();
+            var vehicle = camera.Target.GetComponent<Vehicle>();
             if (vehicle)
             {
-                m_SpeedText.text = string.Format("Speed: {0:0.00} m/s, {1:0} mph", vehicle.speed, vehicle.speed * 2.237);
+                m_SpeedText.text = string.Format("Speed: {0:0.00} m/s, {1:0} mph RPM: {2}", vehicle.speed, vehicle.speed * 2.237, vehicle.rpm);
 
                 if(vehicle.brake > 0)
                 {
