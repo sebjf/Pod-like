@@ -1,4 +1,4 @@
-function [] = plotProfileObservations(j)
+function [] = plotPathObservations(j)
 %PLOTPROFILEOBSERVATIONS Summary of this function goes here
 %   Detailed explanation goes here
 hold all;
