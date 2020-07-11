@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -85,6 +86,16 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
 
     public float curvatureSampleDistance;
 
+    public override TrackGeometry track
+    {
+        get{ return this; }
+    }
+
+    public override float TrackDistance(float pathdistance)
+    {
+        return pathdistance;
+    }
+
     public TrackWaypoint lastSelected
     {
         get
@@ -113,16 +124,16 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         Recompute();
     }
 
-    public override TrackSection TrackSection(float distance)
+    public TrackSection Section(float distance)
     {
         var wq = WaypointQuery(distance);
-        
         var position = Position(wq);
         var tangent = Tangent(wq);
         var width = Width(wq);
         TrackSection section;
         section.left = position - tangent * width * 0.5f;
         section.right = position + tangent * width * 0.5f;
+        section.direction = (wq.next.position - wq.waypoint.position).normalized;
         section.jump = wq.waypoint.jump;
         section.trackdistance = distance;
         return section;
@@ -166,11 +177,6 @@ public class TrackGeometry : Waypoints<TrackWaypoint>
         query.nospawn = wq.waypoint.nospawn;
         query.jumprules = wq.waypoint.jumprules;
         return query;
-    }
-
-    public override float TrackDistance(float distance)
-    {
-        return distance;
     }
 
     public Vector3 Position(WaypointQueryResult q)

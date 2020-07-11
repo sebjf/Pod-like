@@ -19,6 +19,18 @@ MonoBehaviour:
   curvature: []
   camber: []
   inclination: []
+--- !u!114 &1226316748745404936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4001992816435297627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6e0d4d2ae26671429276585f4a58599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5106066053930418821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,7 +57,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a6b8e1bea26d4419a22d29ac5cddef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1226316748745404936
+--- !u!114 &1374407117148959413
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,9 +66,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4001992816435297627}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6e0d4d2ae26671429276585f4a58599, type: 3}
+  m_Script: {fileID: 11500000, guid: 003f25e792f19124d8392791acae5f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waypoints: {fileID: 0}
+  StartingPosition: -1
 --- !u!1001 &4001992816094949123
 PrefabInstance:
   m_ObjectHideFlags: 0

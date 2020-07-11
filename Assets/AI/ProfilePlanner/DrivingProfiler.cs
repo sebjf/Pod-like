@@ -9,7 +9,7 @@ public class DrivingProfiler : MonoBehaviour
 {
     public string directory = @"Support\DrivingProfiles";
 
-    private Navigator navigator;
+    private PathNavigator navigator;
     private Rigidbody body;
     private DerivedPath path;
     private PathObservations observations;
@@ -55,7 +55,7 @@ public class DrivingProfiler : MonoBehaviour
 
     private void Awake()
     {
-        navigator = GetComponent<Navigator>();
+        navigator = GetComponent<PathNavigator>();
         body = GetComponent<Rigidbody>();
         observations = GetComponent<PathObservations>();
 
@@ -85,7 +85,7 @@ public class DrivingProfiler : MonoBehaviour
     void FixedUpdate()
     {
         // realistically we will not skip a whole waypoint in a frame, but even if we do, we can interpolate to fix as its easy to detect
-        var index = path.WaypointQuery(navigator.PathDistance).waypoint.index;
+        var index = path.WaypointQuery(navigator.Distance).waypoint.index;
 
         if (body)
         {

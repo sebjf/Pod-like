@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Onnx;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Unity.Barracuda;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 [Serializable]
@@ -14,6 +16,8 @@ public class RaceConfiguration
     public List<Car> cars;
     public Car player;
 }
+
+public class RaceEvent : UnityEvent<RaceManager> { }
 
 public class RaceManager : MonoBehaviour
 {
@@ -25,13 +29,20 @@ public class RaceManager : MonoBehaviour
     public int gridForward;
     public int gridSideways;
 
+    public RaceEvent OnRacePrepared;
+
     [NonSerialized]
-    public List<GameObject> running;
+    public List<GameObject> competitors;
 
 
     private void Awake()
     {
-        running = new List<GameObject>();
+        competitors = new List<GameObject>();
+
+        if(OnRacePrepared == null)
+        {
+            OnRacePrepared = new RaceEvent();
+        }
     }
 
     // Update is called once per frame
@@ -64,21 +75,24 @@ public class RaceManager : MonoBehaviour
 
         var cars = config.cars;
 
+        competitors.Clear();
+
         int i = 0;
         for (; i < cars.Count; i++)
         {
             var item = cars[i];
             var car = GameObject.Instantiate(item.Agent, geometry.transform);
             ResetController.PlacePrefab(car.transform, geometry, GridStartDistance(i), GridStartOffset(i));
-            running.Add(car);
+            competitors.Add(car);
         }
         
         var player = GameObject.Instantiate(config.player.Player, geometry.transform);
         ResetController.PlacePrefab(player.transform, geometry, GridStartDistance(i), GridStartOffset(i));
-        running.Add(player);
+        competitors.Add(player);
         raceCamera.Target = player.GetComponent<CamRig>();
-    }
 
+        OnRacePrepared.Invoke(this);
+    }
 
     private float GridStartDistance(int position)
     {

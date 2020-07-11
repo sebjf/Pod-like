@@ -141,6 +141,7 @@ GameObject:
   - component: {fileID: 5158299566702106700}
   - component: {fileID: 7262632918985002092}
   - component: {fileID: 7097604858166644226}
+  - component: {fileID: 6141168029479644695}
   m_Layer: 0
   m_Name: Alien
   m_TagString: Untagged
@@ -49666,6 +49667,21 @@ MonoBehaviour:
   lookAtTarget: {fileID: 993816026}
   positionTarget: {fileID: 1395924278}
   sideView: {fileID: 2035527730}
+--- !u!114 &6141168029479644695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 914759940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 654f2f3a6ce646f4a86fcb40b9990e18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints: {fileID: 0}
+  StartingPosition: -1
+  NoseOffset: 2.7
 --- !u!1 &914759941
 GameObject:
   m_ObjectHideFlags: 0

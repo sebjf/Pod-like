@@ -209,7 +209,7 @@ public class ProfileAgentManager : MonoBehaviour, IAgentManager
         var driver = agent.GetComponent<ProfileController>();
         DestroyImmediate(driver);
 
-        var navigator = agent.GetComponent<Navigator>(); // ensure navigator is initialised first as profile agent will reset it
+        var navigator = agent.GetComponent<PathNavigator>(); // ensure navigator is initialised first as profile agent will reset it
         navigator.waypoints = path;
         navigator.StartingPosition = position;
 

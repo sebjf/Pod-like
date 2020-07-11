@@ -28,13 +28,22 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
     protected WaypointsBroadphase1D broadphase;
 
     [SerializeField]
-    protected TrackGeometry track;
+    protected TrackGeometry _track;
 
     [SerializeField]
     protected PathCache cache;
 
+    public override TrackGeometry track
+    {
+        get { return _track; } 
+    }
+
     private void Awake()
     {
+        if(_track == null)
+        {
+            _track = GetComponentInParent<TrackGeometry>();
+        }
         cache = new PathCache(this, 0.5f);
     }
 
@@ -46,7 +55,7 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
     public virtual void Initialise()
     {
-        track = GetComponentInParent<TrackGeometry>();
+        _track = GetComponentInParent<TrackGeometry>();
 
         var numWaypoints = Mathf.CeilToInt(track.totalLength / Resolution);
         var trueResolution = track.totalLength / numWaypoints;
@@ -70,7 +79,7 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         {
             Initialise();
         }
-        return waypoints.Select(wp => track.TrackSection(wp.x)).ToList();
+        return waypoints.Select(wp => track.Section(wp.x)).ToList();
     }
 
     public void Load(float[] weights)
@@ -90,7 +99,7 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
 
     public Vector3 Position(float x, float w)
     {
-        var T = track.TrackSection(x);
+        var T = track.Section(x);
         return  (1 - ((w * 0.5f) + 0.5f)) * T.left + ((w * 0.5f) + 0.5f) * T.right; // convert w from domain -0.5..0.5 to domain 0..1 then interpolate
     }
 
@@ -149,20 +158,15 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         return query;
     }
 
-    public override TrackFlags Flags(float distance)
+    public override float TrackDistance(float pathdistance)
     {
-        return track.Flags(TrackDistance(distance));
-    }
-
-    public override float TrackDistance(float distance)
-    {
-        var wq = WaypointQuery(distance);
+        var wq = WaypointQuery(pathdistance);
         return Mathf.Lerp(wq.waypoint.x, wq.next.x, wq.t);
     }
 
-    public override TrackSection TrackSection(float distance)
+    public override TrackFlags Flags(float pathdistance)
     {
-        return track.TrackSection(TrackDistance(distance));
+        return track.Flags(TrackDistance(pathdistance));
     }
 
     private void OnDrawGizmos()
@@ -175,7 +179,7 @@ public class DerivedPath : Waypoints<DerivedWaypoint>
         {
             if (track == null)
             {
-                track = GetComponentInParent<TrackGeometry>();
+                _track = GetComponentInParent<TrackGeometry>();
             }
 
             Gizmos.color = Color.red;

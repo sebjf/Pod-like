@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(ResetController))]
-[RequireComponent(typeof(Navigator))]
+[RequireComponent(typeof(PathNavigator))]
 [RequireComponent(typeof(Autopilot))]
 [RequireComponent(typeof(PathObservations))]
 [RequireComponent(typeof(Vehicle))]
@@ -15,7 +15,7 @@ public class ProfileAgent : MonoBehaviour
     public int profileLength = 40;
     public int interval = 10;
 
-    private Navigator navigator;
+    private PathNavigator navigator;
     private ResetController resetController;
     private Autopilot autopilot;
     private PathObservations pathObservations;
@@ -101,7 +101,7 @@ public class ProfileAgent : MonoBehaviour
     private void Awake()
     {
         autopilot = GetComponent<Autopilot>();
-        navigator = GetComponent<Navigator>();
+        navigator = GetComponent<PathNavigator>();
         pathObservations = GetComponent<PathObservations>();
         resetController = GetComponent<ResetController>();
         vehicle = GetComponent<Vehicle>();
@@ -276,7 +276,7 @@ public class ProfileAgent : MonoBehaviour
         node.actual = pathObservations.speed;
         node.sideslip = pathObservations.sideslipAngle;
         node.error = error;
-        node.distance = navigator.PathDistance;
+        node.distance = navigator.Distance;
 
         var prev = Previous(node);
         while (!prev.traction)
@@ -328,7 +328,7 @@ public class ProfileAgent : MonoBehaviour
 
         if (navigator == null)
         {
-            navigator = GetComponent<Navigator>();
+            navigator = GetComponent<PathNavigator>();
         }
 
         if (navigator != null)

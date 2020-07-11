@@ -4,7 +4,7 @@ using UnityEngine;
 using Unity.Barracuda;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Navigator))]
+[RequireComponent(typeof(PathNavigator))]
 [RequireComponent(typeof(Autopilot))]
 [RequireComponent(typeof(Vehicle))]
 public class ProfileController : MonoBehaviour
@@ -20,7 +20,7 @@ public class ProfileController : MonoBehaviour
     private int numObservations;
 
     private Rigidbody body;
-    private Navigator navigator;
+    private PathNavigator navigator;
     private Autopilot autopilot;
     private Vehicle vehicle;
 
@@ -43,7 +43,7 @@ public class ProfileController : MonoBehaviour
     void Start()
     {
         body = GetComponent<Rigidbody>();
-        navigator = GetComponent<Navigator>();
+        navigator = GetComponent<PathNavigator>();
         autopilot = GetComponent<Autopilot>();
         vehicle = GetComponent<Vehicle>();
         workers = new List<IWorker>();
@@ -99,29 +99,19 @@ public class ProfileController : MonoBehaviour
 
         for (int i = 0; i < numObservations; i++)
         {
-            var Q = navigator.waypoints.Query(navigator.PathDistance + i * observationsInterval);
+            var Q = navigator.waypoints.Query(navigator.Distance + i * observationsInterval);
             curvature[i] = Q.Curvature;
             camber[i] = Q.Camber;
             inclination[i] = Q.Inclination;
         }
 
-        // pack the inputs F
+        // pack the inputs F ((i * 3) + 0 + 2) (pack inputs C (i + numObservations * 0 + 1))
         for (int i = 0; i < numObservations; i++)
         {
             inputs[(i * 3) + 0 + 2] = curvature[i] * 20f;
             inputs[(i * 3) + 1 + 2] = camber[i] * 200f;
             inputs[(i * 3) + 2 + 2] = inclination[i] * 3f;
         }
-
-        // pack inputs C
-        /*
-        for (int i = 0; i < numObservations; i++)
-        {
-            inputs[i + numObservations * 0 + 1] = curvature[i] * 20f;
-            inputs[i + numObservations * 1 + 1] = camber[i] * 200f;
-            inputs[i + numObservations * 2 + 1] = inclination[i] * 3f;
-        }
-        */
 
         estimations.Clear();
         foreach (var worker in workers)

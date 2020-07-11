@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 3377283260564951050}
   - component: {fileID: 343465207}
   - component: {fileID: 7185422284977984932}
-  - component: {fileID: -5226852784286650872}
+  - component: {fileID: 1034336441436742081}
   m_Layer: 8
   m_Name: Gamma
   m_TagString: Untagged
@@ -54339,7 +54339,7 @@ MonoBehaviour:
   lookAtTarget: {fileID: 48921566}
   positionTarget: {fileID: 1780430346}
   sideView: {fileID: 159124328}
---- !u!114 &-5226852784286650872
+--- !u!114 &1034336441436742081
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54348,11 +54348,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 474698328}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57b43f307b34f5741a615aaaf87f5591, type: 3}
+  m_Script: {fileID: 11500000, guid: 654f2f3a6ce646f4a86fcb40b9990e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: {fileID: 0}
   StartingPosition: -1
+  NoseOffset: 3.58
 --- !u!1 &681467350
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,8 +4,27 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 
-[CustomEditor(typeof(Navigator))]
-public class NavigatorEditor : Editor
+[CustomEditor(typeof(TrackNavigator))]
+public class TrackNavigatorEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("StartingPosition"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("NoseOffset"));
+
+        serializedObject.ApplyModifiedProperties();
+
+        var navigator = target as Navigator;
+
+        EditorGUILayout.LabelField("Distance", navigator.Distance.ToString());
+        EditorGUILayout.LabelField("Lap", navigator.Lap.ToString());
+    }
+}
+
+[CustomEditor(typeof(PathNavigator))]
+public class PathNavigatorEditor : Editor
 {
     public override void OnInspectorGUI()
     {
@@ -26,12 +45,13 @@ public class NavigatorEditor : Editor
         }
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("StartingPosition"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("NoseOffset"));
 
         serializedObject.ApplyModifiedProperties();
 
         var navigator = target as Navigator;
 
-        EditorGUILayout.LabelField("Distance", navigator.PathDistance.ToString());
+        EditorGUILayout.LabelField("Distance", navigator.Distance.ToString());
         EditorGUILayout.LabelField("Lap", navigator.Lap.ToString());
     }
 }

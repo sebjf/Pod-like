@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 public class PathObservations : MonoBehaviour
 {
-    private Navigator navigator;
+    private PathNavigator navigator;
     private Rigidbody body;
     private Vehicle vehicle;
 
@@ -45,7 +45,7 @@ public class PathObservations : MonoBehaviour
 
     private void Awake()
     {
-        navigator = GetComponent<Navigator>();
+        navigator = GetComponent<PathNavigator>();
         body = GetComponent<Rigidbody>();
         vehicle = GetComponent<Vehicle>();
         trackLayerMask = LayerMask.GetMask("Track");
@@ -61,14 +61,14 @@ public class PathObservations : MonoBehaviour
     {
         Profiler.BeginSample("Query");
 
-        var q = navigator.waypoints.Query(navigator.PathDistance);
+        var q = navigator.waypoints.Query(navigator.Distance);
 
         var trackCenter = q.Midpoint;
         var trackForward = q.Forward;
         var curvature = q.Curvature;
         var bodyPosition = body.position;
 
-        jumprulesflag = navigator.waypoints.Flags(navigator.PathDistance).jumprules;
+        jumprulesflag = navigator.waypoints.Flags(navigator.Distance).jumprules;
 
         Profiler.EndSample();
         Profiler.BeginSample("Understeer");

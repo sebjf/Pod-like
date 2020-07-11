@@ -21,7 +21,7 @@ public class InterpolatedPath : DerivedPath
     {
         sp = GetComponentInParent<ShortestPath>();
         mcp = GetComponentInParent<MinimumCurvaturePath>();
-        track = GetComponentInParent<TrackGeometry>();
+        _track = GetComponentInParent<TrackGeometry>();
     }
 
     private void TryAwake()

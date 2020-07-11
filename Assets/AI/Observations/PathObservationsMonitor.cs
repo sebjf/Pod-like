@@ -29,7 +29,7 @@ public class PathObservationsMonitor : MonoBehaviour
         {
             if (activateGameObject.activeInHierarchy)
             {
-                var navigator = UnityEditor.Selection.activeGameObject.GetComponent<Navigator>();
+                var navigator = UnityEditor.Selection.activeGameObject.GetComponent<PathNavigator>();
                 if (navigator)
                 {
                     if (Curvature.Length != numObservations)
@@ -42,7 +42,7 @@ public class PathObservationsMonitor : MonoBehaviour
 
                     for (int i = 0; i < numObservations; i++)
                     {
-                        var d = navigator.PathDistance + i * pathInterval;
+                        var d = navigator.Distance + i * pathInterval;
                         var q = navigator.waypoints.Query(d);
                         Camber[i] = q.Camber;
                         Curvature[i] = q.Curvature;
@@ -67,13 +67,13 @@ public class PathObservationsMonitor : MonoBehaviour
         {
             if (activateGameObject.activeInHierarchy)
             {
-                var navigator = UnityEditor.Selection.activeGameObject.GetComponent<Navigator>();
+                var navigator = UnityEditor.Selection.activeGameObject.GetComponent<PathNavigator>();
                 if (navigator)
                 {
                     Gizmos.color = Color.yellow;
                     for (int i = 0; i < numObservations; i++)
                     {
-                        Gizmos.DrawWireSphere(navigator.waypoints.Query(navigator.PathDistance + i * pathInterval).Midpoint, 0.25f);
+                        Gizmos.DrawWireSphere(navigator.waypoints.Query(navigator.Distance + i * pathInterval).Midpoint, 0.25f);
                     }
                 }
             }

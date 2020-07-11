@@ -15,7 +15,7 @@ public class PathAgentManager : MonoBehaviour, IAgentManager
 
     public class Agent
     {
-        public Navigator navigator;
+        public PathNavigator navigator;
         public InterpolatedPath path;
         public float[] times;
     }
@@ -99,7 +99,7 @@ public class PathAgentManager : MonoBehaviour, IAgentManager
         path.coefficient = coefficient;
         path.Initialise();
 
-        var navigator = agent.GetComponent<Navigator>();
+        var navigator = agent.GetComponent<PathNavigator>();
         navigator.waypoints = path;
         navigator.StartingPosition = 0;
 
@@ -129,7 +129,7 @@ public class PathAgentManager : MonoBehaviour, IAgentManager
     {
         foreach (var agent in agents)
         {
-            agent.times[agent.path.WaypointQuery(agent.navigator.PathDistance).waypoint.index] = Time.time;
+            agent.times[agent.path.WaypointQuery(agent.navigator.Distance).waypoint.index] = Time.time;
 
             if(agent.navigator.Lap >= 1)
             {

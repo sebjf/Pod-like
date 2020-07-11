@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using UnityEngine;
 
-[RequireComponent(typeof(Navigator))]
+[RequireComponent(typeof(PathNavigator))]
 public class Autopilot : MonoBehaviour
 {
     public float speed;
@@ -16,7 +16,7 @@ public class Autopilot : MonoBehaviour
     public float maxLookahead = 50f;
 
     private Vehicle vehicle;
-    private Navigator navigator;
+    private PathNavigator navigator;
 
     [NonSerialized]
     public Vector3 worldtarget;
@@ -24,7 +24,7 @@ public class Autopilot : MonoBehaviour
     private void Awake()
     {
         vehicle = GetComponent<Vehicle>();
-        navigator = GetComponent<Navigator>();
+        navigator = GetComponent<PathNavigator>();
     }
 
     // Update is called once per frame
@@ -33,7 +33,7 @@ public class Autopilot : MonoBehaviour
         var maxc = 0f;
         for (int i = 0; i < maxLookahead; i++)
         {
-            var c = navigator.waypoints.Query(navigator.PathDistance + i).Curvature;
+            var c = navigator.waypoints.Query(navigator.Distance + i).Curvature;
             maxc = Mathf.Max(Mathf.Abs(c), maxc);
         }
         var h = 1f; // clearance
@@ -41,7 +41,7 @@ public class Autopilot : MonoBehaviour
 
         var lookahead = Mathf.Min(minbase, maxLookahead);
 
-        worldtarget = navigator.waypoints.Query(navigator.PathDistance + lookahead).Midpoint;
+        worldtarget = navigator.waypoints.Query(navigator.Distance + lookahead).Midpoint;
 
         var targetpoint = transform.InverseTransformPoint(worldtarget);
         targetpoint.y = 0;

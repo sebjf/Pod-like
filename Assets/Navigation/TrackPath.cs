@@ -29,6 +29,7 @@ public struct TrackSection
 {
     public Vector3 left;
     public Vector3 right;
+    public Vector3 direction;
     public float trackdistance;
     public bool jump;
 }
@@ -45,10 +46,12 @@ public abstract class TrackPath : MonoBehaviour
 
     public abstract float Distance(Vector3 position, float lastDistance);
 
+    public abstract TrackGeometry track { get; }
+
+    public abstract float TrackDistance(float pathdistance);
+
     public abstract PathQuery Query(float distance);
     public abstract TrackFlags Flags(float distance);
-    public abstract float TrackDistance(float distance);
-    public abstract TrackSection TrackSection(float distance);
 
     /// <summary>
     /// Computes the curvature of Y. (Where X is *ahead* by h and Z is behind by h.)

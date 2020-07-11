@@ -131,6 +131,12 @@ class VehicleTools : EditorWindow
             curve.AddKey(new Keyframe(2000f, 0f, -0.01201525f, -0.01201525f));
         }
 
+        var navigator = asset.GetComponent<TrackNavigator>();
+        if(navigator == null)
+        {
+            navigator = asset.AddComponent<TrackNavigator>();
+        }
+
         var camrigguid = AssetDatabase.FindAssets("CamRig t:GameObject").First();
         var camrig = Instantiate(AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(camrigguid), typeof(GameObject))) as GameObject;
         camrig.transform.SetParent(asset.transform);

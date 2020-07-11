@@ -4,11 +4,15 @@ using System;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class Navigator : MonoBehaviour
+public abstract class Navigator : MonoBehaviour
 {
     public TrackPath waypoints;
-
     public float StartingPosition = -1;
+
+    public virtual Vector3 position
+    {
+        get { return transform.position; }
+    }
 
     /// <summary>
     /// Total Distance in Track Space travelled by the car (distance travelled across all laps)
@@ -23,13 +27,10 @@ public class Navigator : MonoBehaviour
     /// Distance around Path in Path Space (the distance along a single lap)
     /// </summary>
     [NonSerialized]
-    public float PathDistance;
+    public float Distance;
 
     [NonSerialized]
-    public float PreviousPathDistance;
-
-    [NonSerialized]
-    public float distanceTravelledInFrame;
+    public float PreviousDistance;
 
     [NonSerialized]
     public int Lap;
@@ -47,11 +48,10 @@ public class Navigator : MonoBehaviour
         }
 
         Lap = -1;
-        PathDistance = waypoints.Distance(transform.position, StartingPosition);
-        PreviousPathDistance = PathDistance;
+        Distance = waypoints.Distance(position, StartingPosition);
+        PreviousDistance = Distance;
         TotalDistanceTravelled = 0f;
         PreviousTotalDistanceTravelled = 0f;
-        distanceTravelledInFrame = 0f;
     }
 
     // Update is called once per frame
@@ -62,24 +62,24 @@ public class Navigator : MonoBehaviour
             return;
         }
 
-        PreviousPathDistance = PathDistance;
+        PreviousDistance = Distance;
 
-        PathDistance = waypoints.Distance(transform.position, PathDistance);
+        Distance = waypoints.Distance(position, Distance);
 
-        distanceTravelledInFrame = PathDistance - PreviousPathDistance;
+        var distanceTravelledInFrame = Distance - PreviousDistance;
 
         if(Mathf.Abs(distanceTravelledInFrame) > (waypoints.totalLength / 2))
         {
             // we have crossed over the finish line. figure out which direction so we know if we going forwards or backwards in this frame.
 
-            if(PathDistance < PreviousPathDistance) // forwards
+            if(Distance < PreviousDistance) // forwards
             {
-                distanceTravelledInFrame = (waypoints.totalLength - PreviousPathDistance) + PathDistance;
+                distanceTravelledInFrame = (waypoints.totalLength - PreviousDistance) + Distance;
                 Lap++;
             }
-            if(PathDistance > PreviousPathDistance) // backwards
+            if(Distance > PreviousDistance) // backwards
             {
-                distanceTravelledInFrame = -(PreviousPathDistance + (waypoints.totalLength - PathDistance));
+                distanceTravelledInFrame = -(PreviousDistance + (waypoints.totalLength - Distance));
                 Lap--;
             }
         }
@@ -97,7 +97,7 @@ public class Navigator : MonoBehaviour
 
     public TrackPosition GetTrackPosition()
     {
-        var section = waypoints.TrackSection(PathDistance);
+        var section = waypoints.track.Section(waypoints.TrackDistance(Distance));
         var midpoint = (section.left + section.right) * 0.5f;
         var tangent = (section.right - midpoint).normalized;
         var width = (section.right - section.left).magnitude;
@@ -112,12 +112,7 @@ public class Navigator : MonoBehaviour
         return p;
     }
 
-    public Vector3 GetPathPosition()
-    {
-        return waypoints.Query(PathDistance).Midpoint;
-    }
-
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         if (!Application.isPlaying)
         {
@@ -134,12 +129,13 @@ public class Navigator : MonoBehaviour
             return;
         }
 
-        var query = waypoints.Query(PathDistance);
+        var query = waypoints.Query(Distance);
 
         var midline = query.Midpoint;
         var forward = query.Forward;
 
-        Gizmos.DrawLine(midline, transform.position);
+        Gizmos.color = Color.white;
+        Gizmos.DrawLine(midline, position);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(midline, forward);
     }

@@ -5,11 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Vehicle))]
 public class PathController : MonoBehaviour
 {
-    private Navigator navigator;
+    private PathNavigator navigator;
 
     private void Awake()
     {
-        navigator = GetComponent<Navigator>();
+        navigator = GetComponent<PathNavigator>();
     }
 
     // Start is called before the first frame update
