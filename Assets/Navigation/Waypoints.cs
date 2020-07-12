@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.Profiling;
+using UnityEngine.UIElements;
 
 [Serializable]
 public class Waypoint : IWaypoint1D // we can keep waypoint as a class and use references, so long as we are careful not to expect them to remain between serialisation. using class also means we can compare to null.
@@ -178,41 +180,109 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
         broadphase1d = null;
     }
 
+
+
     /// <summary>
-    /// Returns the absolute distance along the track for the position
+    /// Returns the absolute distance along the path for the position
     /// </summary>
-    public override float Distance(Vector3 position, float expectedDistance)
+    public override float Distance(Vector3 position, float startDistance)
     {
-        float smallestDistance = float.MaxValue;
-        float result = float.NaN;
+        var start = WaypointQuery(startDistance).waypoint.index;
 
-        int start = 0;
-        int end = waypoints.Count;
+        Result previous = CheckDistance(position, start);
 
-        if (expectedDistance != -1)
+        for (int i = 1; i < waypoints.Count; i++) // search in both directions sequentially
         {
-            start = WaypointQuery(expectedDistance).waypoint.index;
-            start -= 2;
-            end = start + 8;
-        }
-
-        for (int i = start; i < end; i++)
-        {
-            var wp = Waypoint(i);
-            var wpposition = Position(wp);
-            var nxposition = Position(Next(wp));
-            var dir = (nxposition - wpposition).normalized;
-            var distanceFoward = Mathf.Clamp(Vector3.Dot(position - wpposition, dir), 0, wp.length); // projection into line between wp and next
-            var projected = wpposition + dir * distanceFoward;
-            var distance = (position - projected).magnitude;
-
-            if (distance < smallestDistance)
+            if (CheckResult(ref previous, CheckDistance(position, start + i), startDistance))
             {
-                smallestDistance = distance;
-                result = Mathf.Lerp(wp.start, wp.end, distanceFoward / wp.length);
+                break;
+            }
+        }
+        for (int i = 1; i < waypoints.Count; i++)
+        {
+            if (CheckResult(ref previous, CheckDistance(position, start - i), startDistance))
+            {
+                break;
             }
         }
 
+        return previous.trackDistance;
+    }
+
+    private float ShortestDistance(float a, float b) // around the track
+    {
+        var d = Mathf.Abs(a - b);
+
+        if (d > (totalLength / 2f))
+        {
+            if(b > a)
+            {
+                d = a + (totalLength - b);
+            }else
+            {
+                d = b + (totalLength - a);
+            }
+        }
+
+        return d;
+    }
+
+    private bool CheckResult(ref Result previous, Result current, float reference)
+    {
+        var currentTotalDistance = current.lateralDistance;// + ShortestDistance(current.trackDistance, previous.trackDistance);
+        var previousTotalDistance = previous.lateralDistance;
+
+        if (currentTotalDistance < previousTotalDistance)
+        {
+            previous = current;
+        }
+        else
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private struct Result
+    {
+        public float lateralDistance;
+        public float trackDistance;
+        public bool valid;
+    }
+
+    private Result CheckDistance(Vector3 position, int i)
+    {
+        var wp = Waypoint(i);
+        var wpposition = Position(wp);
+        var nxposition = Position(Next(wp));
+        var dir = (nxposition - wpposition).normalized;
+        var a = Vector3.Dot(position - wpposition, dir) / wp.length;
+
+        Result result;
+        result.valid = (a >= 0f) && (a <= 1f);
+
+        a = Mathf.Clamp(a, 0, 1);
+
+        var projected = wpposition + dir * a * wp.length;
+        var distance = (position - projected).magnitude;
+
+        result.lateralDistance = distance;
+
+        var trackDistance = Mathf.Lerp(wp.start, wp.end, a);
+
+        Debug.DrawLine(Query(trackDistance).Midpoint, position);
+
+        result.trackDistance = trackDistance;
+
+        if (result.valid)
+        {
+            var section = track.Section(trackDistance);
+
+            var side = section.right - section.left;
+            var e = Vector3.Dot(position - section.left, side.normalized) / side.magnitude;
+        }
+        
         return result;
     }
 }
