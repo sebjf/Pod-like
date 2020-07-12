@@ -45,7 +45,6 @@ public class PathNavigatorEditor : Editor
         }
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("StartingPosition"));
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("NoseOffset"));
 
         serializedObject.ApplyModifiedProperties();
 

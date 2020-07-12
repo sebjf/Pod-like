@@ -11,6 +11,15 @@ public class TrackNavigator : Navigator
         waypoints = GetComponentInParent<TrackGeometry>();
     }
 
+    public override void Reset()
+    {
+        if (waypoints == null)
+        {
+            waypoints = GetComponentInParent<TrackGeometry>();
+        }
+        base.Reset();
+    }
+
     public override Vector3 position
     {
         get { return transform.position + transform.forward * NoseOffset; }

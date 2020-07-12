@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[RequireComponent(typeof(ResetController))]
 [RequireComponent(typeof(PathNavigator))]
 [RequireComponent(typeof(Autopilot))]
 [RequireComponent(typeof(PathObservations))]
@@ -16,11 +15,8 @@ public class ProfileAgent : MonoBehaviour
     public int interval = 10;
 
     private PathNavigator navigator;
-    private ResetController resetController;
     private Autopilot autopilot;
     private PathObservations pathObservations;
-    private Vehicle vehicle;
-    private Rigidbody body;
 
     public float speedStepSize = 5f;
     public float errorThreshold = 1f; // tolerance must be high enough to allow slight corner cutting, since the rabbit is a little ahead of the car
@@ -103,9 +99,6 @@ public class ProfileAgent : MonoBehaviour
         autopilot = GetComponent<Autopilot>();
         navigator = GetComponent<PathNavigator>();
         pathObservations = GetComponent<PathObservations>();
-        resetController = GetComponent<ResetController>();
-        vehicle = GetComponent<Vehicle>();
-        body = GetComponent<Rigidbody>();
         logToConsole = false;
         lastUndersteerError = 0f;
         navigator.Reset();
@@ -315,7 +308,7 @@ public class ProfileAgent : MonoBehaviour
 
     public void Reset()
     {
-        resetController.ResetPosition();
+        ResetController.ResetPosition(navigator);
     }
 
 #if UNITY_EDITOR

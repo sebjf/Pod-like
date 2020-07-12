@@ -27301,7 +27301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 23.76
+      value: 36.7
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.y
@@ -27309,7 +27309,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -544.76
+      value: -482.5
       objectReference: {fileID: 0}
     - target: {fileID: 474698329, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
       propertyPath: m_LocalRotation.x
@@ -27343,8 +27343,39 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 1034336441436742081, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: waypoints
+      value: 
+      objectReference: {fileID: 605557291}
+    - target: {fileID: 1034336441436742081, guid: 18c0919ec78c5d242b13903617a9e1ae,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 1034336441436742081, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 18c0919ec78c5d242b13903617a9e1ae, type: 3}
+--- !u!1 &1081926556 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 474698328, guid: 18c0919ec78c5d242b13903617a9e1ae,
+    type: 3}
+  m_PrefabInstance: {fileID: 1081926555}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1081926557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081926556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003f25e792f19124d8392791acae5f5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints: {fileID: 605557296}
+  StartingPosition: -1
 --- !u!1001 &1120310923
 PrefabInstance:
   m_ObjectHideFlags: 0

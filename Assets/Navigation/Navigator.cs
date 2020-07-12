@@ -40,7 +40,7 @@ public abstract class Navigator : MonoBehaviour
         Reset();
     }
 
-    public void Reset()
+    public virtual void Reset()
     {
         if (waypoints == null)
         {
@@ -134,7 +134,7 @@ public abstract class Navigator : MonoBehaviour
         var midline = query.Midpoint;
         var forward = query.Forward;
 
-        Gizmos.color = Color.white;
+        Gizmos.color = Color.green;
         Gizmos.DrawLine(midline, position);
         Gizmos.color = Color.red;
         Gizmos.DrawRay(midline, forward);

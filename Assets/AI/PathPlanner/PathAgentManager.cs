@@ -103,8 +103,7 @@ public class PathAgentManager : MonoBehaviour, IAgentManager
         navigator.waypoints = path;
         navigator.StartingPosition = 0;
 
-        var reset = agent.GetComponent<ResetController>();
-        reset.ResetPosition();
+        ResetController.ResetPosition(navigator);
 
         agent.SetActive(true); // prefab may be disabled depending on when it was last updated
         SetLayer(agent, TrainingProperties.AgentLayer); // for now car but we may add a training car layer in the future

@@ -213,6 +213,12 @@ public class ProfileAgentManager : MonoBehaviour, IAgentManager
         navigator.waypoints = path;
         navigator.StartingPosition = position;
 
+        var tracknavigator = agent.GetComponentInChildren<TrackNavigator>();
+        if(tracknavigator != null)
+        {
+            DestroyImmediate(tracknavigator); // don't need this so dont waste cpu time
+        }
+
         var profileAgent = agent.GetComponent<ProfileAgent>();
 
         if(!profileAgent)
@@ -222,13 +228,10 @@ public class ProfileAgentManager : MonoBehaviour, IAgentManager
 
         profileAgent.profileLength = profileLength;
         profileAgent.speedStepSize = profileSpeedStepSize;
-        //profileAgent.errorThreshold = profileErrorThreshold;
         profileAgent.interval = driver.observationsInterval;
 
         profileAgent.CreateProfile(); // re-create the profile with the updated parameters as CreateProfile will be called with the prefabs parameters by PathFinder.Awake() on AddComponent
-
-        var reset = agent.GetComponent<ResetController>();
-        reset.ResetPosition();
+        profileAgent.Reset();
 
         agent.SetActive(true); // prefab may be disabled depending on when it was last updated
 
