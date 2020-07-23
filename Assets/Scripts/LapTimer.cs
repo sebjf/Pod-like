@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class LapTimer : MonoBehaviour
 {
-    private Navigator navigator;
+    private TrackNavigator navigator;
 
     private float startTime;
     private float previousLap;
 
     private void Awake()
     {
-        navigator = GetComponent<Navigator>();
+        navigator = GetComponent<TrackNavigator>();
     }
 
     // Start is called before the first frame update
@@ -24,11 +24,20 @@ public class LapTimer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(navigator.Lap > 0 && navigator.Lap != previousLap)
+        if (navigator.Lap != previousLap)
         {
-            Debug.Log(name + " Lap Time: " + (Time.time - startTime));
-            startTime = Time.time;
-            previousLap = navigator.Lap;
+            if (navigator.Lap == 0)
+            {
+                startTime = Time.time;
+            }
+
+            if (navigator.Lap > 0)
+            {
+                Debug.Log(name + " Lap Time: " + (Time.time - startTime));
+                startTime = Time.time;
+            }
         }
+
+        previousLap = navigator.Lap;
     }
 }
