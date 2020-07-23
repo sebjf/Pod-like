@@ -59,6 +59,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0
   maxLookahead: 50
+--- !u!114 &7846503029915050915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4001992816435297627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b498f94b52e8a644498ccd3eaf833aa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Gamma
+  Difficulty: 1
 --- !u!1001 &4001992816094949123
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -59,6 +59,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6e0d4d2ae26671429276585f4a58599, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &780475183769970528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2326825649506877170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b498f94b52e8a644498ccd3eaf833aa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Truck
+  Difficulty: 1
 --- !u!1001 &8331423798382269670
 PrefabInstance:
   m_ObjectHideFlags: 0

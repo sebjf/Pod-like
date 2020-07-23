@@ -21,10 +21,14 @@ public class Autopilot : MonoBehaviour
     [NonSerialized]
     public Vector3 worldtarget;
 
+    [NonSerialized]
+    public float speedScalar;
+
     private void Awake()
     {
         vehicle = GetComponent<Vehicle>();
         navigator = GetComponent<PathNavigator>();
+        speedScalar = 1f;
     }
 
     // Update is called once per frame
@@ -52,7 +56,7 @@ public class Autopilot : MonoBehaviour
 
         vehicle.steeringAngle = Mathf.Clamp(angle, -extrema, extrema) / extrema;
 
-        var u = speed - vehicle.speed;
+        var u = (speedScalar * speed) - vehicle.speed;
 
         if (u >= 0)
         {

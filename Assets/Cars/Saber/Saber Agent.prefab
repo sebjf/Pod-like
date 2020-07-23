@@ -47,6 +47,20 @@ MonoBehaviour:
   curvature: []
   camber: []
   inclination: []
+--- !u!114 &4489779576340118263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3036070618562730840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b498f94b52e8a644498ccd3eaf833aa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Saber
+  Difficulty: 1
 --- !u!114 &6406187590653296433
 MonoBehaviour:
   m_ObjectHideFlags: 0

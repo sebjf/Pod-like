@@ -1,5 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-5549548870347984567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6425727429087473606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b498f94b52e8a644498ccd3eaf833aa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Bakar
+  Difficulty: 1
 --- !u!114 &-329568099747803450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,19 +82,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 40297176, guid: 567d37c7d21de9c4ebec5fe84c3eef82, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1311152936, guid: 567d37c7d21de9c4ebec5fe84c3eef82, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 1592011214, guid: 567d37c7d21de9c4ebec5fe84c3eef82, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 2040806978, guid: 567d37c7d21de9c4ebec5fe84c3eef82, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 919132149062915434, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
@@ -130,12 +144,12 @@ PrefabInstance:
     - target: {fileID: 3422757078275764176, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3422757078461082484, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3422757078610913552, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
@@ -145,42 +159,42 @@ PrefabInstance:
     - target: {fileID: 3422757078610913552, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3422757078925194455, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 3422757079853321813, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5912619988193725454, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5912619988878833292, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5912619989448775433, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5912619989783663049, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5912619989931856813, guid: 567d37c7d21de9c4ebec5fe84c3eef82,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 567d37c7d21de9c4ebec5fe84c3eef82, type: 3}
