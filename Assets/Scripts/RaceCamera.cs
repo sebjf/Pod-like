@@ -13,6 +13,7 @@ public class RaceCamera : MonoBehaviour
         public KeyCode switchViewKey = KeyCode.Space;
     }
 
+
     [HideInInspector]
     public CamRig[] cameraRigs;
 
@@ -61,8 +62,8 @@ public class RaceCamera : MonoBehaviour
 
         if (m_ShowingSideView)
         {
-            transform.position = Target.sideView.position;
-            transform.rotation = Target.sideView.transform.rotation;
+            transform.position = Vector3.Lerp(transform.position, Target.sideView.position, Time.deltaTime * smoothing * 0.5f);
+            transform.LookAt(Target.lookAtTarget);
         }
         else
         {
