@@ -31,15 +31,10 @@ public class Leaderboard : MonoBehaviour, IComparer<Entrant>
 
     private void Awake()
     {
-        foreach (var item in GetComponentsInChildren<RaceManager>())
-        {
-            item.OnRacePrepared.AddListener(OnRacePrepared);
-        }
-
         drivers = new List<Entrant>();
     }
 
-    void OnRacePrepared(RaceManager manager)
+    public void OnRacePrepared(RaceManager manager)
     {
         drivers.Clear();
         drivers.AddRange(manager.competitors.Select(x => new Entrant(x)));

@@ -15,9 +15,16 @@ public class RaceConfiguration
     public Circuit circuit;
     public List<Car> cars;
     public Car player;
+    public float difficulty;
 }
 
-public class RaceEvent : UnityEvent<RaceManager> { }
+public enum RaceStage
+{
+    Preparation,
+    Countdown,
+    Race,
+    Finish
+}
 
 public class RaceManager : MonoBehaviour
 {
@@ -29,20 +36,18 @@ public class RaceManager : MonoBehaviour
     public int gridForward;
     public int gridSideways;
 
-    public RaceEvent OnRacePrepared;
-
     [NonSerialized]
     public List<GameObject> competitors;
 
+    [NonSerialized]
+    public RaceStage state;
+
+    [NonSerialized]
+    public int countdown;
 
     private void Awake()
     {
         competitors = new List<GameObject>();
-
-        if(OnRacePrepared == null)
-        {
-            OnRacePrepared = new RaceEvent();
-        }
     }
 
     // Update is called once per frame
@@ -63,11 +68,15 @@ public class RaceManager : MonoBehaviour
 
     private IEnumerator ConfigureRaceWorker(RaceConfiguration config)
     {
+        state = RaceStage.Preparation;
+
         var operation = SceneManager.LoadSceneAsync(config.circuit.sceneName, LoadSceneMode.Additive);
         while(!operation.isDone)
         {
             yield return null;
         }
+
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(config.circuit.sceneName));
 
         var scene = SceneManager.GetSceneByName(config.circuit.sceneName);
         var track = scene.GetRootGameObjects().Select(g => g.GetComponentInChildren<Track>()).Where(o => o != null).First();
@@ -85,13 +94,37 @@ public class RaceManager : MonoBehaviour
             ResetController.PlacePrefab(car.transform, geometry, GridStartDistance(i), GridStartOffset(i));
             competitors.Add(car);
         }
-        
-        var player = GameObject.Instantiate(config.player.Player, geometry.transform);
-        ResetController.PlacePrefab(player.transform, geometry, GridStartDistance(i), GridStartOffset(i));
-        competitors.Add(player);
-        raceCamera.Target = player.GetComponent<CamRig>();
 
-        OnRacePrepared.Invoke(this);
+        if (config.player != null)
+        {
+            var player = GameObject.Instantiate(config.player.Player, geometry.transform);
+            ResetController.PlacePrefab(player.transform, geometry, GridStartDistance(i), GridStartOffset(i));
+            competitors.Add(player);
+        }
+
+        raceCamera.cameraRigs = competitors.Select(g => g.GetComponentInChildren<CamRig>()).ToArray();
+        raceCamera.Target = competitors.Last().GetComponent<CamRig>();
+
+        SendMessage("OnRacePrepared", this, SendMessageOptions.DontRequireReceiver);
+
+        StartCoroutine(CountdownWorker());
+    }
+
+    private IEnumerator CountdownWorker()
+    {
+        state = RaceStage.Countdown;
+        for (int i = 3; i > 0; i--)
+        {
+            countdown = i;
+            yield return new WaitForSeconds(1f);
+        }
+        StartCoroutine(RaceWorker());
+    }
+
+    private IEnumerator RaceWorker()
+    {
+        state = RaceStage.Race;
+        yield break;
     }
 
     private float GridStartDistance(int position)
