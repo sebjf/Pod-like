@@ -209,24 +209,6 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
         return previous.trackDistance;
     }
 
-    private float ShortestDistance(float a, float b) // around the track
-    {
-        var d = Mathf.Abs(a - b);
-
-        if (d > (totalLength / 2f))
-        {
-            if(b > a)
-            {
-                d = a + (totalLength - b);
-            }else
-            {
-                d = b + (totalLength - a);
-            }
-        }
-
-        return d;
-    }
-
     private bool CheckResult(ref Result previous, Result current, float reference)
     {
         var currentTotalDistance = current.lateralDistance;// + ShortestDistance(current.trackDistance, previous.trackDistance);
@@ -270,8 +252,6 @@ public abstract class Waypoints<T> : TrackPath where T : Waypoint
         result.lateralDistance = distance;
 
         var trackDistance = Mathf.Lerp(wp.start, wp.end, a);
-
-        Debug.DrawLine(Query(trackDistance).Midpoint, position);
 
         result.trackDistance = trackDistance;
 
