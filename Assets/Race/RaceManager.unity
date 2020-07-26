@@ -273,8 +273,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 331d33499e5699440a8230204951ff6a, type: 2}
     - {fileID: 11400000, guid: bb3e9d6ae8550dc4e82319273465370e, type: 2}
     - {fileID: 11400000, guid: 3d0911cc645d88a47b89b972f3135829, type: 2}
-    - {fileID: 11400000, guid: ffbbbc0dc274043448b8bfa6a73fabef, type: 2}
-    player: {fileID: 0}
+    player: {fileID: 11400000, guid: ffbbbc0dc274043448b8bfa6a73fabef, type: 2}
     difficulty: 1
   gridForward: 10
   gridSideways: 10

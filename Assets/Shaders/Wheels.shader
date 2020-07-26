@@ -1,4 +1,4 @@
-﻿Shader "POD/Wheels"
+﻿Shader "Cars/Wheels"
 {
     Properties
     {

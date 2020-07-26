@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 8663071452629514428}
   - component: {fileID: 5268318448180272168}
   - component: {fileID: 8164078559752489742}
+  - component: {fileID: 1402769239289156324}
   m_Layer: 0
   m_Name: default
   m_TagString: Untagged
@@ -182,8 +183,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -5898445423523695066, guid: 92077b981e2f3634387b3018ad2c6e4b, type: 3}
-  - {fileID: 7363477993353334421, guid: 92077b981e2f3634387b3018ad2c6e4b, type: 3}
+  - {fileID: 2100000, guid: fe1ab389548e1c440a7b8bc4029ae146, type: 2}
+  - {fileID: 2100000, guid: d77f7cf13829513419c0a1b8514a5e4f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -218,6 +219,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: 92077b981e2f3634387b3018ad2c6e4b, type: 3}
+--- !u!114 &1402769239289156324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3339535347308761805}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51ee4fa5590483548a41ddca973d1ec6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6851324707432372677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -427,7 +440,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 954310a35c68e6946b40b942f0e5406a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bodyCollider: {fileID: 0}
   throttle: 0
   steeringAngle: 0
   brake: 0
