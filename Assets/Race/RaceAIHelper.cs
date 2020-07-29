@@ -16,7 +16,7 @@ public class RaceAIHelper : MonoBehaviour
     public void OnRacePrepared(RaceManager manager)
     {
         this.manager = manager;
-        agents = manager.competitors.Select(g => g.GetComponent<Agent>()).Where(a => a != null).ToList();
+        agents = manager.race.competitors.Select(c => c.vehicle.GetComponent<Agent>()).Where(a => a != null).ToList();
         difficulty = manager.configuration.difficulty;
     }
 
@@ -35,7 +35,7 @@ public class RaceAIHelper : MonoBehaviour
         foreach (var agent in agents)
         {
             agent.Difficulty = difficulty;
-            agent.state = manager.state;
+            agent.state = manager.stage;
         }
     }
 }

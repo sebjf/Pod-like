@@ -54996,6 +54996,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7062637675167717982}
   - component: {fileID: 1725350241617260950}
+  - component: {fileID: 9212430926598146252}
   m_Layer: 8
   m_Name: Engine
   m_TagString: Untagged
@@ -55027,11 +55028,11 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: aa0e16126d0f21b488a0ecdfe2f05f70, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -55113,6 +55114,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &9212430926598146252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5013138539731400185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f4088f749c4c64384a1dc3b9ebf061, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8429203872983542737
 GameObject:
   m_ObjectHideFlags: 0

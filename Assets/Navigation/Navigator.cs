@@ -47,7 +47,6 @@ public abstract class Navigator : MonoBehaviour
             return;
         }
 
-        Lap = -1;
         Distance = waypoints.Distance(position, StartingPosition);
         PreviousDistance = Distance;
         TotalDistanceTravelled = 0f;

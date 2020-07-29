@@ -25,6 +25,9 @@ public class Vehicle : MonoBehaviour
     [HideInInspector]
     public new Rigidbody rigidbody;
 
+    /// <summary>
+    /// Vehicle's forward speed in m/s
+    /// </summary>
     public float speed;
 
     private Drivetrain drivetrain;
