@@ -71,8 +71,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b498f94b52e8a644498ccd3eaf833aa9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Truck
+  DriverName: Luigi
   Difficulty: 1
+  state: 2
 --- !u!1001 &8331423798382269670
 PrefabInstance:
   m_ObjectHideFlags: 0

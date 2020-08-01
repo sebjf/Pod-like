@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Barracuda;
 using UnityEngine;
+using Game;
 
 public class RaceAIHelper : MonoBehaviour
 {
@@ -16,8 +17,8 @@ public class RaceAIHelper : MonoBehaviour
     public void OnRacePrepared(RaceManager manager)
     {
         this.manager = manager;
-        agents = manager.race.competitors.Select(c => c.vehicle.GetComponent<Agent>()).Where(a => a != null).ToList();
-        difficulty = manager.configuration.difficulty;
+        agents = manager.competitors.Select(c => c.vehicle.GetComponent<Agent>()).Where(a => a != null).ToList();
+        difficulty = GameManager.Instance.configuration.difficulty;
     }
 
     private float difficulty;

@@ -1,39 +1,44 @@
-﻿using System;
+﻿using Game;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LeaderboardBindings : MonoBehaviour
 {
-    public RaceManager manager;
+    public LeaderboardEntryBindings[] bindings;
 
-    public Text lapIndicator;
-    public Text leaderboard;
-
-
-
-    // Start is called before the first frame update
-    void Start()
+    private class LeaderboardEntryComparison : IComparer<LeaderboardEntry>
     {
-        
+        public int Compare(LeaderboardEntry x, LeaderboardEntry y)
+        {
+            return x.place.CompareTo(y.place);
+        }
     }
+
+    private LeaderboardEntryComparison comparer = new LeaderboardEntryComparison();
 
     // Update is called once per frame
     void Update()
     {
-        int lap = 0;
-        if (manager.player != null)
-        {
-            lap = Math.Max(1, manager.player.navigator.Lap);
-        }
-        lapIndicator.text = string.Format("Lap {0}/{1}", lap, manager.race.laps);
+        var leaderboard = GameManager.Instance.configuration.leaderboard;
 
-        string rtf = "";
-        foreach (var item in manager.race.competitors)
+        int i = 0;
+        if (leaderboard != null)
         {
-            rtf += item.vehicle.gameObject.name + " " + item.interval + " s" + "\n";
+            leaderboard.Sort(comparer);
+
+            for (; i < leaderboard.Count; i++)
+            {
+                bindings[i].UpdateEntry(leaderboard[i]);
+                bindings[i].gameObject.SetActive(true);
+            }
         }
-        leaderboard.text = rtf;
+        for (; i < bindings.Length; i++)
+        {
+            bindings[i].gameObject.SetActive(false);
+        }
     }
 }

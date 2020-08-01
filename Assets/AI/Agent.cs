@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Autopilot))]
 public class Agent : MonoBehaviour
 {
-    public string Name;
+    public string DriverName;
 
     public float Difficulty;
     public RaceStage state = RaceStage.Race;

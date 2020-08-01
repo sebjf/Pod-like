@@ -1,14 +1,12 @@
-﻿using Onnx;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using Unity.Barracuda;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using Game;
+using System.Net.Http.Headers;
 
 [Serializable]
 public class RaceConfiguration
@@ -18,6 +16,11 @@ public class RaceConfiguration
     public Car player;
     public float difficulty;
     public int laps;
+
+    /// <summary>
+    /// This is reinitialised by the Race Configuration worker
+    /// </summary>
+    public List<LeaderboardEntry> leaderboard;
 }
 
 public enum Penalties
@@ -25,14 +28,28 @@ public enum Penalties
     Jumpstart,
 }
 
+[Serializable]
+public class LeaderboardEntry
+{
+    public string driver;
+    public string car;
+    public float reaction;
+    public float interval;
+    public float bestLap;
+    public int place;
+}
+
 public class Competitor
 {
     public Vehicle vehicle;
     public TrackNavigator navigator;
 
+    public LeaderboardEntry entry;
+
     public bool finished;
-    public float interval;
-    public float reaction;
+
+    public Util.Trigger<int> onLapTrigger;
+    public float lapStartTime;
 
     public float raceDistance
     {
@@ -58,72 +75,7 @@ public class Competitor
         navigator = car.GetComponent<TrackNavigator>();
         finished = false;
         penalties = new List<Penalties>();
-        reaction = -1;
-    }
-}
-
-public class Race
-{
-    public List<Competitor> competitors;
-    public int laps;
-
-    public bool finished;
-
-    public Race()
-    {
-        competitors = new List<Competitor>();
-        laps = 0;
-        finished = false;
-    }
-
-    public void Update()
-    {
-        for (int i = 0; i < competitors.Count; i++)
-        {
-            if(competitors[i].navigator.Lap > laps)
-            {
-                competitors[i].finished = true;
-            }
-        }
-
-        finished = true;
-        for (int i = 0; i < competitors.Count; i++)
-        {
-            if(!competitors[i].finished)
-            {
-                finished = false;
-            }
-        }
-
-        for (int i = 0; i < competitors.Count; i++)
-        {
-            if(competitors[i].finished)
-            {
-                continue;
-            }
-
-            for (int j = i; j < competitors.Count; j++)
-            {
-                if(competitors[j].raceDistance > competitors[i].raceDistance)
-                {
-                    competitors.Swap(i, j);
-                }
-            }
-        }
-
-        // update the interval between drivers
-
-        if(competitors.Count > 0)
-        {
-            competitors[0].interval = -1;
-        }
-
-        for (int i = 1; i < competitors.Count; i++)
-        {
-            var d = competitors[i - 1].raceDistance - competitors[i].raceDistance;
-            var v = competitors[i].speed;
-            competitors[i].interval = d / v;
-        }
+        onLapTrigger = new Util.Trigger<int>();
     }
 }
 
@@ -138,16 +90,15 @@ public enum RaceStage
 public class RaceManager : MonoBehaviour
 {
     public RaceCamera raceCamera;
-    public Catalogue catalogue;
-
-    public RaceConfiguration configuration;
 
     public int gridForward;
     public int gridSideways;
 
-    [NonSerialized]
-    public Race race;
+    public List<Competitor> competitors;
     public Competitor player;
+
+    [NonSerialized]
+    public int laps;
 
     [NonSerialized]
     public RaceStage stage;
@@ -163,17 +114,16 @@ public class RaceManager : MonoBehaviour
 
     private void Awake()
     {
-        race = new Race();
-
         if (OnPenalty == null)
         {
             OnPenalty = new Penalty();
         }
+        competitors = new List<Competitor>();
     }
 
     public void ConfigureRace()
     {
-        ConfigureRace(configuration);
+        ConfigureRace(GameManager.Instance.configuration);
     }
 
     public void ConfigureRace(RaceConfiguration config)
@@ -199,8 +149,8 @@ public class RaceManager : MonoBehaviour
 
         var cars = config.cars;
 
-        race = new Race();
-        race.laps = config.laps;
+        competitors = new List<Competitor>();
+        laps = config.laps;
 
         int i = 0;
         for (; i < cars.Count; i++)
@@ -208,7 +158,7 @@ public class RaceManager : MonoBehaviour
             var item = cars[i];
             var car = GameObject.Instantiate(item.Agent, geometry.transform);
             ResetController.PlacePrefab(car.transform, geometry, GridStartDistance(i), GridStartOffset(i));
-            race.competitors.Add(new Competitor(car));
+            competitors.Add(new Competitor(car));
         }
 
         if (config.player != null)
@@ -216,16 +166,37 @@ public class RaceManager : MonoBehaviour
             var player = GameObject.Instantiate(config.player.Player, geometry.transform);
             ResetController.PlacePrefab(player.transform, geometry, GridStartDistance(i), GridStartOffset(i));
             this.player = new Competitor(player);
-            race.competitors.Add(this.player);
+            competitors.Add(this.player);
         }
 
-        foreach (var item in race.competitors)
+        foreach (var item in competitors)
         {
             item.navigator.Lap = 0;
         }
 
-        raceCamera.cameraRigs = race.competitors.Select(c => c.vehicle.GetComponentInChildren<CamRig>()).ToArray();
-        raceCamera.Target = race.competitors.Last().vehicle.GetComponent<CamRig>();
+        config.leaderboard.Clear();
+        foreach (var item in competitors)
+        {
+            var entry = new LeaderboardEntry();
+            entry.car = item.vehicle.name;
+            entry.bestLap = float.PositiveInfinity;
+            entry.place = competitors.IndexOf(item) + 1;
+            
+            if(item.vehicle.GetComponent<Agent>())
+            {
+                entry.driver = item.vehicle.GetComponent<Agent>().DriverName;
+            }
+            else
+            {
+                entry.driver = "Player 1";
+            }
+
+            config.leaderboard.Add(entry);
+            item.entry = entry;
+        }
+
+        raceCamera.cameraRigs = competitors.Select(c => c.vehicle.GetComponentInChildren<CamRig>()).ToArray();
+        raceCamera.Target = competitors.Last().vehicle.GetComponent<CamRig>();
 
         SendMessage("OnRacePrepared", this, SendMessageOptions.DontRequireReceiver);
 
@@ -241,7 +212,7 @@ public class RaceManager : MonoBehaviour
             time -= Time.deltaTime;
             countdown = Mathf.FloorToInt(time) + 1;
 
-            foreach (var item in race.competitors)
+            foreach (var item in competitors)
             {
                 if(item.navigator.TotalDistanceTravelled > 1f)
                 {
@@ -263,25 +234,85 @@ public class RaceManager : MonoBehaviour
         {
             raceTime += Time.deltaTime;
 
-            foreach (var item in race.competitors)
+            foreach (var item in competitors)
             {
-                if(item.reaction < 0)
+                if(item.entry.reaction < 0)
                 {
                     if(item.vehicle.speed > 0.5f)
                     {
-                        item.reaction = raceTime;
-                        Debug.Log(item.vehicle.name + " Reaction Time: " + item.reaction.ToString());
+                        item.entry.reaction = raceTime;
+                        Debug.Log(item.vehicle.name + " Reaction Time: " + item.entry.reaction.ToString());
+                    }
+                }
+
+                item.onLapTrigger.Update(item.navigator.Lap);
+                if (item.onLapTrigger.Changed)
+                {
+                    if (item.navigator.Lap > 1)
+                    {
+                        var lapTime = raceTime - item.lapStartTime;
+                        item.entry.bestLap = Mathf.Min(item.entry.bestLap, lapTime);
+                    }
+
+                    item.lapStartTime = raceTime;
+                }
+            }
+
+            for (int i = 0; i < competitors.Count; i++)
+            {
+                if (competitors[i].navigator.Lap > laps)
+                {
+                    competitors[i].finished = true;
+                }
+            }
+
+            bool finished = true;
+            for (int i = 0; i < competitors.Count; i++)
+            {
+                if (!competitors[i].finished)
+                {
+                    finished = false;
+                }
+            }
+            if(player.finished)
+            {
+                finished = true;
+            }
+
+            for (int i = 0; i < competitors.Count; i++)
+            {
+                if (competitors[i].finished)
+                {
+                    continue;
+                }
+
+                for (int j = i; j < competitors.Count; j++)
+                {
+                    if (competitors[j].raceDistance > competitors[i].raceDistance)
+                    {
+                        competitors.Swap(i, j);
                     }
                 }
             }
 
-            race.Update();
-
-            if(race.finished)
+            for (int i = 0; i < competitors.Count; i++)
             {
-                break;
+                competitors[i].entry.place = i + 1;
             }
-            if(player.finished)
+
+            if (competitors.Count > 0)
+            {
+                competitors[0].entry.interval = -1;
+            }
+
+            for (int i = 1; i < competitors.Count; i++)
+            {
+                var d = competitors[i - 1].raceDistance - competitors[i].raceDistance;
+                var v = competitors[i].speed;
+                competitors[i].entry.interval = d / v;
+            }
+
+            if (finished)
             {
                 break;
             }
